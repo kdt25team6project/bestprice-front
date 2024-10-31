@@ -1,0 +1,21 @@
+/* src/css/TipsPage.css */
+
+.tip-link {
+    flex-grow: 1;
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .like-button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 1.2em;
+    color: red;
+  }
+  
+  .like-count {
+    margin-left: 0.5em;
+    font-weight: bold;
+  }
+  

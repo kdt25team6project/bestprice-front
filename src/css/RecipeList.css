@@ -1,0 +1,17 @@
+.one-column .recipe-card {
+  width: 100%;
+}
+
+.two-column .recipe-card {
+  width: 50%;
+}
+
+.three-column .recipe-card {
+  width: 33.33%;
+}
+  
+  .recipe-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }

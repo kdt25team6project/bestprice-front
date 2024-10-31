@@ -1,0 +1,86 @@
+.recipe-card {
+  position: relative;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: #fff;
+  overflow: hidden;
+  height: auto; /* 자동 높이 설정 */
+}
+
+.recipe-card-image {
+  width: 100%; /* 카드 너비에 맞게 조정 */
+  height: 200px; /* 3열일 때 이미지 고정 높이 설정 */
+  object-fit: cover; /* 비율을 유지하며 잘림 */
+}
+
+.recipe-info {
+  margin-top: 10px;
+  flex-grow: 1; /* 남은 공간을 차지하여 카드 크기 일관성 유지 */
+}
+
+/* 기본 레이아웃: 3열 */
+.recipe-list.three-column {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.recipe-list.two-column {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.recipe-list.one-column {
+  display: flex; /* 1열일 때 플렉스 사용 */
+  gap: 16px; /* 카드 간의 간격 */
+}
+
+/* 2열일 때 이미지 크기 설정 */
+.recipe-list.two-column .recipe-card-image {
+  height: 150px; /* 2열일 때 이미지 높이 설정 */
+}
+
+/* 1열일 때 이미지 크기 설정 */
+.recipe-list.one-column .recipe-card-image {
+  height: 150px; /* 1열일 때 이미지 높이 설정 */
+}
+
+/* 1열일 때 텍스트 스타일 */
+.recipe-list.one-column .recipe-info {
+  display: flex;
+  justify-content: space-between; /* 텍스트를 양쪽으로 배치 */
+  align-items: center; /* 수직 중앙 정렬 */
+  flex-direction: row; /* 가로로 정렬 */
+  width: 100%; /* 가로 전체 차지 */
+}
+
+.recipe-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  background: none;
+  border: none;
+  color: #000000;
+  cursor: pointer;
+  padding: 0;
+}
+
+.recipe-author {
+  font-size: 14px;
+  color: #555;
+}
+
+/* 기타 스타일 유지 */
+.bookmark-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 12px;
+  padding: 5px 10px; /* 크기 조정 */
+}

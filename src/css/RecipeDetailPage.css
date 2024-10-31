@@ -1,0 +1,12 @@
+.recipe-detail-container {
+    text-align: center;
+  }
+  
+  .recipe-detail-image {
+    display: block;
+    margin: 0 auto;
+    width: 100%; /* 원하는 너비 */
+    max-width: 600px; /* 최대 너비 */
+    height: auto; /* 비율 유지 */
+    margin-bottom: 20px;
+  }
