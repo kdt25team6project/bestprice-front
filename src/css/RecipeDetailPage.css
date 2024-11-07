@@ -1,3 +1,4 @@
+/* 레시피 카드 클릭했을 때 상세 페이지 UI */
 .recipe-detail-container {
     text-align: center;
   }
@@ -5,8 +6,8 @@
   .recipe-detail-image {
     display: block;
     margin: 0 auto;
-    width: 100%; /* 원하는 너비 */
-    max-width: 600px; /* 최대 너비 */
-    height: auto; /* 비율 유지 */
+    width: 100%; 
+    max-width: 600px; 
+    height: auto; 
     margin-bottom: 20px;
   }

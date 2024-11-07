@@ -1,21 +1,80 @@
-/* src/css/TipsPage.css */
+/* 페이지 제목 스타일 */
+.tips-title {
+  text-align: left; /* 텍스트를 가운데 정렬 */
+  font-size: 2.0rem; /* 글자 크기를 크게 설정 */
+  font-weight: bold; /* 글자 굵기를 굵게 설정 */
+  color: #28a745; /* 초록색 계열로 색상 변경 */
+  margin-bottom: 20px; /* 아래쪽 여백 */
+  padding-bottom: 10px; /* 아래쪽 패딩 */
+  border-bottom: 3px solid #4ed66e; /* 하단에 경계선 추가 */
+  letter-spacing: 1px; /* 글자 간격을 약간 늘림 */
+}
 
+/* 체크박스 크기 조정 및 색상 설정 */
+input[type='checkbox'] {
+  transform: scale(1.5); /* 체크박스 크기를 키움 */
+  accent-color: #28a745; /* 초록색 */
+}
+
+.list-group-item {
+  text-align: left; /* 모든 텍스트를 왼쪽 정렬 */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* 내용물을 왼쪽 정렬 */
+}
+
+/* 체크박스와 내용 컨테이너 */
+.tip-content {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.tip-details {
+  margin-left: 20px; /* 체크박스와 내용 사이 간격 추가 */
+}
+
+/* 좋아요 버튼 영역 스타일 */
+.like-section {
+  display: flex;
+  align-items: center;
+  margin-left: auto; /* 좋아요 버튼을 오른쪽으로 밀기 */
+}
+
+
+/* 저장된 메모 섹션 스타일 */
+.memo-section {
+  border-top: 2px solid #28a745; /* 초록색 경계선 */
+}
+
+/* 버튼 스타일 */
+.btn-success {
+  background-color: #28a745;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+}
+
+/* 팁 링크 스타일 (메모에서 사용) */
 .tip-link {
     flex-grow: 1;
     text-decoration: none;
     color: inherit;
-  }
+}
   
-  .like-button {
+/* 좋아요 버튼 스타일 */
+.like-button {
     border: none;
     background: none;
     cursor: pointer;
     font-size: 1.2em;
     color: red;
-  }
+}
   
-  .like-count {
+/* 좋아요 카운트 스타일 */
+.like-count {
     margin-left: 0.5em;
     font-weight: bold;
-  }
-  
+}
+
