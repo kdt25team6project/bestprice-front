@@ -8,6 +8,7 @@ import Ranking from "./pages/Ranking";
 import TipsPage from "./pages/Tip";
 import SearchResultsPage from "./pages/Search";
 import RecipeDetailPage from "./pages/Recipe/RecipeDetailPage";
+import ProductPage from "./pages/Product/ProductPage";
 import styled from "styled-components";
 
 const Router = () => {
@@ -22,6 +23,8 @@ const Router = () => {
 					<Route path="/tips" element={<TipsPage />} />
 					<Route path="/search-results" element={<SearchResultsPage />} />
 					<Route path="/recipe/:recipeId" element={<RecipeDetailPage />} />
+					<Route path="/products" element={<ProductPage />} />
+					
 				</Routes>
 				<Footer />
 			</Container>
