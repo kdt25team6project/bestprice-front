@@ -1,0 +1,418 @@
+.fridge-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background-color: #f4d8a3;
+	padding: 0;
+	position: relative;
+	height: 100vh;
+	overflow: hidden;
+	overflow-y: auto;
+}
+
+.add-button {
+	position: absolute;
+	top: 20px;
+	left: 20px;
+	background-color: #ffffff;
+	border: none;
+	color: #000;
+	padding: 10px 15px;
+	font-size: 1rem;
+	cursor: pointer;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.more-button {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	background-color: #ffffff;
+	border: none;
+	color: #000;
+	padding: 10px 15px;
+	font-size: 1rem;
+	cursor: pointer;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.add-button:hover,
+.more-button:hover {
+	background-color: #f0f0f0;
+}
+
+/*//////////////////////////////////////////////////////////////////*/
+
+.fridge {
+	flex-grow: 1;
+	display: flex;
+	justify-content: center;
+}
+
+/*//////////////////////////////////////////////////////////////////*/
+
+.fridge-body {
+	width: 40vw;
+	height: 70vh;
+	max-width: 350px;
+	max-height: 900px;
+	background-color: #ccc;
+	border: 2px solid #555;
+	position: relative;
+	transition: transform 0.5s ease;
+	box-shadow: 0 4px 7px rgba(0, 0, 0, 1);
+}
+
+/*//////////////////////////////////////////////////////////////////*/
+
+.fridge-door {
+	position: absolute;
+	width: 100%;
+	background-color: #aaa;
+	border: 2px solid #555;
+	cursor: pointer;
+	background: linear-gradient(to right, #aaa, #f0f0f0 70%, #aaa 100%);
+	transition: transform 0.5s ease;
+	transform-origin: right;
+	z-index: 2;
+	border-radius: 5px;
+	box-shadow: 0px 4px 3px rgba(0, 0, 0, 0.5);
+}
+
+.fridge-door-top {
+	top: 0.5%;
+	height: 35%;
+}
+
+.fridge-door-bottom {
+	bottom: 0.5%;
+	height: 61%;
+}
+
+/*//////////////////////////////////////////////////////////////////*/
+
+.fridge-compartment {
+	position: absolute;
+	width: 92%;
+	background-color: #fff;
+	transition: opacity 0.5s ease;
+	opacity: 0;
+	z-index: 1;
+	border-radius: 10px;
+}
+
+.fridge-compartment-top {
+	top: 2%;
+	left: 4%;
+	height: 33%;
+	border-top: 70px solid rgb(184, 184, 184);
+	border-bottom: 10px solid rgb(184, 184, 184);
+	border-right: 70px solid rgb(224, 224, 224);
+	border-left: 70px solid rgb(224, 224, 224);
+}
+
+.fridge-compartment-bottom {
+	bottom: 2%;
+	left: 4%;
+	height: 58%;
+	border-bottom: 70px solid rgb(184, 184, 184);
+	border-right: 70px solid rgb(224, 224, 224);
+	border-left: 70px solid rgb(224, 224, 224);
+}
+
+/*//////////////////////////////////////////////////////////////////*/
+
+.fridge-compartment-door {
+	position: absolute;
+	width: 92%;
+	background-color: #ffffff;
+	transition: opacity 0.5s ease;
+	border-radius: 10px;
+}
+
+.fridge-compartment-door-top {
+	top: 5%;
+	left: 4%;
+	height: 90%;
+	border-top: 2vh solid rgb(184, 184, 184);
+	border-bottom: 0.5vh solid rgb(184, 184, 184);
+	border-right: 30px solid rgb(224, 224, 224);
+	border-left: 30px solid rgb(224, 224, 224);
+}
+
+.fridge-compartment-door-bottom {
+	bottom: 5%;
+	left: 3.8%;
+	height: 90%;
+	border-bottom: 30px solid rgb(184, 184, 184);
+	border-right: 30px solid rgb(224, 224, 224);
+	border-left: 30px solid rgb(224, 224, 224);
+}
+
+/*//////////////////////////////////////////////////////////////////*/
+
+.visible {
+	opacity: 1;
+}
+
+.door-open {
+	transform: rotateY(180deg);
+}
+
+/*//////////////////////////////////////////////////////////////////*/
+
+.door-handle {
+	position: absolute;
+	width: 6%;
+	height: 17%;
+	background-color: #333;
+	z-index: 3;
+	border-radius: 15px;
+	box-shadow: 2px 4px 3px rgba(0, 0, 0, 0.5);
+}
+
+.door-handle-top {
+	left: 5%;
+	bottom: 5%;
+}
+
+.door-handle-bottom {
+	left: 5%;
+	top: 5%;
+}
+
+/*//////////////////////////////////////////////////////////////////*/
+
+.off-canvas {
+	position: fixed;
+	top: 0;
+	width: 400px;
+	height: 100%;
+	background-color: #fff;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	padding: 20px;
+	transform: translateX(-100%);
+	transition: transform 0.5s ease;
+	z-index: 10;
+	overflow-y: auto;
+}
+
+.left-canvas {
+	left: 0;
+}
+
+.right-canvas {
+	right: 0;
+	transform: translateX(100%);
+}
+
+.left-canvas.open {
+	transform: translateX(0);
+}
+
+.right-canvas.open {
+	transform: translateX(0);
+}
+
+/*//////////////////////////////////////////////////////////////////*/
+
+.close-button {
+	background-color: #ff0000;
+	color: #fff;
+	border: none;
+	padding: 10px;
+	cursor: pointer;
+}
+
+.close-button:hover {
+	background-color: #cc0000;
+}
+
+.left-canvas-content {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+/*//////////////////////////////////////////////////////////////////*/
+.category-buttons {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr); /* 4열 배치 */
+	gap: 10px;
+	margin-top: 10px;
+}
+
+.category-button {
+	background-color: #cce5ff;
+	border: none;
+	color: #000;
+	padding: 10px;
+	cursor: pointer;
+	font-size: 18px;
+	font-weight: bold;
+	border-radius: 10px;
+	text-align: center;
+}
+
+.category-button:hover {
+	background-color: #99ccff;
+}
+
+.category-button.selected {
+	background-color: #357edd;
+	color: white;
+	font-weight: bold;
+}
+
+/*//////////////////////////////////////////////////////////////////*/
+
+.input-section {
+	margin-top: 20px;
+}
+
+.input-prompt {
+	margin-bottom: 5px;
+	font-weight: bold;
+	color: #ff4d4f;
+}
+
+.input-field {
+	padding: 8px;
+	margin-bottom: 10px;
+	width: calc(100% - 20px);
+	border: 1px solid #ddd;
+	border-radius: 4px;
+}
+
+/*//////////////////////////////////////////////////////////////////*/
+
+.right-canvas-content {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+}
+
+.expiration-item {
+	display: flex;
+	align-items: center;
+	gap: 70px;
+	padding-left: 20px;
+	background-color: #ffe6e6;
+	border-radius: 8px;
+}
+
+.icon-placeholder {
+	width: 50px;
+	height: 50px;
+	background-color: #cce5ff;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 50%;
+	font-size: 14px;
+}
+
+.expiration-details {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.expiration-date {
+	color: #ff6f61;
+	font-weight: bold;
+}
+
+.food-name {
+	color: #555;
+}
+
+.pagination {
+	display: flex;
+	gap: 5px;
+	justify-content: center;
+	margin: 15px 0;
+}
+
+.pagination button {
+	background-color: #cce5ff;
+	border: none;
+	padding: 8px 12px;
+	cursor: pointer;
+	border-radius: 4px;
+}
+
+.pagination button:hover {
+	background-color: #99ccff;
+}
+
+/*//////////////////////////////////////////////////////////////////*/
+
+.recipe-links {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.recipe-item {
+	padding: 10px;
+	background-color: #ffe6e6;
+	border-radius: 8px;
+}
+
+.recipe-link {
+	font-weight: bold;
+	color: #d9534f;
+}
+
+.recipe-name {
+	color: #555;
+}
+
+/*//////////////////////////////////////////////////////////////////*/
+
+.date-buttons button {
+	background-color: #cce5ff;
+	border: none;
+	padding: 8px 12px;
+	margin-right: 5px;
+	cursor: pointer;
+	border-radius: 4px;
+}
+
+.date-buttons button:hover {
+	background-color: #99ccff;
+}
+
+/*//////////////////////////////////////////////////////////////////*/
+.save-buttons {
+	margin-top: 20px;
+}
+
+.save-button {
+	background-color: #ff4d4f;
+	color: white;
+	border: none;
+	padding: 10px 20px;
+	font-size: 16px;
+	cursor: pointer;
+	border-radius: 4px;
+	font-weight: bold;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.save-button:hover {
+	background-color: #cc0000;
+}
+
+/*//////////////////////////////////////////////////////////////////*/
+
+.selectedEmoji {
+	width: 100px;
+	height: 100px;
+	background-color: #cee5ff;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	font-size: 70px;
+	margin-top: 10px;
+	border-radius: 20%;
+}

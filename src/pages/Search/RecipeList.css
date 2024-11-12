@@ -1,0 +1,24 @@
+/* RecipeList.css */
+.recipe-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.recipe-card {
+  flex: 1 1 calc(33.333% - 20px); /* 3열 보기 */
+  box-sizing: border-box;
+  margin-bottom: 20px;
+}
+
+.one-column .recipe-card {
+  flex: 1 1 100%;
+}
+
+.two-column .recipe-card {
+  flex: 1 1 calc(50% - 20px);
+}
+
+.three-column .recipe-card {
+  flex: 1 1 calc(33.333% - 20px);
+}
