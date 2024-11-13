@@ -6,22 +6,14 @@ function SearchBar({ onSearch }) {
 	const [searchType, setSearchType] = useState("name");
 	const navigate = useNavigate();
 
-	const handleKeyPress = (e) => {
-		if (e.key === "Enter") {
-			handleSearch();
-		}
-	};
-
+  // 부모 컴퍼넌트로 전달
 	const handleSearch = () => {
+		onSearch(keyword, searchType); // 검색어와 타입 전달
 		if (searchType === "product") {
-			navigate("/product-search", { state: { keyword } });
+			navigate("/product-search");
 		} else {
-			navigate("/search-results", { state: { keyword } });
+			navigate("/search-results");
 		}
-	};
-
-	const handleSelect = (type) => {
-		setSearchType(type);
 	};
 
 	return (
@@ -38,21 +30,9 @@ function SearchBar({ onSearch }) {
 					{searchType === "name" ? "요리 이름" : searchType === "ingredient" ? "재료" : "상품"}
 				</button>
 				<ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-					<li>
-						<button className="dropdown-item" onClick={() => handleSelect("name")}>
-							요리 이름
-						</button>
-					</li>
-					<li>
-						<button className="dropdown-item" onClick={() => handleSelect("ingredient")}>
-							재료
-						</button>
-					</li>
-					<li>
-						<button className="dropdown-item" onClick={() => handleSelect("product")}>
-							상품
-						</button>
-					</li>
+					<li><button className="dropdown-item" onClick={() => setSearchType("name")}>요리 이름</button></li>
+					<li><button className="dropdown-item" onClick={() => setSearchType("ingredient")}>재료</button></li>
+					<li><button className="dropdown-item" onClick={() => setSearchType("product")}>상품</button></li>
 				</ul>
 			</div>
 
@@ -60,14 +40,7 @@ function SearchBar({ onSearch }) {
 				type="text"
 				value={keyword}
 				onChange={(e) => setKeyword(e.target.value)}
-				onKeyPress={handleKeyPress}
-				placeholder={
-					searchType === "name"
-						? "요리 이름을 입력하세요."
-						: searchType === "ingredient"
-						? "재료를 입력하세요."
-						: "상품을 입력하세요."
-				}
+				placeholder={searchType === "name" ? "요리 이름을 입력하세요." : searchType === "ingredient" ? "재료를 입력하세요." : "상품을 입력하세요."}
 			/>
 			<button type="button" className="btn btn-secondary" onClick={handleSearch}>
 				검색

@@ -10,12 +10,22 @@ import RecipeDetailPage from "./pages/Recipe/RecipeDetailPage";
 import ProductPage from "./pages/Product/ProductPage";
 import ProductSearchPage from "./pages/Search/ProductSearchPage";
 import styled from "styled-components";
+import { useState } from "react";
 
 const Router = () => {
+	// 검색어를 저장하는 상태를 정의하여 SearchBar와 ProductSearchPage에서 공유
+	const [searchKeyword, setSearchKeyword] = useState("");
+
+	// 검색어가 입력되면 이 함수가 호출되어 검색어 상태를 업데이트함
+	const handleSearch = (keyword) => {
+		setSearchKeyword(keyword);
+	};
+
 	return (
 		<BrowserRouter>
 			<Container>
-				<Header />
+				{/* Header에 handleSearch 함수를 전달하여 검색 시 검색어를 설정 */}
+				<Header onSearch={handleSearch} />
 				<Routes>
 					<Route path="/" element={<Home />} />
 					<Route path="/myfridge" element={<MyFridge />} />
@@ -24,7 +34,7 @@ const Router = () => {
 					<Route path="/search-results" element={<SearchResultsPage />} />
 					<Route path="/recipe/:recipeId" element={<RecipeDetailPage />} />
 					<Route path="/products" element={<ProductPage />} />
-					<Route path="/product-search" element={<ProductSearchPage />} />
+					<Route path="/product-search" element={<ProductSearchPage keyword={searchKeyword} />} />
 				</Routes>
 				<Footer />
 			</Container>
