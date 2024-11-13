@@ -3,7 +3,8 @@
 }
 
 .recipe-image img {
-  width: 100%;
+  width: 90%;
+  margin: 5%;
 }
 
 .recipe-container {
@@ -65,7 +66,8 @@ a {
   border-bottom: 10px solid #f4f4f4;
 }
 .recipe-ingredients {
-  width: 50%;
+  width: 40%;
+  margin: 5%;
   margin-bottom: 0;
   padding-bottom: 20px;
 }
