@@ -7,7 +7,7 @@ import MyFridge from "./pages/MyFridge";
 import Ranking from "./pages/Ranking";
 import TipsPage from "./pages/Tip";
 import SearchResultsPage from "./pages/Search";
-import RecipeDetailPage from "./pages/Recipe/RecipeDetailPage";
+import RecipeDetailPage from "./pages/Recipe/RecipeDetail";
 import ProductPage from "./pages/Product/ProductPage";
 import styled from "styled-components";
 
