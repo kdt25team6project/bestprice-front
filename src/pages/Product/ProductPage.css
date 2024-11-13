@@ -12,7 +12,7 @@
   .prod-ed {
     position: relative;
     width: 100%;
-    margin: 0 auto;
+    margin: 20px;
     overflow: hidden;
   }
   
@@ -33,7 +33,8 @@
   .prod-ed .prod-ed-body {
     position: relative;
     width: auto;
-    margin: 0 0 35px;
+    left: 10px;
+    margin: 30px;
     display: flex;
     align-items: center;
     overflow-x: hidden;
@@ -57,7 +58,7 @@
   
   .prod-ed .prod-ed-item {
     flex: 0 0 auto;
-    width: 180px;
+    width: 212px;
     scroll-snap-align: start;
     border: 1px solid #eee;
     border-radius: 8px;
@@ -101,11 +102,9 @@
     z-index: 1;
   }
   
-  .scroll-button.left {
-    left: 10px;
-  }
+
   
   .scroll-button.right {
-    right: 10px;
+    right: 80px;
   }
   

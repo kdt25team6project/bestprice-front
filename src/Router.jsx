@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useRecoilValue } from "recoil";
 import Home from "./pages/Home";
 import Header from "./layouts/Header";
 import Footer from "./layouts/Footer";
@@ -9,6 +8,7 @@ import TipsPage from "./pages/Tip";
 import SearchResultsPage from "./pages/Search";
 import RecipeDetailPage from "./pages/Recipe/RecipeDetailPage";
 import ProductPage from "./pages/Product/ProductPage";
+import ProductSearchPage from "./pages/Search/ProductSearchPage";
 import styled from "styled-components";
 
 const Router = () => {
@@ -24,7 +24,7 @@ const Router = () => {
 					<Route path="/search-results" element={<SearchResultsPage />} />
 					<Route path="/recipe/:recipeId" element={<RecipeDetailPage />} />
 					<Route path="/products" element={<ProductPage />} />
-					
+					<Route path="/product-search" element={<ProductSearchPage />} />
 				</Routes>
 				<Footer />
 			</Container>
