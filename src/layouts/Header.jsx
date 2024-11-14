@@ -38,10 +38,10 @@ const Header = ({ onSearch }) => {
 						<li className="nav-item dropdown">
 							<a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">더보기</a>
 							<ul className="dropdown-menu">
-								<li><a className="dropdown-item" href="#">상품</a></li>
-								<li><a className="dropdown-item" href="#">레시피</a></li>
+								<li><a className="dropdown-item" href="products">상품</a></li>
+								<li><a className="dropdown-item" href="recipe">레시피</a></li>
 								<li><a className="dropdown-item" href="/tips">자취 꿀팁</a></li>
-								<li><a className="dropdown-item" href="#">랭킹</a></li>
+								<li><a className="dropdown-item" href="rank">랭킹</a></li>
 							</ul>
 						</li>
 						<li className="nav-item">
