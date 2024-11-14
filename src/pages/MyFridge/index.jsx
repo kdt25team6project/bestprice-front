@@ -1,31 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
 import "./styles.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Picker from "@emoji-mart/react";
 import data from "@emoji-mart/data";
+import axios from 'axios';
 
 const MyFridge = () => {
-	// 상단 냉장고 문이 열렸는지 여부를 추적하는 상태
+	// 냉장고 상태 관련 useState
 	const [isTopDoorOpen, setIsTopDoorOpen] = useState(false);
-	// 하단 냉장고 문이 열렸는지 여부를 추적하는 상태
 	const [isBottomDoorOpen, setIsBottomDoorOpen] = useState(false);
-	// 왼쪽 패널(식료품 추가)이 열렸는지 여부를 추적하는 상태
 	const [isLeftCanvasOpen, setIsLeftCanvasOpen] = useState(false);
-	// 오른쪽 패널(유통기한 알림)이 열렸는지 여부를 추적하는 상태
 	const [isRightCanvasOpen, setIsRightCanvasOpen] = useState(false);
 
-	// 카테고리 선택
-	const [selectedCategory, setSelectedCategory] = useState("");
-	// 음식 이름 입력
-	const [foodName, setFoodName] = useState("");
-	// 음식 수량
-	const [quantity, setQuantity] = useState("");
-	// 유통기한
+	// 식료품 관련 useState
+	const [selectedCategory, setSelectedCategory] = useState('');
+	const [foodName, setFoodName] = useState('');
+	const [quantity, setQuantity] = useState('');
 	const [expirationDate, setExpirationDate] = useState(new Date());
-
-	// Emoji 선택 상태 추가
+	const [frozen, setFrozen] = useState('냉장');
 	const [selectedEmoji, setSelectedEmoji] = useState(null);
+	const [foodItems, setFoodItems] = useState([]); // 서버에서 가져온 식료품 목록
 
 	// 상단 냉장고 문 열기/닫기 함수
 	const toggleTopDoor = () => {
@@ -66,21 +61,52 @@ const MyFridge = () => {
 		setExpirationDate(newDate);
 	};
 
+    // API 엔드포인트 설정
+	const API_URL = 'http://localhost:8001/refrigerator';
+
+	// 데이터 로드
+	useEffect(() => {
+		fetchFoodItems();
+	}, []);
+	
+	const fetchFoodItems = async () => {
+		try {
+			const response = await axios.get(API_URL);
+			setFoodItems(response.data);
+			console.log('데이터 로드:', response.data);
+		} catch (error) {
+			console.error('데이터 로드 실패:', error);
+		}
+	};
+	
 	// 저장 버튼 클릭 시 실행되는 함수
-	const handleSave = () => {
+	const handleSave = async () => {
 		const newFoodItem = {
 			category: selectedCategory,
 			emoji: selectedEmoji,
 			name: foodName,
-			quantity: quantity,
-			expirationDate: expirationDate,
+			quantity: parseInt(quantity, 10),
+			expirationDate: expirationDate.toISOString().split('T')[0],
+			frozen: frozen === '냉동',
 		};
-
-		console.log("데이터베이스에 저장:", newFoodItem);
-		setSelectedCategory("");
-		setFoodName("");
-		setQuantity("");
+	
+		try {
+			await axios.post(API_URL, newFoodItem); // POST 요청으로 새 항목을 서버에 저장
+			console.log('데이터베이스에 저장:', newFoodItem);
+			fetchFoodItems(); // 새로고침하여 추가된 데이터를 반영
+			resetForm(); // 입력 필드 초기화
+		} catch (error) {
+			console.error('저장 실패:', error);
+		}
+	};
+	
+	// 입력 필드 초기화 함수
+	const resetForm = () => {
+		setSelectedCategory('');
+		setFoodName('');
+		setQuantity('');
 		setExpirationDate(new Date());
+		setFrozen('냉장');
 		setSelectedEmoji(null);
 	};
 
@@ -221,6 +247,11 @@ const MyFridge = () => {
 							value={quantity}
 							onChange={(e) => setQuantity(e.target.value)}
 						/>
+			        	<p className="input-prompt">식료품의 냉동 여부를 선택해주세요</p>
+                        <select className="input-field" value={frozen} onChange={(e) => setFrozen(e.target.value)}>
+                            <option value="냉장">냉장</option>
+                            <option value="냉동">냉동</option>
+                        </select>
 						<p className="input-prompt">식료품 유통기한을 적어주세요</p>
 						<DatePicker
 							selected={expirationDate}

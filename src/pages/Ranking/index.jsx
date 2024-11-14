@@ -1,74 +1,129 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./styles.css";
 
 const Ranking = () => {
-	const topThree = [
-		{
-			rank: 1,
-			color: "#FFD700",
-			label: "추천수",
-			icon: "⭐",
-			bgColor: "#FFF5CC",
-		},
-		{
-			rank: 2,
-			color: "#C0C0C0",
-			label: "조회수",
-			icon: "⭐",
-			bgColor: "#E6E6E6",
-		},
-		{
-			rank: 3,
-			color: "#FF8C00",
-			label: "리뷰수",
-			icon: "⭐",
-			bgColor: "#FFE6CC",
-		},
-	];
+    // 상태 정의: 상위 3개와 그 외 순위
+    const [topThree, setTopThree] = useState([]);
+    const [otherRanks, setOtherRanks] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState("inquiry"); // 초기 카테고리를 inquiry로 설정
+    const [isLoading, setIsLoading] = useState(true);
 
-	const otherRanks = [4, 5, 6, 7, 8, 9, 10];
+    // 카테고리 변경 시 데이터를 가져오는 함수
+    const fetchRankingData = async (category) => {
+        try {
+            setIsLoading(true); // 로딩 상태 설정
+            // 요청 경로 설정
+            const endpoint = `http://localhost:8001/rank/${category}`;
+            console.log(`Fetching data from: ${endpoint}`);
 
-	return (
-		<div className="ranking-container">
-			{/* Header Buttons */}
-			<div className="ranking-header">
-				<button className="header-button views">조회수</button>
-				<button className="header-button recommends">추천수</button>
-				<button className="header-button reviews">리뷰수</button>
-			</div>
+            // Axios 요청
+            const response = await axios.get(endpoint);
+            const data = response.data;
 
-			{/* Top 3 Ranking Display */}
-			<div className="top-three-container">
-				{topThree.map((item, index) => (
-					<div
-						key={index}
-						className="top-item"
-						style={{ backgroundColor: item.bgColor }}
-					>
-						<span className="rank-icon" style={{ color: item.color }}>
-							{item.icon}
-						</span>
-						<div className="rank-number" style={{ color: item.color }}>
-							{item.rank}
-						</div>
-					</div>
-				))}
-			</div>
+            // 상위 3개와 나머지 4~10위를 분리하여 상태에 저장
+            setTopThree(data.slice(0, 3));
+            setOtherRanks(data.slice(3, 10));
+        } catch (error) {
+            console.error("Error fetching ranking data:", error);
+        } finally {
+            setIsLoading(false); // 로딩 상태 해제
+        }
+    };
 
-			{/* Divider */}
-			<hr className="divider" />
+    // 선택된 카테고리가 변경될 때마다 데이터를 다시 가져옴
+    useEffect(() => {
+        fetchRankingData(selectedCategory);
+    }, [selectedCategory]);
 
-			{/* Other Rankings */}
-			<div className="other-ranks-container">
-				{otherRanks.map((rank) => (
-					<div key={rank} className="rank-item">
-						<div className="rank-avatar">👤</div>
-						<div className="rank-label">{rank}</div>
-					</div>
-				))}
-			</div>
-		</div>
-	);
-}
+    // 카테고리 선택 함수
+    const handleCategorySelect = (category) => {
+        setSelectedCategory(category);
+    };
+
+    return (
+        <div className="ranking-container">
+            {/* Header Buttons */}
+            <div className="ranking-header">
+                <button
+                    className={`header-button ${selectedCategory === "inquiry" ? "selected" : ""}`}
+                    onClick={() => handleCategorySelect("inquiry")}
+                >
+                    조회수
+                </button>
+                <button
+                    className={`header-button ${selectedCategory === "recommendation" ? "selected" : ""}`}
+                    onClick={() => handleCategorySelect("recommendation")}
+                >
+                    추천수
+                </button>
+                <button
+                    className={`header-button ${selectedCategory === "scrap" ? "selected" : ""}`}
+                    onClick={() => handleCategorySelect("scrap")}
+                >
+                    스크랩수
+                </button>
+            </div>
+
+            {isLoading ? (
+                <div>Loading...</div>
+            ) : (
+                <>
+                    {/* Top 3 Ranking Display */}
+                    <div className="top-three-container">
+                        {topThree && topThree.length > 0 ? (
+                            topThree.map((item, index) => (
+                                <div
+                                    key={index}
+                                    className="top-item"
+                                    style={{ backgroundColor: item?.bgColor || "#FFF5CC" }} // 기본 배경 색상 설정
+                                >
+                                    <span className="rank-icon" style={{ color: item?.color || "#FFD700" }}>
+                                        {item?.icon || "⭐"}
+                                    </span>
+                                    <div className="rank-number" style={{ color: item?.color || "#FFD700" }}>
+                                        {item?.rank || index + 1}
+                                    </div>
+                                    <div className="rank-title">{item?.rcpTtl || "Unknown Title"}</div>
+                                    <div className="rank-nickname">{item?.rgtrNm || "Unknown User"}</div>
+                                    <div className="rank-stat">
+                                        {selectedCategory === "inquiry" && `조회수: ${item?.inqCnt || 0}`}
+                                        {selectedCategory === "recommendation" && `추천수: ${item?.rcmmCnt || 0}`}
+                                        {selectedCategory === "scrap" && `스크랩수: ${item?.srapCnt || 0}`}
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <div>No Data Available</div>
+                        )}
+                    </div>
+
+                    {/* Divider */}
+                    <hr className="divider" />
+
+                    {/* Other Rankings */}
+                    <div className="other-ranks-container">
+                        {otherRanks && otherRanks.length > 0 ? (
+                            otherRanks.map((item, index) => (
+                                <div key={item?.rcpSno || index} className="rank-item">
+                                    <div className="rank-number">{index + 4}</div> {/* 4위부터 시작 */}
+                                    <div className="rank-title">{item?.rcpTtl || "Unknown Title"}</div>
+                                    <div className="rank-nickname">{item?.rgtrNm || "Unknown User"}</div>
+                                    <div className="rank-stat">
+                                        {selectedCategory === "inquiry" && `조회수: ${item?.inqCnt || 0}`}
+                                        {selectedCategory === "recommendation" && `추천수: ${item?.rcmmCnt || 0}`}
+                                        {selectedCategory === "scrap" && `스크랩수: ${item?.srapCnt || 0}`}
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <div>No Data Available</div>
+                        )}
+                    </div>
+                </>
+            )}
+        </div>
+    );
+};
 
 export default Ranking;
