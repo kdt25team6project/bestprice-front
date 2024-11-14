@@ -1,0 +1,123 @@
+/* 전체 레이아웃 */
+.w_custom {
+    width: 100%; 
+    max-width: 1200px; 
+    margin: 0 auto; 
+  }
+  
+  .title.main_title h2 {
+    text-align: center;
+    font-size: 46px;
+    color: #333;
+    font-weight: 600;
+    margin: 50px;
+  }
+  
+  .prdList {
+    display: grid;
+    max-width: 1200px;
+    margin: 0 auto;
+    grid-template-columns: repeat(2, 480px); 
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 100px;
+  }
+
+  /* 상품 항목 스타일 */
+  .product-item {
+    border: 1px solid #e6e6e6;
+    border-radius: 8px;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .product-item.large {
+    grid-column: span 2; /* 가로로 2칸 차지 */
+    grid-row: span 2;    /* 세로로 2칸 차지 */
+  }
+  
+  /* 이미지 영역 */
+  .thumbnail {
+    padding: 20px;
+    position: relative;
+  }
+  
+  .thumbnail img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+  
+  /* 숫자 배지 스타일 */
+  .thumbnail .cnt {
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    width: 54px;
+    height: 54px;
+    text-align: center;
+    box-sizing: border-box;
+    border-radius: 15px 0 15px;
+    background: #888;
+    z-index: 5;
+  }
+  
+  .prdrank {
+    font-size: 22px;
+    color: #fff;
+    font-weight: 700;
+    line-height: 54px;
+  }
+  
+  /* 베스트 배지 */
+  .thumbnail .cnt.best-badge {
+    width: 80px;
+    height: 80px;
+    background: #ff600f;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0 15px 15px 0;
+    color: #fff;
+    top: 10px;
+    left: 10px;
+  }
+  
+  /* 상품 설명 영역 */
+  .description {
+    padding: 13px 19px;
+    background: #f5f5f5;
+    border-radius: 10px;
+    margin-top: 10px;
+  }
+  
+  .item_name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .item_money_box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 5px;
+  }
+  
+  .c_price {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .sale {
+    font-size: 16px;
+    color: #ff6f00;
+    font-weight: bold;
+  }
+  

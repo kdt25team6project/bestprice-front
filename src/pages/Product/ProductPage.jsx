@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import BestProduct from './BestProduct.jsx';
 import './ProductPage.css';
 
 function ProductItem({ product }) {
@@ -82,13 +83,11 @@ function ProductSection({ title, query }) {
 
 function ProductPage() {
   return (
-    <div className='wid'>
-      <div className='contaiiii'>
-        {/* 각 섹션에 대해 title과 query 값을 지정 */}
-        <ProductSection title="내 냉장고 유통기한 임박" query="간장" />
-        <ProductSection title="내 냉장고 유통기한 임박" query="된장" />
-        <ProductSection title="내 냉장고 유통기한 임박" query="고추장" />
-      </div>
+    <div>
+      <BestProduct/>
+      {/* 각 섹션에 대해 title과 query 값을 지정 */}
+      <ProductSection title="내 냉장고 유통기한 임박" query="간장" />
+      <ProductSection title="이달의 핫딜" query="된장" />
     </div>
   );
 }
