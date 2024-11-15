@@ -8,12 +8,17 @@ function LoginPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState(''); 
   const [username, setUsername] = useState('');
-  const [realName, setRealName] = useState(''); // 이름
-  const [userId, setUserId] = useState(''); // 아이디
-  const [isEmailVerified, setIsEmailVerified] = useState(false); // 이메일 인증 여부
+  const [realName, setRealName] = useState(''); 
+  const [userId, setUserId] = useState(''); 
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(''); 
 
   const handleLogin = (e) => {
     e.preventDefault();
+    if (!email || !password) {
+      setErrorMessage('이메일과 비밀번호를 입력해주세요.');
+      return;
+    }
     console.log('Logging in with:', { email, password });
   };
 
@@ -21,6 +26,14 @@ function LoginPage() {
     e.preventDefault();
     if (password !== confirmPassword) {
       alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+      return;
+    }
+    if (!username || !userId || !email || !password || !realName) {
+      setErrorMessage('모든 사항을 입력해주세요.');
+      return;
+    }
+    if (!isEmailVerified) {
+      setErrorMessage('이메일 인증을 완료해주세요.');
       return;
     }
     console.log('Registering with:', { realName, username, userId, email, password });
@@ -61,6 +74,7 @@ function LoginPage() {
               <a className="outer-link pull-left" href="#/forgot">비밀번호 찾기</a>
               <button type="submit" className="btn btn-submit btn-default pull-right">로그인</button>
             </form>
+            {errorMessage && <div className="error-message">{errorMessage}</div>}
           </div>
         </div>
       )}
@@ -113,7 +127,6 @@ function LoginPage() {
                 이메일 인증
               </button>
 
-              {/* 비밀번호 필드 */}
               <input
                 type="password"
                 value={password}
@@ -123,7 +136,6 @@ function LoginPage() {
                 required
               />
               
-              {/* 비밀번호 확인 필드 */}
               <input
                 type="password"
                 value={confirmPassword}
@@ -132,10 +144,9 @@ function LoginPage() {
                 placeholder="비밀번호 확인"
                 required
               />
-
-              {/* 회원가입 버튼 */}
               <button type="submit" className="btn btn-submit btn-default pull-right">회원가입</button>
             </form>
+            {errorMessage && <div className="error-message">{errorMessage}</div>}
           </div>
         </div>
       )}
