@@ -22,3 +22,7 @@
 .three-column .recipe-card {
   flex: 1 1 calc(33.333% - 20px);
 }
+
+.five-column .recipe-card {
+  flex: 1 1 calc(20% - 20px);
+}

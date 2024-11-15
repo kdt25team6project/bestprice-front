@@ -73,41 +73,25 @@ function RecipeFilter({ onFilterChange }) {
   ];
 
   return (
-    <div>
-      {categories.map(category => (
-        <div key={category.type}>
-          <label>{category.label}</label>
-          <select onChange={(e) => onFilterChange(category.type, e.target.value)}>
-            {category.options.map(option => (
-              <option key={option.id} value={option.id}>{option.name}</option>
-            ))}
-          </select>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-  const handleFilterClick = (type, id) => {
-    onFilterChange(type, id);
-  };
-
-  return (
     <div className="filter-container">
-      {categories.map((category) => (
-        <div key={category.type}>
-          <h3>{category.label}</h3>
-          {category.options.map((option) => (
-            <button
-              key={option.id}
-              onClick={() => handleFilterClick(category.type, option.id)}
-              className="filter-button"
-            >
-              {option.name}
-            </button>
-          ))}
-        </div>
-      ))}
+      {
+        categories.map((category) => (
+          <div key={category.type}>
+            <h3>{category.label}</h3>
+            {
+              category.options.map((option) => (
+                <button
+                  key={option.id}
+                  onClick={() => onFilterChange(category.type, option.id)}
+                  className="filter-button"
+                >
+                  {option.name}
+                </button>
+              ))
+            }
+          </div>
+       ))
+     }
     </div>
   );
 }

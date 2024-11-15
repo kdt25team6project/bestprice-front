@@ -1,7 +1,9 @@
 /* Footer 스타일 */
 .footer {
-    background-color: #f8f9fa; /* 배경색 */
+    background-color: #ffffff; /* Header와 동일한 배경색 */
     padding: 20px 0;
+    border-top: 2px solid #28a745; /* Header와 동일한 구분선 */
+    text-align: center; /* 텍스트 가운데 정렬 */
   }
   
   .footer h5 {
@@ -34,4 +36,14 @@
   /* 카피라이트 섹션 */
   .footer .text-center {
     margin-top: 20px;
+  }
+  
+  /* 플렉스 박스를 사용하여 컬럼을 가운데 정렬 */
+  .footer .row {
+    display: flex;
+    justify-content: center; /* 가로축 가운데 정렬 */
+  }
+  
+  .footer .col-md-4 {
+    margin-bottom: 20px; /* 각 컬럼에 여백 추가 */
   }

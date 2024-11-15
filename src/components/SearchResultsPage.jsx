@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Papa from 'papaparse';
-import SearchBar from './SearchBar';
+import Header from './Header';
 import RecipeList from './RecipeList';
 import Footer from './Footer';
 import '../css/SearchResultsPage.css';
 import '../css/RecipeCard.css';
 import '../css/RecipeList.css';
+import '../css/Header.css';
 import { tips } from '../TipsData.js';
 
 function SearchResultsPage() {
@@ -16,9 +17,8 @@ function SearchResultsPage() {
   const [layout, setLayout] = useState('three-column');
   const [sortType, setSortType] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [isFilterVisible, setIsFilterVisible] = useState(false); // 카테고리 필터 표시 여부
+  const [isFilterVisible, setIsFilterVisible] = useState(false);
 
-  // recipesPerPage 값을 동적으로 설정
   let recipesPerPage;
   
   if (layout === 'two-column') {
@@ -32,14 +32,14 @@ function SearchResultsPage() {
   useEffect(() => {
     if (tips && tips.length > 0) {
       const randomIndex = Math.floor(Math.random() * tips.length);
-      setRandomTip(tips[randomIndex].content); // 무작위로 팁 선택
+      setRandomTip(tips[randomIndex].content);
     }
   }, []);
 
   useEffect(() => {
     fetch('/recipes.csv')
-      .then(response => response.text())
-      .then(data => {
+      .then((response) => response.text())
+      .then((data) => {
         Papa.parse(data, {
           header: true,
           complete: (results) => {
@@ -53,7 +53,6 @@ function SearchResultsPage() {
               RGTR_ID: recipe.RGTR_ID,
               INQ_CNT: Number(recipe.INQ_CNT),
               RCMM_CNT: Number(recipe.RCMM_CNT),
-              CKG_DODF_NM: recipe.CKG_DODF_NM
             }));
             setAllRecipes(recipes);
             setFilteredRecipes(recipes);
@@ -87,17 +86,14 @@ function SearchResultsPage() {
   const handleSortChange = (e) => {
     setSortType(e.target.value);
     let sortedRecipes = [...filteredRecipes];
-  
+
     if (e.target.value === 'views') {
       sortedRecipes.sort((a, b) => b.INQ_CNT - a.INQ_CNT); // 조회수 높은 순
     } else if (e.target.value === 'recommendations') {
       sortedRecipes.sort((a, b) => b.RCMM_CNT - a.RCMM_CNT); // 추천수 높은 순
     } else if (e.target.value === 'difficulty') {
-      // 난이도를 숫자로 매핑
       const difficultyMap = { '아무나': 1, '초급': 2, '중급': 3, '고급': 4 };
-  
-      // 난이도를 기준으로 정렬
-      sortedRecipes.sort((a, b) => difficultyMap[a.CKG_DODF_NM] - difficultyMap[b.CKG_DODF_NM]);
+      sortedRecipes.sort((a, b) => difficultyMap[a.CKG_DODF_NM] - difficultyMap[b.CKG_DODF_NM]); // 난이도 쉬운 순
     } else if (e.target.value === 'newest') {
       sortedRecipes.sort((a, b) => new Date(b.RGTR_ID) - new Date(a.RGTR_ID)); // 최신순
     }
@@ -106,21 +102,22 @@ function SearchResultsPage() {
   };
 
   const goSearchRecipe = (category, value) => {
-    const filtered = allRecipes.filter(recipe => 
+    const filtered = allRecipes.filter(recipe =>
       (category === 'cat4' && (value === '' || recipe.종류?.includes(value))) ||
-      (category === 'cat3' && (value === '' || recipe.재료?.includes(value))) || 
-      (category === 'cat1' && (value === '' || recipe.요리방법?.includes(value)))  
+      (category === 'cat3' && (value === '' || recipe.재료?.includes(value))) ||
+      (category === 'cat1' && (value === '' || recipe.요리방법?.includes(value)))
     );
     setFilteredRecipes(filtered);
-    setCurrentPage(1); // 페이지를 첫 페이지로 초기화
+    setCurrentPage(1);
   };
-  
-  // 페이지네이션 관련 함수들
+
+  // 페이지네이션 관련
   const indexOfLastRecipe = currentPage * recipesPerPage;
   const indexOfFirstRecipe = indexOfLastRecipe - recipesPerPage;
   const currentRecipes = filteredRecipes.slice(indexOfFirstRecipe, indexOfLastRecipe);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   const totalPages = Math.ceil(filteredRecipes.length / recipesPerPage);
 
   const toggleFilterVisibility = () => {
@@ -129,50 +126,7 @@ function SearchResultsPage() {
 
   return (
     <div className="container">
-      <nav className="navbar navbar-expand-lg bg-body-tertiary">
-        <div className="container-fluid">
-          <a className="navbar-brand page-title" href="/">🍽️Best Price Test🍽️</a>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNavDropdown"
-            aria-controls="navbarNavDropdown"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarNavDropdown">
-            <div className="mx-auto">
-              <SearchBar onSearch={handleSearch} />
-            </div>
-
-            <ul className="navbar-nav me-auto">
-              <li className="nav-item">
-                <button className="nav-link" onClick={() => console.log('나만의 냉장고 클릭')}>
-                  나만의 냉장고
-                </button>
-              </li>
-              <li className="nav-item dropdown">
-                <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  더보기
-                </a>
-                <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="/tips">자취 꿀팁</a></li>
-                  <li><a className="dropdown-item" href="#">요리 팁</a></li>
-                  <li><a className="dropdown-item" href="#">최저가 그래프</a></li>
-                </ul>
-              </li>
-              <li className="nav-item">
-                <button className="nav-link" onClick={() => console.log('로그인/회원가입 클릭')}>
-                  로그인/회원가입
-                </button>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
+      <Header handleSearch={handleSearch} />
 
       <div className={`filter-container ${isFilterVisible ? 'show' : ''}`}>
           <div className="button-group">
@@ -231,33 +185,45 @@ function SearchResultsPage() {
   </div>
 </div>
 
-<div className="d-flex justify-content-end align-items-center my-3">
+<div className="d-flex justify-content-center align-items-center my-3 custom-filter-container">
   <button className="custom-filter-button" onClick={toggleFilterVisibility}>
     {isFilterVisible ? '카테고리 닫기' : '카테고리 열기'}
   </button>
+</div>
 
-      <select className="form-select w-auto me-2" value={sortType} onChange={handleSortChange}>
-        <option value="">-정렬 기준-</option>
-        <option value="difficulty">최신 순</option>
-        <option value="difficulty">난이도 쉬운 순</option>
-        <option value="views">조회수 높은 순</option>
-        <option value="recommendations">추천수 높은 순</option>
-        
-      </select>
 
-      <select className="form-select w-auto me-2" aria-label="찜 목록">
-        <option>찜 목록</option>
-        {bookmarkedRecipes.map((recipe) => (
-          <option key={recipe.id} value={recipe.id}>{recipe.name}</option>
-        ))}
-      </select>
+{/* 드롭다운들 (정렬 기준, 찜 목록, n열 보기) */}
+<div className="d-flex justify-content-end gap-3 my-3">
+  {/* 정렬 기준 드롭다운 */}
+  <div className="dropdown1">
+    <select className="form-select w-auto" value={sortType} onChange={handleSortChange}>
+      <option value="">-정렬 기준-</option>
+      <option value="newest">최신 순</option>
+      <option value="difficulty">난이도 쉬운 순</option>
+      <option value="views">조회수 높은 순</option>
+      <option value="recommendations">추천수 높은 순</option>
+    </select>
+  </div>
 
-      <select className="form-select w-auto" value={layout} onChange={handleLayoutChange}>
-        <option value="two-column">2열 보기</option>
-        <option value="three-column">3열 보기</option>
-        <option value="five-column">5열 보기</option>
-      </select>
-    </div>
+  {/* n열 보기 드롭다운 */}
+  <div className="dropdown3">
+    <select className="form-select w-auto" value={layout} onChange={handleLayoutChange}>
+      <option value="two-column">2열 보기</option>
+      <option value="three-column">3열 보기</option>
+      <option value="five-column">5열 보기</option>
+    </select>
+  </div>
+
+   {/* 찜 목록 드롭다운 */}
+   <div className="dropdown2">
+    <select className="form-select w-auto me-2" aria-label="찜 목록">
+      <option>찜 목록</option>
+      {bookmarkedRecipes.map((recipe) => (
+        <option key={recipe.id} value={recipe.id}>{recipe.name}</option>
+      ))}
+    </select>
+  </div>
+</div>
 
       <RecipeList
         recipes={currentRecipes}
@@ -314,5 +280,6 @@ function SearchResultsPage() {
     </div>
   );
 }
+
 
 export default SearchResultsPage;

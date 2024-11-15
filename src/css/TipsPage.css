@@ -1,3 +1,16 @@
+/* 헤더에만 적용할 container */
+.navbar-container {
+  margin: 0 auto; /* 가운데 정렬 */
+  padding: 0 10px; /* 좌우 여백 추가 */
+  box-sizing: border-box; /* padding을 width에 포함시켜서 전체 레이아웃에 영향을 주지 않도록 설정 */
+}
+
+.navbar {
+  width: 100%;
+  max-width: 1280px; /* 너비를 1280px로 제한 */
+  margin: 0 auto; /* 가운데 정렬 */
+}
+
 /* 페이지 제목 스타일 */
 .tips-title {
   text-align: left; /* 텍스트를 가운데 정렬 */
