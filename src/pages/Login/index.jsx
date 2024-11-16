@@ -43,9 +43,16 @@ const LoginPage = () => {
 			}
 
 			try {
-				const response = await join(userId, password, name, nickname, email);
-				alert("가입 성공, 이메일 인증 후 로그인 해주세요");
-				
+				await join(userId, password, name, nickname, email);
+				alert("이메일 발송완료, 이메일 인증 후 로그인 해주세요");
+				setShowSignIn(false); // 로그인 폼으로 전환
+				// 상태 초기화
+				setEmail("");
+				setPassword("");
+				setConfirmPassword("");
+				setName("");
+				setNickname("");
+				setUserId("");
 			} catch (error) {
 				if (error.response) {
 					// 서버에서 응답이 온 경우
