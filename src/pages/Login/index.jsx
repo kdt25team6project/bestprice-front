@@ -77,11 +77,14 @@ const LoginPage = () => {
 			try {
 				const response = await login(userId, password);
 				setUser({
-					name: response.name,
-					nickname: response.nickname,
-					email: response.email,
-					accessToken: response.accessToken,
+					isLoggedIn: true,
+					user: {
+						name: response.name,
+						nickname: response.nickname,
+						email: response.email,
+					},
 				});
+				localStorage.setItem("isLoggedIn", "true"); // 로그인 상태 저장
 				navigate("/");
 			} catch (error) {
 				if (error.response) {

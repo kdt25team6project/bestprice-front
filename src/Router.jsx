@@ -1,4 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useSetRecoilState } from "recoil";
+import styled from "styled-components";
+import { userState } from "./state/userState";
 import Home from "./pages/Home";
 import Header from "./layouts/Header";
 import Footer from "./layouts/Footer";
@@ -10,14 +14,25 @@ import SearchResultsPage from "./pages/Search";
 import RecipeDetailPage from "./pages/Recipe/RecipeDetail";
 import ProductPage from "./pages/Product/ProductPage";
 import ProductSearchPage from "./pages/Search/ProductSearchPage";
-import styled from "styled-components";
-import { useState } from "react";
 
 const Router = () => {
-	// 검색어를 저장하는 상태를 정의하여 SearchBar와 ProductSearchPage에서 공유
-	const [searchKeyword, setSearchKeyword] = useState("");
+	const [searchKeyword, setSearchKeyword] = useState(""); // 검색 상태
+	const setUser = useSetRecoilState(userState); // Recoil 상태 업데이트
 
-	// 검색어가 입력되면 이 함수가 호출되어 검색어 상태를 업데이트함
+	// 앱 초기화 시 로그인 상태를 로컬 스토리지에서 로드
+	useEffect(() => {
+		const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+		const userInfo = JSON.parse(localStorage.getItem("userInfo")); // 저장된 사용자 정보
+
+		if (isLoggedIn && userInfo) {
+			setUser({
+				isLoggedIn: true,
+				user: userInfo,
+			});
+		}
+	}, [setUser]);
+
+	// 검색어 상태 업데이트 함수
 	const handleSearch = (keyword) => {
 		setSearchKeyword(keyword);
 	};
@@ -25,7 +40,7 @@ const Router = () => {
 	return (
 		<BrowserRouter>
 			<Container>
-				{/* Header에 handleSearch 함수를 전달하여 검색 시 검색어를 설정 */}
+				{/* Header에 검색 상태 관리 함수를 전달 */}
 				<Header onSearch={handleSearch} />
 				<Routes>
 					<Route path="/" element={<Home />} />
@@ -36,7 +51,10 @@ const Router = () => {
 					<Route path="/search-results" element={<SearchResultsPage />} />
 					<Route path="/recipe/:recipeId" element={<RecipeDetailPage />} />
 					<Route path="/products" element={<ProductPage />} />
-					<Route path="/product-search" element={<ProductSearchPage keyword={searchKeyword} />} />
+					<Route
+						path="/product-search"
+						element={<ProductSearchPage keyword={searchKeyword} />}
+					/>
 				</Routes>
 				<Footer />
 			</Container>
