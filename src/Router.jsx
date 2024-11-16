@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Header from "./layouts/Header";
 import Footer from "./layouts/Footer";
+import LoginPage from "./pages/Login";
 import MyFridge from "./pages/MyFridge";
 import Ranking from "./pages/Ranking";
 import TipsPage from "./pages/Tip";
@@ -28,6 +29,7 @@ const Router = () => {
 				<Header onSearch={handleSearch} />
 				<Routes>
 					<Route path="/" element={<Home />} />
+					<Route path="/login" element={<LoginPage />} />
 					<Route path="/myfridge" element={<MyFridge />} />
 					<Route path="/rank" element={<Ranking />} />
 					<Route path="/tips" element={<TipsPage />} />
