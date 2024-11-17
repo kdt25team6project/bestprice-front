@@ -1,8 +1,10 @@
 .fridge-container {
+	position: relative;
+	width: 100%;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	background-color: #f4d8a3;
+	background-color: #aac482;
 	padding: 0;
 	position: relative;
 	height: 100vh;
@@ -109,6 +111,12 @@
 	border-bottom: 10px solid rgb(184, 184, 184);
 	border-right: 70px solid rgb(224, 224, 224);
 	border-left: 70px solid rgb(224, 224, 224);
+	overflow: hidden;
+	display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: 10px;
+    padding: 10px;
 }
 
 .fridge-compartment-bottom {
@@ -118,6 +126,12 @@
 	border-bottom: 70px solid rgb(184, 184, 184);
 	border-right: 70px solid rgb(224, 224, 224);
 	border-left: 70px solid rgb(224, 224, 224);
+	overflow: hidden;
+	display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    gap: 10px;
+    padding: 10px;
 }
 
 /*//////////////////////////////////////////////////////////////////*/
@@ -138,6 +152,12 @@
 	border-bottom: 0.5vh solid rgb(184, 184, 184);
 	border-right: 30px solid rgb(224, 224, 224);
 	border-left: 30px solid rgb(224, 224, 224);
+	overflow: hidden;
+	display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: 10px;
+    padding: 10px;
 }
 
 .fridge-compartment-door-bottom {
@@ -147,6 +167,12 @@
 	border-bottom: 30px solid rgb(184, 184, 184);
 	border-right: 30px solid rgb(224, 224, 224);
 	border-left: 30px solid rgb(224, 224, 224);
+	overflow: hidden;
+	display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    gap: 10px;
+    padding: 10px;
 }
 
 /*//////////////////////////////////////////////////////////////////*/
@@ -407,6 +433,15 @@
 
 /*//////////////////////////////////////////////////////////////////*/
 
+.food-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* 아이콘이 바깥으로 나가지 않도록 설정 */
+}
+
 .selectedEmoji {
 	width: 100px;
 	height: 100px;
@@ -415,4 +450,56 @@
 	font-size: 70px;
 	margin-top: 10px;
 	border-radius: 20%;
+}
+
+.food-emoji {
+	font-size: 2.3rem;
+  }
+
+/*////////////////////////////////////////////////////////////////////*/
+
+/* 냉동 페이지네이션 - 냉장고 좌측 */
+.pagination-frozen-left {
+    position: absolute;
+	left: 30%;
+    top: 23%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 2;
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 5px;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* 냉장 페이지네이션 - 냉장고 좌측 */
+.pagination-chilled-left {
+    position: absolute;
+    left: 30%;
+    top: 60%; 
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 2;
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 5px;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.pagination-frozen-left .pagination, .pagination-chilled-left .pagination {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.pagination-frozen-left .page-item, .pagination-chilled-left .page-item {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    border-radius: 50%;
 }

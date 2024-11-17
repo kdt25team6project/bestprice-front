@@ -127,11 +127,6 @@ const Home = () => {
 				<div className="my-fridge">나만의 냉장고</div>
 			</div>
 
-			{/* 자취팁 일반 div */}
-			<div className="living-tips">
-				<p>자취팁 관련 내용</p>
-			</div>
-
 			<div className="d-flex justify-content-center align-items-center my-3">
 				<div className="tip-box d-flex align-items-center">
 					<h5 className="card-text mb-0">{`자취 꿀팁 한 줄! ${randomTip} `}</h5>

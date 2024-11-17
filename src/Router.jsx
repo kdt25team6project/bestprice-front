@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useRecoilValue } from "recoil";
+//import { useRecoilValue } from "recoil";
 import Home from "./pages/Home";
 import Header from "./layouts/Header";
 import Footer from "./layouts/Footer";
@@ -24,7 +24,6 @@ const Router = () => {
 					<Route path="/search-results" element={<SearchResultsPage />} />
 					<Route path="/recipe/:recipeId" element={<RecipeDetailPage />} />
 					<Route path="/products" element={<ProductPage />} />
-					
 				</Routes>
 				<Footer />
 			</Container>
