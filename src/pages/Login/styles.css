@@ -1,0 +1,260 @@
+:root {
+	--red: #ef6161;
+	--green: #7ac142;
+}
+
+/* 로그인 페이지 스타일 */
+.login-page {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	background: #fff;
+}
+
+.login-page .login-content {
+	width: 420px;
+	padding: 40px;
+	height: 600px;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 1;
+	position: absolute;
+	background: #fff;
+	box-shadow: 0 0px 70px rgba(0, 0, 0, 0.1);
+	border-top: 5px solid var(--green);
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 0.5s ease-in-out, visibility 0s 0.5s;
+}
+
+.login-content.login-content-signin {
+	opacity: 1;
+	visibility: visible;
+	transition: opacity 0.5s ease-in-out, visibility 0s 0s;
+}
+
+.login-content.login-content-signup {
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 0.5s ease-in-out, visibility 0s 0.5s;
+}
+
+.login-content.hidden {
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 0.5s ease-in-out, visibility 0s 0.5s;
+}
+
+.login-content.visible {
+	opacity: 1;
+	visibility: visible;
+	transition: opacity 0.5s ease-in-out, visibility 0s 0s;
+}
+
+.login-content h2 {
+	text-align: left;
+	color: var(--green);
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	margin: 0;
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.login-content form.wrapper-box {
+	margin-top: 40px;
+}
+
+.login-content form.wrapper-box input {
+	margin-top: 20px;
+	border: none;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+	border-radius: 0;
+	padding-left: 0;
+	box-shadow: none;
+	transition: all 0.1s ease-out;
+}
+
+.login-content form.wrapper-box input:valid {
+	border-bottom: 1px solid var(--green);
+}
+
+.login-content form.wrapper-box input:focus:invalid {
+	border-bottom: 1px solid var(--red);
+}
+
+.login-content form.wrapper-box button {
+	display: inline-block;
+	margin-top: 50px;
+	border: 2px solid var(--green);
+	background: var(--green);
+	border-radius: 25px;
+	padding: 3px 12px 5px 12px;
+	color: #fff;
+	font-size: 14px;
+	font-weight: bold;
+	letter-spacing: 0px;
+	transition: all 0.1s ease-out;
+}
+
+.login-content form.wrapper-box button:hover {
+	color: var(--green);
+	background: #fff;
+	border: 2px solid var(--green);
+}
+
+.login-content form.wrapper-box button:active {
+	box-shadow: none;
+}
+
+.login-content .outer-link {
+	display: inline-block;
+	margin-top: 50px;
+	padding: 5px 0;
+	display: block;
+	color: rgba(0, 0, 0, 0.4);
+	transition: all 0.1s ease-out;
+}
+
+.login-content .outer-link:hover {
+	color: rgba(0, 0, 0, 0.8);
+	text-decoration: none;
+}
+
+.login-content-signin > div,
+.login-content-signup > div {
+	overflow: hidden;
+	top: 50%;
+	position: relative;
+	transform: translateY(-50%);
+}
+
+.login-content-signin {
+	margin-left: -130px;
+	opacity: 1;
+	visibility: visible;
+	transition: opacity 0.5s ease-in-out, margin-left 0.5s ease-in-out;
+}
+
+.login-content-signup {
+	margin-left: 130px;
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 0.5s ease-in-out, margin-left 0.5s ease-in-out;
+}
+
+.login-switcher {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	margin: auto;
+	width: 660px;
+	height: 400px;
+	box-shadow: 0 0px 20px rgba(0, 0, 0, 0.03);
+}
+
+.login-switcher > div {
+	width: 40%;
+	margin-top: 125px;
+}
+
+.login-switcher .login-switcher-signin {
+	float: left;
+}
+
+.login-switcher .login-switcher-signup {
+	float: right;
+}
+
+.login-switcher h3 {
+	color: rgba(0, 0, 0, 0.4);
+	text-align: center;
+	font-size: 14px;
+}
+
+.login-switcher button {
+	display: block;
+	margin: 20px auto 0 auto;
+	outline: 0;
+	background: none;
+	border: 2px solid rgba(0, 0, 0, 0.1);
+	border-radius: 20px;
+	color: rgba(0, 0, 0, 0.3);
+	font-weight: bold;
+	font-size: 14px;
+	padding: 4px 12px 5px 12px;
+	transition: all 0.1s ease-out;
+}
+
+.login-switcher button:hover {
+	border: 2px solid var(--green) !important;
+	color: rgba(0, 0, 0, 0.8);
+}
+
+.login-switcher .login-switcher-signin,
+.login-switcher .login-switcher-signup {
+	transition: all 0.1s ease-out;
+}
+
+.hidden {
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+}
+
+.visible {
+	opacity: 1;
+	visibility: visible;
+	transition: opacity 0.5s ease-in-out, visibility 0s 0s;
+}
+
+/* 마이페이지 버튼 스타일링 */
+.my-page-button {
+	background-color: transparent; /* 투명 배경 */
+	color: var(--green); /* 초록색 텍스트 */
+	border: 2px solid var(--green);
+	padding: 0.75rem 1.5rem; /* 크기 조정 */
+	margin-bottom: 20px;
+	border-radius: 0.25rem;
+	font-weight: bold;
+	transition: background-color 0.3s ease; /* 부드러운 배경 색상 전환 효과 */
+}
+
+.my-page-button:hover {
+	background-color: #5a9e3f; /* 호버 시 약간 어두운 초록색 배경 */
+}
+
+/* 로그인/회원가입 버튼 스타일링 */
+.login-button {
+	background-color: var(--green); /* 초록색 배경 */
+	color: white; /* 흰색 텍스트 */
+	padding: 0.75rem 1.5rem;
+	font-weight: bold;
+	transition: background-color 0.3s ease, color 0.3s ease;
+	border-radius: 0.25rem;
+	text-transform: uppercase;
+}
+
+.login-button:hover {
+	background-color: var(--green); /* 초록색 배경 */
+	color: white; /* 흰색 텍스트 */
+}
+
+/* 로그인/회원가입과 마이페이지 버튼 간 간격을 설정 */
+.login-container .navbar-nav {
+	display: flex; /* flexbox로 정렬 */
+	align-items: center; /* 세로 정렬 */
+}
+
+.login-container .navbar-nav .nav-item {
+	margin-right: 10px; /* 버튼 간 간격을 20px로 설정 */
+}
+
+.login-container .navbar-nav .nav-item:last-child {
+	margin-right: 0; /* 마지막 아이템에 마진 제거 */
+}

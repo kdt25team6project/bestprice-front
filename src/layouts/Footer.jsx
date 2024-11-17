@@ -9,17 +9,22 @@ const Footer = () => {
 					<div className="col-md-4">
 						<h5 className="text-success">Best Price</h5>
 						<p>
-							이 사이트는 다양한 요리 레시피를 제공하고 식재료의 가격 비교
-							서비스를 제공합니다.
+							다양한 요리 레시피를 제공하고 식재료의<br></br>가격 비교 서비스를
+							제공합니다.
 						</p>
 					</div>
 
 					<div className="col-md-4">
-						<h5 className="text-success">footer 테스트</h5>
+						<h5 className="text-success">바로가기</h5>
 						<ul className="list-unstyled">
 							<li>
-								<a href="/about" className="footer-link">
-									소개
+								<a href="/recipes" className="footer-link">
+									레시피
+								</a>
+							</li>
+							<li>
+								<a href="#" className="footer-link">
+									식재료
 								</a>
 							</li>
 							<li>
@@ -28,19 +33,13 @@ const Footer = () => {
 								</a>
 							</li>
 							<li>
-								<a href="/recipes" className="footer-link">
-									레시피
-								</a>
-							</li>
-							<li>
-								<a href="/contact" className="footer-link">
-									문의하기
+								<a href="#" className="footer-link">
+									나만의 냉장고
 								</a>
 							</li>
 						</ul>
 					</div>
 
-					{/* 세 번째 컬럼: 소셜 미디어 */}
 					<div className="col-md-4">
 						<h5 className="text-success">SNS</h5>
 						<ul className="list-unstyled">
@@ -63,13 +62,12 @@ const Footer = () => {
 					</div>
 				</div>
 
-				{/* 하단 카피라이트 */}
 				<div className="text-center mt-4">
-					<p>&copy; 2024 Best Price Project.</p>
+					<p>&copy; 2024. Best Price. All rights reserved.</p>
 				</div>
 			</div>
 		</footer>
 	);
-}
+};
 
 export default Footer;
