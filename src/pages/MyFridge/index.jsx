@@ -146,7 +146,7 @@ const MyFridge = () => {
         }
     };
     
-    // 페이지네이션 상태
+    // 냉장고 페이지네이션 상태
     const [frozenPage, setFrozenPage] = useState(1);
     const [chilledPage, setChilledPage] = useState(1);
     const frozenItemsPerPage = 28;
@@ -191,6 +191,43 @@ const MyFridge = () => {
     const handleCloseModal = () => {
         setShowModal(false);
         setSelectedFood(null);
+    };
+
+    // 유통기한 알림 페이지네이션 상태
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 5;
+    const maxPageButtons = 5;
+
+    // 현재 날짜 가져오기
+    const currentDate = new Date();
+
+    // 유통기한 남은 일수 계산
+    const calculateDaysLeft = (expirationDate) => {
+        const expDate = new Date(expirationDate);
+        const timeDiff = expDate - currentDate;
+        return Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); // 밀리초 -> 일
+    };
+
+    // 남은 일수 기준으로 정렬
+    const sortedFoodItems = [...foodItems].sort((a, b) => {
+        const daysLeftA = calculateDaysLeft(a.expiration_date);
+        const daysLeftB = calculateDaysLeft(b.expiration_date);
+        return daysLeftA - daysLeftB;
+    });
+
+    // 페이지네이션을 위한 데이터 분리
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const currentItems = sortedFoodItems.slice(startIndex, startIndex + itemsPerPage);
+
+    // 총 페이지 수 계산
+    const totalPages = Math.ceil(sortedFoodItems.length / itemsPerPage);
+
+    // 현재 페이지네이션의 시작, 끝 계산
+    const paginationStart = Math.max(1, currentPage - Math.floor(maxPageButtons / 2));
+    const paginationEnd = Math.min(totalPages, paginationStart + maxPageButtons - 1);
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
     };
 
     return (
@@ -271,36 +308,72 @@ const MyFridge = () => {
 
             {/* 냉동 페이지네이션 */}
             {isTopDoorOpen && (
-            <div className="pagination-frozen-left">
-                <Pagination>
-                    {[...Array(totalFrozenPages)].map((_, index) => (
-                        <Pagination.Item
-                            key={index + 1}
-                            active={index + 1 === frozenPage}
-                            onClick={() => setFrozenPage(index + 1)}
-                        >
-                            {index + 1}
-                        </Pagination.Item>
-                    ))}
-                </Pagination>
-            </div>
+                <div className="pagination-frozen-left">
+                    <Pagination>
+                        {/* 이전 버튼 */}
+                        <Pagination.Prev
+                            disabled={frozenPage === 1}
+                            onClick={() => setFrozenPage(frozenPage - 1)}
+                        />
+
+                        {/* 페이지 번호 */}
+                        {Array.from({ length: Math.min(totalFrozenPages, 5) }, (_, index) => {
+                            const startPage = Math.max(1, frozenPage - 2); // 시작 페이지 계산
+                            const page = startPage + index;
+                            if (page > totalFrozenPages) return null; // 페이지가 총 페이지를 넘으면 렌더링 안함
+                            return (
+                                <Pagination.Item
+                                    key={page}
+                                    active={page === frozenPage}
+                                    onClick={() => setFrozenPage(page)}
+                                >
+                                    {page}
+                                </Pagination.Item>
+                            );
+                        })}
+
+                        {/* 다음 버튼 */}
+                        <Pagination.Next
+                            disabled={frozenPage === totalFrozenPages}
+                            onClick={() => setFrozenPage(frozenPage + 1)}
+                        />
+                    </Pagination>
+                </div>
             )}
 
             {/* 냉장 페이지네이션 */}
             {isBottomDoorOpen && (
-            <div className="pagination-chilled-left">
-                <Pagination>
-                    {[...Array(totalChilledPages)].map((_, index) => (
-                        <Pagination.Item
-                            key={index + 1}
-                            active={index + 1 === chilledPage}
-                            onClick={() => setChilledPage(index + 1)}
-                        >
-                            {index + 1}
-                        </Pagination.Item>
-                    ))}
-                </Pagination>
-            </div>
+                <div className="pagination-chilled-left">
+                    <Pagination>
+                        {/* 이전 버튼 */}
+                        <Pagination.Prev
+                            disabled={chilledPage === 1}
+                            onClick={() => setChilledPage(chilledPage - 1)}
+                        />
+
+                        {/* 페이지 번호 */}
+                        {Array.from({ length: Math.min(totalChilledPages, 5) }, (_, index) => {
+                            const startPage = Math.max(1, chilledPage - 2); // 시작 페이지 계산
+                            const page = startPage + index;
+                            if (page > totalChilledPages) return null; // 페이지가 총 페이지를 넘으면 렌더링 안함
+                            return (
+                                <Pagination.Item
+                                    key={page}
+                                    active={page === chilledPage}
+                                    onClick={() => setChilledPage(page)}
+                                >
+                                    {page}
+                                </Pagination.Item>
+                            );
+                        })}
+
+                        {/* 다음 버튼 */}
+                        <Pagination.Next
+                            disabled={chilledPage === totalChilledPages}
+                            onClick={() => setChilledPage(chilledPage + 1)}
+                        />
+                    </Pagination>
+                </div>
             )}
 
             <Modal show={showModal} onHide={handleCloseModal} centered >
@@ -400,35 +473,60 @@ const MyFridge = () => {
                 </div>
             </div>
 			{/* 오른쪽 패널 (유통기한 알림 패널) */}
-			<div
-				className={`off-canvas right-canvas ${isRightCanvasOpen ? "open" : ""}`}
-			>
+			<div className={`off-canvas right-canvas ${isRightCanvasOpen ? "open" : ""}`}>
 				<button className="close-button" onClick={toggleRightCanvas}>
 					닫기
 				</button>
+
 				<div className="right-canvas-content">
 					{" "}
 					{/* 오른쪽 패널 내용 */}
 					<h2>유통기한 알림</h2>
-					{[1, 2, 3, 4, 5].map((item, index) => (
-						<div key={index} className="expiration-item">
-							{" "}
-							{/* 유통기한이 다가오는 항목 */}
-							<div className="icon-placeholder">아이콘</div> {/* 아이콘 자리 */}
-							<div className="expiration-details">
-								{" "}
-								{/* 유통기한 정보 */}
-								<p className="expiration-date">남은 유통기한</p>
-								<p className="food-name">식료품 이름</p>
-							</div>
-						</div>
-					))}
-					{/* 페이지네이션 버튼 */}
-					<div className="pagination">
-						<button>1</button>
-						<button>2</button>
-						<button>3</button>
-					</div>
+					{/* 유통기한이 다가오는 항목 표시 */}
+                    {currentItems.map((item, index) => {
+                        const daysLeft = calculateDaysLeft(item.expiration_date);
+                        return (
+                            <div key={index} className="expiration-item">
+                                <div className="food-emoji">{item.emoji}</div> {/* 아이콘 */}
+                                <div className="expiration-details">
+                                    <p className="expiration-date">남은 일수: {daysLeft}일</p>
+                                    <p className="food-name">{item.name}</p>
+                                </div>
+                            </div>
+                        );
+                    })}
+
+                    {/* 페이지네이션 */}
+                <div className="pagination">
+                    <Pagination>
+                        {/* 이전 버튼 */}
+                        <Pagination.Prev
+                            disabled={currentPage === 1}
+                            onClick={() => handlePageChange(currentPage - 1)}
+                        />
+
+                        {/* 페이지 버튼 */}
+                        {Array.from(
+                            { length: paginationEnd - paginationStart + 1 },
+                            (_, index) => paginationStart + index
+                        ).map((page) => (
+                            <Pagination.Item
+                                key={page}
+                                active={page === currentPage}
+                                onClick={() => handlePageChange(page)}
+                            >
+                                {page}
+                            </Pagination.Item>
+                        ))}
+
+                        {/* 다음 버튼 */}
+                        <Pagination.Next
+                            disabled={currentPage === totalPages}
+                            onClick={() => handlePageChange(currentPage + 1)}
+                        />
+                    </Pagination>
+                </div>
+
 					{/* 레시피 링크 */}
 					<div className="recipe-links">
 						{[1, 2, 3, 4, 5].map((item, index) => (
