@@ -16,9 +16,24 @@ const Header = ({ onSearch }) => {
 	};
 
 	const handleSearch = (keyword, searchType) => {
-		onSearch(keyword);
-		navigate(searchType === "product" ? "/product-search" : "/search-results");
-	};
+		if (!keyword.trim()) {
+		  alert("검색어를 입력하세요.");
+		  return;
+		}
+	  
+		// 부모 컴포넌트 콜백 호출
+		if (onSearch) {
+		  onSearch(keyword.trim(), searchType);
+		}
+	  
+		// 경로 설정
+		const targetPath = `/search-results?keyword=${encodeURIComponent(keyword)}&searchType=${encodeURIComponent(searchType)}`;
+		if (searchType === "product") {
+		  navigate(`/product-search?keyword=${encodeURIComponent(keyword)}&searchType=${encodeURIComponent(searchType)}`);
+		} else {
+		  navigate(targetPath);
+		}
+	  };
 
 	return (
 		<nav className="navbar navbar-expand-lg bg-body-tertiary">
