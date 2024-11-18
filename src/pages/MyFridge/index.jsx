@@ -8,8 +8,13 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Pagination from 'react-bootstrap/Pagination';
 import { Modal, Button } from 'react-bootstrap';
+import { userState } from '../../state/userState';
+import { useRecoilValue } from 'recoil';
 
 const MyFridge = () => {
+    // 로그인 여부 판별
+    const { isLoggedIn } = useRecoilValue(userState);
+
     // 냉장고 문 상태
     const [isTopDoorOpen, setIsTopDoorOpen] = useState(false);
     const [isBottomDoorOpen, setIsBottomDoorOpen] = useState(false);
@@ -231,7 +236,19 @@ const MyFridge = () => {
     };
 
     return (
+        
         <div className="fridge-container">
+        {/* 로그인되지 않은 경우: 흐린 배경과 메시지 */}
+        {!isLoggedIn && (
+                <div className="overlay">
+                    <div className="overlay-message">
+                        <h2>로그인 해주세요</h2>
+                    </div>
+                </div>
+            )}
+
+            {/* 냉장고 UI */}
+            <div className={`fridge-content ${!isLoggedIn ? "blurred" : ""}`}>
 
             <button className="add-button" onClick={() => setIsLeftCanvasOpen(!isLeftCanvasOpen)}>추가하기</button>
 
@@ -541,6 +558,7 @@ const MyFridge = () => {
 				</div>
 			</div>
 		</div>
+        </div>
 	);
 }
 

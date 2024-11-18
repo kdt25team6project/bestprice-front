@@ -10,6 +10,7 @@ import productImage from "../../assets/images/product.png";
 import rankImage from "../../assets/images/rank.jpeg";
 import tipImage from "../../assets/images/tip.png";
 import recipeImage from "../../assets/images/recipe.png";
+import refrigerator from "../../assets/images/refrigerator close.png"
 
 const Home = () => {
 
@@ -45,51 +46,59 @@ const Home = () => {
 							data-bs-theme="dark"
 							className="movecarousel"
 						>
-							<Carousel.Item>
+							<Carousel.Item onClick={() => navigate("/products")}>
 								<img
 									src={productImage}
 									alt="Slide 1"
-									className="carousel-image"
+									className="carousel-image1"
 								/>
-								<Carousel.Caption>
+								<Carousel.Caption style={{ transform: "translateY(-10px)"}}>
 									<h3>상품</h3>
 									<p>냉장고를 가득 채울 신선한 상품을 만나보세요!</p>
 								</Carousel.Caption>
-							</Carousel.Item>
-							<Carousel.Item>
+							</Carousel.Item >
+							<Carousel.Item onClick={() => navigate("/search-results")}>
 								<img
 									src={recipeImage}
 									alt="Slide 2"
-									className="carousel-image"
+									className="carousel-image2"
 								/>
-								<Carousel.Caption>
+								<Carousel.Caption style={{ transform: "translateY(-10px)"}}>
 									<h3>레시피</h3>
 									<p>신선한 재료와 좋은 레시피로 맛있는 요리를 만나보세요!</p>
 								</Carousel.Caption>
 							</Carousel.Item>
-							<Carousel.Item>
-								<img src={tipImage} alt="Slide 3" className="carousel-image" />
-								<Carousel.Caption>
+							<Carousel.Item onClick={() => navigate("/tips")}>
+								<img 
+									src={tipImage} 
+									alt="Slide 3"
+									className="carousel-image3" 	 
+								/>
+								<Carousel.Caption style={{ transform: "translateY(-10px)"}}>
 									<h3>생활 팁</h3>
 									<p>살면서 유용한 조언, 팁을 만나보세요!</p>
 								</Carousel.Caption>
 							</Carousel.Item>
-							<Carousel.Item>
-								<img src={rankImage} alt="Slide 4" className="carousel-image" />
-								<Carousel.Caption>
+							<Carousel.Item onClick={() => navigate("/rank")}>
+								<img 
+									src={rankImage} 
+									alt="Slide 4"
+									className="carousel-image4"
+								/>
+								<Carousel.Caption style={{ transform: "translateY(22px)"}}>
 									<h3>랭킹</h3>
 									<p>
-										어떤 레시피가 많은사람들에게 맛있는 요리를 선물했을까요?
+										가장 사랑을 많이 받은 레시피를 만나보세요!
 									</p>
 								</Carousel.Caption>
 							</Carousel.Item>
-							<Carousel.Item>
+							<Carousel.Item onClick={() => navigate("/myfridge")}>
 								<img
 									src={fridgeImage}
 									alt="Slide 5"
-									className="carousel-image"
+									className="carousel-image5"
 								/>
-								<Carousel.Caption>
+								<Carousel.Caption style={{ transform: "translateY(-13px)"}}>
 									<h3>나만의 냉장고</h3>
 									<p>자신의 냉장고를 관리해 보세요!</p>
 								</Carousel.Caption>
@@ -124,7 +133,13 @@ const Home = () => {
 				</div>
 
 				{/* 나만의 냉장고 */}
-				<div className="my-fridge">나만의 냉장고</div>
+				<div className="my-fridge" onClick={() => navigate("/myfridge")}>
+					<h3 className="fridgeh3">나만의 냉장고</h3>
+					<img
+						src={refrigerator}
+						className="fridgediv"
+					/>
+				</div>
 			</div>
 
 			<div className="d-flex justify-content-center align-items-center my-3">
