@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Fuse from 'fuse.js';
-import './RecipeDetailPage.css';
+import './style.css';
 
+// 제거할 접두사
 const prefixesToRemove = ['통', '송송', '썬', '썬 것', '볶음', '생', '다진', '신', '슬라이스', '다진것', '다진 것', '유기농', '뜨거운', '찬', '차가운'];
+
+// 제거할 접미사
 const suffixesToRemove = ['썬', '썬 것', '볶음', '생', '다진', '신', '슬라이스', '다진것', '다진 것', '유기농', '뜨거운', '찬', '차가운'];
 
+// 처리할 동의어
 const synonymMap = {
   '달걀': '계란',
   '베이킹소다': '중조',
@@ -18,18 +22,21 @@ const synonymMap = {
 const normalizeSearchTerm = (term) => {
   let normalizedTerm = typeof term === 'string' ? term.trim().toLowerCase() : '';
 
+  // 접두사 제거
   prefixesToRemove.forEach(prefix => {
     if (normalizedTerm.startsWith(prefix)) {
       normalizedTerm = normalizedTerm.slice(prefix.length);
     }
   });
 
+  // 접미사 제거
   suffixesToRemove.forEach(suffix => {
     if (normalizedTerm.endsWith(suffix)) {
       normalizedTerm = normalizedTerm.slice(0, -suffix.length);
     }
   });
 
+  // 동의어 처리
   if (synonymMap[normalizedTerm]) {
     if (Array.isArray(synonymMap[normalizedTerm])) {
       normalizedTerm = synonymMap[normalizedTerm][0];
@@ -41,10 +48,12 @@ const normalizeSearchTerm = (term) => {
   return normalizedTerm.replace(/\s+/g, '_');
 };
 
+// 검색
 const findIngredient = (name, data) => {
   const normalizedName = normalizeSearchTerm(name);
   const fusePrimary = new Fuse(data, {
     keys: ['식품명'],
+    // 정확도
     threshold: 0.3,
     includeScore: true
   });
@@ -52,6 +61,7 @@ const findIngredient = (name, data) => {
   return result.length > 0 ? result[0].item : null;
 };
 
+// 재료 이름 | 양
 const parseQuantity = (quantity) => {
   const firstDigitIndex = quantity.search(/\d/);
   let name, amount;
@@ -73,6 +83,7 @@ const parseQuantity = (quantity) => {
   return { name, amount };
 };
 
+// 재료 카테고리 | 이름
 const parseIngredients = (ingredientText) => {
   if (!ingredientText) {
     return [];
@@ -98,7 +109,7 @@ const parseIngredients = (ingredientText) => {
 };
 
 
-
+// 단위 변경
 const conversionTable = {
   '': 50,
   'C': 240,
@@ -237,6 +248,7 @@ function RecipeDetailPage() {
     }
   }, [recipeId]);
 
+  // 영양 데이터
   useEffect(() => {
     setLoading(true);
     fetch('/nutrition_data.json')

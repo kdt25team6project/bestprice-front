@@ -1,14 +1,3 @@
-/* 전체 레이아웃 */
-.wid {
-  width: 100%;
-  justify-content: center;
-  display: flex;
-}
-
-.contaiiii {
-  width: 1200px;
-  justify-content: center;
-}
 
 .w_custom {
   width: 100%;
@@ -24,18 +13,16 @@
   margin: 50px;
 }
 
-/* BestProduct 그리드 설정 */
 .prdList {
   display: grid;
   max-width: 1200px;
   margin: 0 auto;
-  grid-template-columns: repeat(2, 480px);
+  grid-template-columns: repeat(3, 360px);
   gap: 20px;
   justify-content: center;
   margin-bottom: 100px;
 }
 
-/* 상품 항목 스타일 */
 .product-item {
   border: 1px solid #e6e6e6;
   border-radius: 8px;
@@ -171,6 +158,7 @@
   overflow-x: hidden;
   scroll-snap-type: x mandatory;
   width: calc(100% - 80px);
+  margin-top: 30px;
 }
 
 .prod-ed .prod-ed-list {
@@ -232,4 +220,35 @@
 
 .scroll-button.right {
   right: 80px;
+}
+
+
+.top-ingredients {
+  margin-top: 10px; /* 제목과 버튼 사이 여백 */
+  display: flex; /* 플렉스 컨테이너로 설정 */
+  flex-wrap: wrap; /* 버튼이 줄바꿈되도록 설정 */
+  gap: 10px; /* 버튼 사이 간격 */
+}
+
+.ingredient-info {
+  display: inline-block;
+  padding: 5px 10px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  border: 1px solid #dee2e6;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.ingredient-info:hover {
+  background-color: #e9ecef;
+  border-color: #adb5bd;
+}
+
+
+.empty-refrigerator {
+  text-align: center;
+  color: gray;
+  font-size: 1.5rem;
+  margin: 20px 0;
 }

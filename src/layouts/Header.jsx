@@ -69,7 +69,7 @@ const Header = ({ onSearch }) => {
 				<button className="nav-button" onClick={() => navigate("/products")}>
 					상품
 				</button>
-				<button className="nav-button" onClick={() => navigate("/")}>
+				<button className="nav-button" onClick={() => navigate("/search-results")}>
 					레시피
 				</button>
 				<button className="nav-button" onClick={() => navigate("/tips")}>
