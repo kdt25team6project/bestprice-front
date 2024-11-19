@@ -1,9 +1,15 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { userState } from "../../state/userState"; // Recoil userState 가져오기
 import "./styles.css";
 
 const MyPage = () => {
     const navigate = useNavigate();
+    const user = useRecoilValue(userState); // Recoil 상태 읽기
+
+    // user 정보 추출
+    const { userId, name, nickname, email } = user?.user || {};
 
     return (
         <div className="mypage-container">
@@ -16,7 +22,9 @@ const MyPage = () => {
                         </span>
                     </div>
                     <div className="user-details">
-                        <h2>이효진</h2>
+                        <h2>{name || "사용자 이름"}</h2>
+                        <p>{nickname || "닉네임"}</p>
+                        <p>{email || "이메일"}</p>
                     </div>
                 </div>
                 <div
