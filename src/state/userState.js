@@ -20,7 +20,12 @@ export const userState = atom({
 	// 초기값: 로컬 스토리지에서 로드하거나 기본값 설정
 	default: loadFromStorage(LOCAL_STORAGE_KEY, {
 		isLoggedIn: false,
-		user: null,
+		user: {
+			userId: null,
+			name: null,
+			nickname: null,
+			email: null,
+		},
 	}),
 	// 로컬 스토리지와 상태 동기화
 	effects_UNSTABLE: [
