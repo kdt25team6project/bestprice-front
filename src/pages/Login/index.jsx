@@ -76,15 +76,24 @@ const LoginPage = () => {
 			e.preventDefault();
 			try {
 				const response = await login(userId, password);
-				setUser({
+				// 사용자 데이터 저장
+				const userData = {
 					isLoggedIn: true,
 					user: {
+						userId: response.userId,
 						name: response.name,
 						nickname: response.nickname,
 						email: response.email,
 					},
-				});
-				localStorage.setItem("isLoggedIn", "true"); // 로그인 상태 저장
+				};
+
+				// Recoil 상태 업데이트
+				setUser(userData);
+
+				// 로컬 스토리지 업데이트 (Recoil의 effects_UNSTABLE에서 처리됨)
+				localStorage.setItem("isLoggedIn", "true"); // 추가 저장 (필요시)
+
+				// 로그인 성공 시 홈으로 이동
 				navigate("/");
 			} catch (error) {
 				if (error.response) {

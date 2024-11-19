@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 import Header from "./layouts/Header";
 import Footer from "./layouts/Footer";
 import LoginPage from "./pages/Login";
+import MyPage from "./pages/MyPage";
 import MyFridge from "./pages/MyFridge";
 import Ranking from "./pages/Ranking";
 import TipsPage from "./pages/Tip";
@@ -45,6 +46,7 @@ const Router = () => {
 				<Routes>
 					<Route path="/" element={<Home />} />
 					<Route path="/login" element={<LoginPage />} />
+					<Route path="/mypage" element={<MyPage />} />
 					<Route path="/myfridge" element={<MyFridge />} />
 					<Route path="/rank" element={<Ranking />} />
 					<Route path="/tips" element={<TipsPage />} />
