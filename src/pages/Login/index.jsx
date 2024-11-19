@@ -92,6 +92,7 @@ const LoginPage = () => {
 
 				// 로컬 스토리지 업데이트 (Recoil의 effects_UNSTABLE에서 처리됨)
 				localStorage.setItem("isLoggedIn", "true"); // 추가 저장 (필요시)
+				console.log("데이터 확인 : " + userId);
 
 				// 로그인 성공 시 홈으로 이동
 				navigate("/");

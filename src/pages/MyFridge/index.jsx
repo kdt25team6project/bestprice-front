@@ -9,11 +9,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Pagination from 'react-bootstrap/Pagination';
 import { Modal, Button } from 'react-bootstrap';
 import { userState } from '../../state/userState';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 const MyFridge = () => {
     // 로그인 여부 판별
     const { isLoggedIn } = useRecoilValue(userState);
+    const { user } = useRecoilValue(userState);
+    const userId = user?.userId;
 
     // 냉장고 문 상태
     const [isTopDoorOpen, setIsTopDoorOpen] = useState(false);
@@ -39,10 +41,19 @@ const MyFridge = () => {
     // API URL 설정
     const API_URL = 'http://localhost:8001/refrigerator';
 
+    const setUser = useSetRecoilState(userState);
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem("userLocal");
+        if (storedUser) {
+            setUser(JSON.parse(storedUser)); // 로컬 스토리지에서 Recoil로 복원
+        }
+    }, [setUser]);
+
     // 데이터 로드 (페이지 최초 렌더링 시 실행)
     useEffect(() => {
         fetchFoodItems();
-    }, []);
+    }, [userId]);
 
     // 상단 냉장고 문 열기/닫기 함수
     const toggleTopDoor = () => {
@@ -88,8 +99,13 @@ const MyFridge = () => {
 
     // 서버에서 식료품 목록 가져오는 함수
     const fetchFoodItems = async () => {
+        if (!userId) {
+            console.log("userId가 없습니다.");
+            return;
+        }
         try {
-            const response = await axios.get(API_URL);
+            const response = await axios.get(`${API_URL}?userId=${userId}`);
+            console.log(userId);
             setFoodItems(response.data);
             console.log('데이터 로드:', response.data);
         } catch (error) {
@@ -105,7 +121,14 @@ const MyFridge = () => {
             return;
         }
 
+        if (!userId) {
+            console.error("userId가 없습니다. 로그인이 필요합니다.");
+            alert("로그인이 필요합니다.");
+            return;
+        }
+
         const newFoodItem = {
+            userId,
             category: selectedCategory,
             emoji: selectedEmoji,
             name: foodName,
