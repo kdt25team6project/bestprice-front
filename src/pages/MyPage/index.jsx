@@ -3,6 +3,8 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { userState } from "../../state/userState";
 import { changeNickname } from "../../services/changeNicknameApi"; // 닉네임 변경 API 호출
 import { changePassword } from "../../services/changePasswordApi"; // 비밀번호 변경 API 호출
+import { deleteUser } from "../../services/deleteUserApi"; // 탈퇴 API 호출
+import useLogout from "../../hooks/useLogout";
 import "./styles.css";
 
 const MyPage = () => {
@@ -80,6 +82,7 @@ const SettingsSection = ({ user }) => {
     const [confirmPassword, setConfirmPassword] = useState(""); // 비밀번호 확인 상태 관리
     const [loading, setLoading] = useState(false); // 로딩 상태 관리
     const [error, setError] = useState(null); // 오류 메시지 관리
+    const logout = useLogout(); 
 
     // 닉네임 변경 요청 처리 함수
     const handleNicknameUpdate = async () => {
@@ -132,9 +135,27 @@ const SettingsSection = ({ user }) => {
         }
     };
 
-    const handleAccountDelete = () => {
-        if (window.confirm("정말로 회원 탈퇴를 진행하시겠습니까?")) {
-            alert("회원 탈퇴 로직 추가 예정");
+    const handleAccountDelete = async () => {
+        if (!window.confirm("정말로 회원 탈퇴를 진행하시겠습니까?")) return;
+    
+        try {
+            setLoading(true);
+            const userId = user?.user?.userId; // 사용자 ID 가져오기
+    
+            if (!userId) {
+                throw new Error("사용자 정보를 찾을 수 없습니다.");
+            }
+    
+            await deleteUser(userId); // API 호출
+            alert("회원 탈퇴가 완료되었습니다.");
+            
+            logout();
+
+        } catch (error) {
+            console.error("회원 탈퇴 중 오류:", error);
+            alert(error.message);
+        } finally {
+            setLoading(false);
         }
     };
 

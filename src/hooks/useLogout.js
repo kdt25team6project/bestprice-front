@@ -6,7 +6,7 @@ const useLogout = () => {
     const navigate = useNavigate();
     const [, setUser] = useRecoilState(userState);
 
-    const logout = async () => {
+    const logout = () => {
         try {
             //클라이언트 상태 및 로컬 스토리지 초기화
             setUser({ user: null }); // Recoil 상태 초기화

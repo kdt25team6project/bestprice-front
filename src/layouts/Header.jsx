@@ -1,14 +1,14 @@
 import React from "react";
 import SearchBar from "../components/SearchBar";
 import { useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { userState } from "../state/userState";
 import useLogout from "../hooks/useLogout";
 import "./Header.css";
 
 const Header = ({ onSearch }) => {
 	const navigate = useNavigate();
-	const [user] = useRecoilState(userState); // 로그인 상태 구독
+	const user = useRecoilValue(userState); // Recoil 상태 읽기
 	const logout = useLogout(); // useLogout 훅 사용
 
 	const handleSearch = (keyword, searchType) => {
