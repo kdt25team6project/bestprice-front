@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { userState } from "../../state/userState";
+import { changeNickname } from "../../services/changeNicknameApi"; // 닉네임 변경 API 호출
 import "./styles.css";
 
 const MyPage = () => {
-    const user = useRecoilValue(userState); // Recoil 상태 읽기
-    const [activeTab, setActiveTab] = useState("product"); // 활성 탭 ("product" 또는 "recipe")
+    const user = useRecoilValue(userState); // Recoil 상태 읽기 (현재 로그인한 사용자 정보 가져오기)
+    const [activeTab, setActiveTab] = useState("product"); // 활성 탭 상태 관리 ("product" 또는 "recipe")
     const [isSettingsVisible, setIsSettingsVisible] = useState(false); // 설정 화면 표시 상태
 
-    // 사용자 정보
+    // 사용자 정보에서 닉네임 추출
     const { nickname } = user?.user || {};
 
     return (
@@ -36,7 +37,7 @@ const MyPage = () => {
 
             {/* 설정 섹션 */}
             {isSettingsVisible ? (
-                <SettingsSection user={{ nickname }} />
+                <SettingsSection user={user} />
             ) : (
                 <DefaultSection activeTab={activeTab} setActiveTab={setActiveTab} />
             )}
@@ -72,14 +73,34 @@ const DefaultSection = ({ activeTab, setActiveTab }) => (
 
 // 설정 섹션
 const SettingsSection = ({ user }) => {
-    const setUser = useSetRecoilState(userState);
+    const setUser = useSetRecoilState(userState); // Recoil 상태를 업데이트하기 위해 사용
+    const [nickname, setNickname] = useState(user?.user?.nickname || ""); // 닉네임을 상태로 관리
+    const [loading, setLoading] = useState(false); // 로딩 상태 관리
+    const [error, setError] = useState(null); // 오류 메시지 관리
 
-    const handleNicknameChange = (e) => {
-        const newNickname = e.target.value;
-        setUser((prevState) => ({
-            ...prevState,
-            user: { ...prevState.user, nickname: newNickname },
-        }));
+    // 닉네임 변경 요청 처리 함수
+    const handleNicknameUpdate = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            // 사용자 ID 가져오기
+            const userId = user?.user?.userId;
+            if (!userId) {
+                throw new Error("사용자 ID를 찾을 수 없습니다.");
+            }
+
+            // 닉네임 변경 API 호출
+            await changeNickname(userId, nickname);
+            setUser((prevState) => ({
+                ...prevState,
+                user: { ...prevState.user, nickname },
+            }));
+            alert("닉네임이 성공적으로 변경되었습니다.");
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handlePasswordChange = () => {
@@ -99,11 +120,15 @@ const SettingsSection = ({ user }) => {
                 <div className="nickname-section">
                     <input
                         type="text"
-                        defaultValue={user.nickname || ""}
-                        onChange={handleNicknameChange}
+                        value={nickname}
+                        onChange={(e) => setNickname(e.target.value)}
+                        disabled={loading} // 로딩 중에는 입력 비활성화
                     />
-                    <button>수정</button>
+                    <button onClick={handleNicknameUpdate} disabled={loading}>
+                        {loading ? "업데이트 중..." : "수정"}
+                    </button>
                 </div>
+                {error && <p className="error-message">{error}</p>} {/* 오류 메시지 출력 */}
             </div>
             <div className="settings-item">
                 <label>비밀번호</label>
