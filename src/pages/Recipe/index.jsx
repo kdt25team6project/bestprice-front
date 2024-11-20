@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Fuse from 'fuse.js';
+import axios from 'axios';
 import './style.css';
+import SearchResultsPage from '../Search';
 
 // 제거할 접두사
 const prefixesToRemove = ['통', '송송', '썬', '썬 것', '볶음', '생', '다진', '신', '슬라이스', '다진것', '다진 것', '유기농', '뜨거운', '찬', '차가운'];
@@ -152,101 +154,42 @@ function RecipeDetailPage() {
     }
   }, [recipe, nutritionData]);
 
+
   useEffect(() => {
-    setLoading(true);
-
-    const mockData = {
-      rcpSno: 139247,
-      title: "부들부들 보들보들 북어갈비♥",
-      ckgNm: "북어갈비",
-      rgtrId: "skfo0701",
-      rgtrNm: "꽃날",
-      inqCnt: 7173,
-      rcmmCnt: 3,
-      srapCnt: 97,
-      category1: "굽기",
-      category2: "술안주",
-      category3: "건어물류",
-      category4: "메인반찬",
-      description: "오늘은 집에서 굴러다니고 쉽게 구할 수 있는 북어로 일품요리를 만들어 보았어요! 도시락 반찬으로는 물론 초대요리에도 너무너무 좋은 요리랍니다~ 겉에 찹쌀가루를 묻혀서 맛도 고소해요~",
-      servings: "2인분",
-      difficulty: "초급",
-      timeRequired: "60분이내",
-      mainThumb: "https://recipe1.ezmember.co.kr/cache/recipe/2015/09/02/1aacaa404802b996c5c4204f876f08871.jpg",
-      firstRegDt: "2007-05-01T00:08:44",
-      CKG_MTRL_CN: "[재료] 북어포 1마리| 찹쌀가루 1C [양념] 간장 2T| 설탕 1T| 물 1T| 다진파 1T| 다진마늘 1T| 참기름 1T| 깨소금 1T| 후춧가루 약간",
-      steps: [
-        {
-          stepId: 28,
-          step: "북어포를 준비해주세여.머리랑 꼬리는 잘라주시고 지느러미도 정리해주세요.그리고 등쪽에 껍질도 제거해주세요.그 다음 물에 5분~10분정도만 불려주세요.",
-          stepOrder: 1,
-          stepImg: null
-        },
-        {
-          stepId: 29,
-          step: "북어를 불리는 동안 위의 분량대로 넣어서 양념장을 만들어 주세요.",
-          stepOrder: 2,
-          stepImg: null
-        },
-        {
-          stepId: 30,
-          step: "불린 북어를 한번 꾹꾹 눌러서 물기를 짜 준 다음에키친타올에 올려 물기를 한번 더 제거해주세요.",
-          stepOrder: 3,
-          stepImg: "https://recipe1.ezmember.co.kr/cache/recipe/2016/08/16/4ccfd429992590b4bb66ebc463af59c21.jpg"
-        },
-        {
-          stepId: 31,
-          step: "칼코를 이용해 북어 등쪽에 칼집을 콕콕콕 내주세요.",
-          stepOrder: 4,
-          stepImg: null
-        },
-        {
-          stepId: 32,
-          step: "먹기 좋은 크기로 잘라주세요.저는 일단 반으로 자른뒤 5등분 해줬어요~",
-          stepOrder: 5,
-          stepImg: null
-        },
-        {
-          stepId: 33,
-          step: "그 다음 통에 북어를 깔고 양념장 1t씩 북어살 안쪽에 뿌려주세요.",
-          stepOrder: 6,
-          stepImg: null
-        },
-        {
-          stepId: 34,
-          step: "북어->양념장->북어->양념장 순서대로 올려주세요.북어 크기에 따라 양념장이 남을수도 있고 안 남을수도 있지만남은 양념장은 과감히 버려주세요~이렇게 한 뒤 1시간정도 숙성시켜주세요.",
-          stepOrder: 7,
-          stepImg: null
-        },
-        {
-          stepId: 35,
-          step: "1시간 뒤에 간이 적절히 밴 북어를 찹쌀가루에 묻혀주세요.남은 찹쌀가루는 톡톡톡 털어주세요~",
-          stepOrder: 8,
-          stepImg: "https://recipe1.ezmember.co.kr/cache/recipe/2016/08/16/408e961023eb839989c66aa2324d357a1.jpg"
-        },
-        {
-          stepId: 36,
-          step: "달군 후라이팬에 기름을 넉넉히 두르고 찹쌀가루를 묻히 북어를 익혀주세요. (약간 튀긴듯한 느낌으로요)",
-          stepOrder: 9,
-          stepImg: null
-        },
-        {
-          stepId: 37,
-          step: "잘 구워준 북어갈비를 키친타올에 올려 불필요한 기름을 제거해주시면 완성!!!!!!!!!!",
-          stepOrder: 10,
-          stepImg: "https://recipe1.ezmember.co.kr/cache/recipe/2016/08/16/2cecab6c4d9b2b7b9097078ebe96b5901.jpg"
-        }
-      ]
-    };
-
-    setRecipe(mockData);
-    setLoading(false);
+    const fetchRecipeData = async () => {
+      try {
+        setLoading(true);
   
-    if (mockData.CKG_MTRL_CN) {  
-      const ingredients = parseIngredients(mockData.CKG_MTRL_CN);
-      setIngredientsList(ingredients);  
-    }
+        const recipeDetailResponse = await axios.get(`http://localhost:8001/api/recipe/${recipeId}`);
+        const recipeExtraResponse = await axios.get(`http://localhost:8001/recipe?query=${recipeId}`);
+  
+        // 데이터 병합
+        const mergedData = {
+          ...recipeDetailResponse.data, // 첫 번째 API 데이터
+          mainThumb: recipeExtraResponse.data.mainThumb, // 두 번째 API의 mainThumb
+          steps: recipeExtraResponse.data.steps, // 두 번째 API의 steps
+        };
+  
+        console.log("Merged Data:", mergedData);
+  
+        setRecipe(mergedData); // 병합된 데이터 저장
+  
+        // CKG_MTRL_CN 데이터를 파싱하여 재료 목록 저장
+        if (mergedData.ckg_MTRL_CN) {
+          const ingredients = parseIngredients(mergedData.ckg_MTRL_CN); // 파싱 함수 호출
+          setIngredientsList(ingredients); // 상태로 저장
+        }
+  
+        setLoading(false);
+      } catch (err) {
+        console.error('Error fetching recipe data:', err);
+        setLoading(false);
+      }
+    };
+  
+    fetchRecipeData();
   }, [recipeId]);
+  
 
   // 영양 데이터
   useEffect(() => {
@@ -335,45 +278,50 @@ function RecipeDetailPage() {
   return (
     <div className="recipe-container">
       <div className="recipe-image">
-        <img src={recipe.mainThumb} alt={recipe.title} />
+        <img src={recipe.mainThumb} alt={recipe.rcp_TTL} />
       </div>
 
       <div className="recipe-header">
-        <div className="recipeD-title">{recipe.title}</div>
-        <div className="recipeD-summary">{recipe.description}</div>
+        <div className="recipeD-title">{recipe.rcp_TTL}</div>
+        <div className="recipeD-summary">{recipe.ckg_IPDC}</div>
         <div className="recipeD-info">
           <span>
-            <img src="/images/icon_person.png" alt="인분" /> {recipe.servings}
+            <img src="/images/icon_person.png" alt="인분" /> {recipe.ckg_INBUN_NM}
           </span>
           <span>
-            <img src="/images/icon_time.png" alt="시간" /> {recipe.timeRequired}
+            <img src="/images/icon_time.png" alt="시간" /> {recipe.ckg_TIME_NM}
           </span>
           <span>
-            <img src="/images/icon_time.png" alt="난이도" /> {recipe.difficulty}
+            <img src="/images/icon_level.png" alt="난이도" /> {recipe.ckg_DODF_NM}
           </span>
         </div>
       </div>
 
       <div className="recipeD-box">
         <dl className="recipe-ingredients">
-          {Object.entries(groupedIngredients).map(([section, items]) => (
-            <React.Fragment key={section}>
-              <dt><span>{section}</span></dt>
-              <dd>
-              <ul className="ingredient-list">
-                {items.map((item, index) => (
-                  <li key={index}>
-                    <div className="ingredient-list_1">
-                      <div className="ingredient-name">{item.name}</div>
-                      <span className="ingredient-amount">{item.amount}</span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-              </dd>
-            </React.Fragment>
-          ))}
+          {ingredientsList.length === 0 ? (
+            <p>재료 정보가 없습니다.</p>
+          ) : (
+            Object.entries(groupedIngredients).map(([section, items]) => (
+              <React.Fragment key={section}>
+                <dt><span>{section}</span></dt>
+                <dd>
+                  <ul className="ingredient-list">
+                    {items.map((item, index) => (
+                      <li key={index}>
+                        <div className="ingredient-list_1">
+                          <div className="ingredient-name">{item.name || "재료 이름 없음"}</div>
+                          <span className="ingredient-amount">{item.amount || "양 없음"}</span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </dd>
+              </React.Fragment>
+            ))
+          )}
         </dl>
+
         {result && (
           <dl className="recipe-ingredients">
             <dt><span>영양성분</span></dt>
@@ -442,23 +390,23 @@ function RecipeDetailPage() {
       </div>
 
       <div className="view3_box_tit">조리 순서</div>
-      <ul className="step_list st_thumb">
-        {recipe.steps.map((step) => (
-          <li key={step.step}>
-            <div className="step_list_num">
-              <span>STEP</span> {step.stepOrder} <span>/ {recipe.steps.length}</span>
-            </div>
-            <div className="step_list_txt">
-              <div className="step_list_txt_cont">{step.step}</div>
-            </div>
-            <div className="step_list_txt_pic">
-              {step.stepImg && (
-                <img src={step.stepImg} alt="" />
-              )}
-            </div>
-          </li>
-        ))}
-      </ul>
+        <ul className="step_list st_thumb">
+          {recipe.steps.map((step, index) => (
+            <li key={index}>
+              <div className="step_list_num">
+                <span>STEP</span> {index + 1} <span>/ {recipe.steps.length}</span>
+              </div>
+              <div className="step_list_txt">
+                <div className="step_list_txt_cont">{step.stepText}</div>
+              </div>
+              <div className="step_list_txt_pic">
+                {step.stepsImg && <img src={step.stepsImg} alt={`Step ${index + 1}`} />}
+              </div>
+            </li>
+          ))}
+        </ul>
+
+      <SearchResultsPage/>
     </div>
   );
 }

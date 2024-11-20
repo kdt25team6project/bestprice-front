@@ -88,28 +88,5 @@ function RecipeFilter({ onFilterChange }) {
   );
 }
 
-  const handleFilterClick = (type, id) => {
-    onFilterChange(type, id);
-  };
-
-  return (
-    <div className="filter-container">
-      {categories.map((category) => (
-        <div key={category.type}>
-          <h3>{category.label}</h3>
-          {category.options.map((option) => (
-            <button
-              key={option.id}
-              onClick={() => handleFilterClick(category.type, option.id)}
-              className="filter-button"
-            >
-              {option.name}
-            </button>
-          ))}
-        </div>
-      ))}
-    </div>
-  );
-
 
 export default RecipeFilter;
