@@ -22,16 +22,12 @@ const Router = () => {
 
 	// 앱 초기화 시 로그인 상태를 로컬 스토리지에서 로드
 	useEffect(() => {
-		const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
-		const userInfo = JSON.parse(localStorage.getItem("userInfo")); // 저장된 사용자 정보
-
-		if (isLoggedIn && userInfo) {
-			setUser({
-				isLoggedIn: true,
-				user: userInfo,
-			});
+		const userInfo = JSON.parse(localStorage.getItem("userLocal"));
+		if (userInfo) {
+			setUser({ user: userInfo });
 		}
 	}, [setUser]);
+	
 
 	// 검색어 상태 업데이트 함수
 	const handleSearch = (keyword) => {
