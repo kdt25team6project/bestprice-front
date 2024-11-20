@@ -1,7 +1,7 @@
 import { atom } from "recoil";
 
 // 로컬 스토리지에 저장할 키 이름
-const LOCAL_STORAGE_KEY = "userLocal";
+export const LOCAL_STORAGE_KEY = "userLocal";
 
 // 로컬 스토리지 헬퍼 함수
 const saveToStorage = (key, value) => {
@@ -19,7 +19,6 @@ export const userState = atom({
 	key: "userState",
 	// 초기값: 로컬 스토리지에서 로드하거나 기본값 설정
 	default: loadFromStorage(LOCAL_STORAGE_KEY, {
-		isLoggedIn: false,
 		user: {
 			userId: null,
 			name: null,

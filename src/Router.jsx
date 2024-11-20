@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { userState } from "./state/userState";
+import { LOCAL_STORAGE_KEY, userState } from "./state/userState";
 import Home from "./pages/Home";
 import Header from "./layouts/Header";
 import Footer from "./layouts/Footer";
@@ -22,16 +22,14 @@ const Router = () => {
 
 	// 앱 초기화 시 로그인 상태를 로컬 스토리지에서 로드
 	useEffect(() => {
-		const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
-		const userInfo = JSON.parse(localStorage.getItem("userInfo")); // 저장된 사용자 정보
-
-		if (isLoggedIn && userInfo) {
-			setUser({
-				isLoggedIn: true,
-				user: userInfo,
-			});
-		}
-	}, [setUser]);
+        const userInfo = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
+        if (userInfo && userInfo.user?.userId) {
+            setUser(userInfo); // 로컬 스토리지에서 상태 초기화
+        } else {
+            setUser({ user: null }); // 기본값 설정
+        }
+    }, [setUser]);
+	
 
 	// 검색어 상태 업데이트 함수
 	const handleSearch = (keyword) => {
