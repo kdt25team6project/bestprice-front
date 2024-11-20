@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { userState } from "../../state/userState";
 import { changeNickname } from "../../services/changeNicknameApi"; // 닉네임 변경 API 호출
+import { changePassword } from "../../services/changePasswordApi"; // 비밀번호 변경 API 호출
 import "./styles.css";
 
 const MyPage = () => {
@@ -75,6 +76,8 @@ const DefaultSection = ({ activeTab, setActiveTab }) => (
 const SettingsSection = ({ user }) => {
     const setUser = useSetRecoilState(userState); // Recoil 상태를 업데이트하기 위해 사용
     const [nickname, setNickname] = useState(user?.user?.nickname || ""); // 닉네임을 상태로 관리
+    const [password, setPassword] = useState(""); // 비밀번호를 상태로 관리
+    const [confirmPassword, setConfirmPassword] = useState(""); // 비밀번호 확인 상태 관리
     const [loading, setLoading] = useState(false); // 로딩 상태 관리
     const [error, setError] = useState(null); // 오류 메시지 관리
 
@@ -103,8 +106,30 @@ const SettingsSection = ({ user }) => {
         }
     };
 
-    const handlePasswordChange = () => {
-        alert("비밀번호 변경 로직 추가 예정");
+    // 비밀번호 변경 요청 처리 함수
+    const handlePasswordChange = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            // 비밀번호 확인 검증
+            if (password !== confirmPassword) {
+                throw new Error("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+            }
+
+            // 사용자 ID 가져오기
+            const userId = user?.user?.userId;
+            if (!userId) {
+                throw new Error("사용자 ID를 찾을 수 없습니다.");
+            }
+
+            // 비밀번호 변경 API 호출
+            await changePassword(userId, password, confirmPassword);
+            alert("비밀번호가 성공적으로 변경되었습니다.");
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleAccountDelete = () => {
@@ -132,7 +157,27 @@ const SettingsSection = ({ user }) => {
             </div>
             <div className="settings-item">
                 <label>비밀번호</label>
-                <button onClick={handlePasswordChange}>비밀번호 수정</button>
+                <div className="password-section-vertical">
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        disabled={loading} // 로딩 중에는 입력 비활성화
+                        className="password-input"
+                        placeholder="새 비밀번호"
+                    />
+                    <input
+                        type="password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        disabled={loading} // 로딩 중에는 입력 비활성화
+                        className="password-input"
+                        placeholder="비밀번호 확인"
+                    />
+                    <button onClick={handlePasswordChange} disabled={loading}>
+                        {loading ? "업데이트 중..." : "수정"}
+                    </button>
+                </div>
             </div>
             <div className="settings-item">
                 <label>회원탈퇴</label>
