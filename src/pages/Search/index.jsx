@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom"; // useLocation 추가
-import axios from 'axios';
+import axios from "axios";
 import RecipeList from "./RecipeList";
 import "./styles.css";
 import "./RecipeCard.css";
@@ -14,22 +14,30 @@ function SearchResultsPage() {
 	const [sortType, setSortType] = useState("");
 	const [currentPage, setCurrentPage] = useState(1);
 	const [isFilterVisible, setIsFilterVisible] = useState(false); // 카테고리 필터 표시 여부
-    const location = useLocation(); // 현재 URL 경로 가져오기
+	const location = useLocation(); // 현재 URL 경로 가져오기
 	const [error, setError] = useState(null); // 에러 상태
 	const [loading, setLoading] = useState(true); // 로딩 상태
-  
+
+	const handleSearch = (keyword, searchType) => {
+		const filtered = allRecipes.filter((recipe) =>
+			searchType === "name"
+				? recipe.name.includes(keyword)
+				: recipe.재료.includes(keyword)
+		);
+		setFilteredRecipes(filtered);
+		setCurrentPage(1);
+	};
 
 	useEffect(() => {
-        // URL 쿼리 파라미터 가져오기
-        const queryParams = new URLSearchParams(location.search);
-        const keyword = queryParams.get("keyword");
-        const searchType = queryParams.get("searchType") || "name";
-		
+		// URL 쿼리 파라미터 가져오기
+		const queryParams = new URLSearchParams(location.search);
+		const keyword = queryParams.get("keyword");
+		const searchType = queryParams.get("searchType") || "name";
 
-        if (keyword) {
-            handleSearch(keyword, searchType);
-        }
-    }, [location]); // location이 변경될 때마다 실행
+		if (keyword) {
+			handleSearch(keyword, searchType);
+		}
+	}, [location]); // location이 변경될 때마다 실행
 
 	// recipesPerPage 값을 동적으로 설정
 	let recipesPerPage;
@@ -41,7 +49,6 @@ function SearchResultsPage() {
 	} else if (layout === "five-column") {
 		recipesPerPage = 20; // 5열 보기일 때 최대 20개
 	}
-
 
 	useEffect(() => {
 		const fetchRecipes = async () => {
@@ -59,44 +66,29 @@ function SearchResultsPage() {
 					RCMM_CNT: Number(recipe.rcmm_CNT), // 추천수
 					CKG_DODF_NM: recipe.ckg_DODF_NM, // 난이도
 					mainThumb: recipe.image_URL,
-
 				}));
 				setAllRecipes(basicRecipes); // 모든 레시피를 상태에 저장
 				setFilteredRecipes(basicRecipes); // 초기값을 전체 레시피로 설정
-				setLoading(false); 
+				setLoading(false);
 			} catch (error) {
 				console.error("Error fetching recipes:", error);
 				setError(error);
 				setLoading(false);
 			}
 		};
-	
+
 		fetchRecipes(); // 비동기 함수 호출
 	}, []); // 빈 배열로 useEffect를 처음 렌더링 시에만 실행
-	
-	
-	  // 로딩 상태 처리
-	  if (loading) {
+
+	// 로딩 상태 처리
+	if (loading) {
 		return <p>Loading recipes...</p>;
-	  }
-	
-	  // 에러 처리
-	  if (error) {
+	}
+
+	// 에러 처리
+	if (error) {
 		return <p>Error loading recipes: {error.message}</p>;
-	  }
-	
-
-
-
-	const handleSearch = (keyword, searchType) => {
-		const filtered = allRecipes.filter((recipe) =>
-			searchType === "name"
-				? recipe.name.includes(keyword)
-				: recipe.재료.includes(keyword)
-		);
-		setFilteredRecipes(filtered);
-		setCurrentPage(1);
-	};
+	}
 
 	const handleBookmark = (recipe) => {
 		setBookmarkedRecipes((prev) =>
@@ -161,8 +153,6 @@ function SearchResultsPage() {
 	const toggleFilterVisibility = () => {
 		setIsFilterVisible(!isFilterVisible);
 	};
-
-	
 
 	return (
 		<div className="container">
