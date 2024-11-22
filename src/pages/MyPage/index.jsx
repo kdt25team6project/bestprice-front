@@ -25,18 +25,36 @@ const MyPage = () => {
     }, [activeTab, userId]);
 
     const fetchBookmarkedRecipes = async () => {
+        setIsLoading(true); // 로딩 상태 활성화
         try {
-            setIsLoading(true);
-            const { data } = await axios.get("http://localhost:8001/api/recipe/bookmarks", {
-                params: { userId },
-            });
-            setBookmarkedRecipes(data);
+            // 1단계: 북마크된 레시피 ID 가져오기
+            const { data: bookmarkedIds } = await axios.get(
+                "http://localhost:8001/api/recipe/bookmarks",
+                { params: { userId } }
+            );
+            console.log("북마크된 레시피 ID:", bookmarkedIds);
+    
+            // 2단계: 각 레시피 ID로 상세 정보 요청
+            const recipeDetails = await Promise.all(
+                bookmarkedIds.map(async (id) => {
+                    const { data: recipe } = await axios.get(
+                        `http://localhost:8001/api/recipe/${id}`
+                    );
+                    return { ...recipe, id }; // 레시피에 ID 추가
+                })
+            );
+            console.log("변환된 데이터 (레시피 상세):", recipeDetails);
+    
+            // 북마크된 레시피 상태 업데이트
+            setBookmarkedRecipes(recipeDetails);
         } catch (error) {
             console.error("북마크된 레시피를 가져오는 중 오류 발생:", error);
         } finally {
-            setIsLoading(false);
+            setIsLoading(false); // 로딩 상태 해제
         }
     };
+    
+
 
     return (
         <div className="mypage-container">

@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { userState } from '../../state/userState';
-import { useRecoilValue } from 'recoil';
+import { userState } from "../../state/userState";
+import { useRecoilValue } from "recoil";
 import axios from "axios";
 import "./RecipeCard.css";
 
 const RecipeCard = ({ recipe, bookmarkedRecipes, onBookmarkUpdate = () => {} }) => {
     const [isRecommended, setIsRecommended] = useState(false);
-    const [recommendCount, setRecommendCount] = useState(recipe.RCMM_CNT);
+    const [recommendCount, setRecommendCount] = useState(recipe?.RCMM_CNT || 0);
     const [isBookmarked, setIsBookmarked] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
@@ -24,7 +24,7 @@ const RecipeCard = ({ recipe, bookmarkedRecipes, onBookmarkUpdate = () => {} }) 
     };
 
     const checkRecommendation = async () => {
-        if (!checkUserId()) return;
+        if (!checkUserId() || !recipe?.id) return;
         try {
             const { data } = await axios.get(
                 `http://localhost:8001/api/recipe/${recipe.id}/recommend`,
@@ -37,11 +37,12 @@ const RecipeCard = ({ recipe, bookmarkedRecipes, onBookmarkUpdate = () => {} }) 
     };
 
     const checkBookmark = async () => {
-        if (!checkUserId()) return;
+        if (!checkUserId() || !recipe?.id) return;
         try {
-            const { data } = await axios.get(`http://localhost:8001/api/recipe/${recipe.id}/bookmark`, {
-                params: { userId },
-            });
+            const { data } = await axios.get(
+                `http://localhost:8001/api/recipe/${recipe.id}/bookmark`,
+                { params: { userId } }
+            );
             setIsBookmarked(data);
         } catch (error) {
             console.error("찜 상태 확인 실패:", error);
@@ -49,7 +50,7 @@ const RecipeCard = ({ recipe, bookmarkedRecipes, onBookmarkUpdate = () => {} }) 
     };
 
     const toggleRecommend = async () => {
-        if (!checkUserId() || isLoading) return;
+        if (!checkUserId() || isLoading || !recipe?.id) return;
 
         setIsLoading(true);
         try {
@@ -77,7 +78,7 @@ const RecipeCard = ({ recipe, bookmarkedRecipes, onBookmarkUpdate = () => {} }) 
     };
 
     const toggleBookmark = async () => {
-        if (!checkUserId() || isLoading) return;
+        if (!checkUserId() || isLoading || !recipe?.id) return;
 
         setIsLoading(true);
         try {
@@ -111,6 +112,10 @@ const RecipeCard = ({ recipe, bookmarkedRecipes, onBookmarkUpdate = () => {} }) 
 
     const handleRecipeClick = async () => {
         try {
+            if (!recipe?.id) {
+                console.warn("Recipe ID is missing. Cannot navigate to details.");
+                return;
+            }
             await axios.post(`http://localhost:8001/api/recipe/${recipe.id}/view`);
             navigate(`/recipe/${recipe.id}`);
             window.scrollTo({ top: 0, behavior: "smooth" });
@@ -120,46 +125,58 @@ const RecipeCard = ({ recipe, bookmarkedRecipes, onBookmarkUpdate = () => {} }) 
     };
 
     useEffect(() => {
-        checkRecommendation();
-        checkBookmark();
-    }, [userId]);
+        if (recipe?.id) {
+            checkRecommendation();
+            checkBookmark();
+        }
+    }, [recipe?.id, userId]);
 
     return (
         <div className="recipe-card">
+            {/* 이미지 렌더링 */}
             <img
-                src={`${recipe.mainThumb}`}
-                alt={recipe.name}
+                src={recipe.image_URL || recipe.mainThumb || "default-image.jpg"} 
+                alt={recipe.rcp_TTL || recipe.name || "레시피"} 
                 className="recipe-card-image"
                 onClick={handleRecipeClick}
             />
+    
+            {/* 레시피 제목 */}
             <button className="recipe-title" onClick={handleRecipeClick}>
-                {recipe.name}
+                {recipe.rcp_TTL || recipe.name || "레시피 이름"}
             </button>
-
-            <p className="recipe-info">작성자: {recipe.RGTR_NM} ({recipe.RGTR_ID})</p>
-            <p className="recipe-info">조회수: {recipe.INQ_CNT}</p>
+    
+            {/* 작성자 정보 */}
+            <p className="recipe-info">
+                작성자: {recipe.rgtr_NM || recipe.RGTR_NM || "알 수 없음"} ({recipe.rgtr_ID || recipe.RGTR_ID || "알 수 없음"})
+            </p>
+    
+            {/* 추가 정보 */}
+            <p className="recipe-info">조회수: {recipe.inq_CNT || recipe.INQ_CNT || 0}</p>
             <p className="recipe-info">추천수: {recommendCount}</p>
-            <p className="recipe-info">난이도: {recipe.CKG_DODF_NM}</p>
-
-            <button
-                className={`btn ${isBookmarked ? "btn-warning" : "btn-success"} btn-sm`}
-                onClick={toggleBookmark}
-                style={{ float: "right" }}
-                disabled={isLoading}
-            >
-                {isBookmarked ? "찜 해제" : "찜하기"}
-            </button>
-
-            <button
-                className={`btn ${isRecommended ? "btn-danger" : "btn-primary"} btn-sm`}
-                onClick={toggleRecommend}
-                style={{ float: "left", marginTop: "10px" }}
-                disabled={isLoading}
-            >
-                {isRecommended ? "추천 취소" : "추천하기"}
-            </button>
+            <p className="recipe-info">난이도: {recipe.ckg_DODF_NM || recipe.CKG_DODF_NM || "알 수 없음"}</p>
+    
+            {/* 찜 및 추천 버튼 */}
+            <div className="button-group">
+                <button
+                    className={`btn ${isBookmarked ? "btn-warning" : "btn-success"} btn-sm`}
+                    onClick={toggleBookmark}
+                    disabled={isLoading}
+                >
+                    {isBookmarked ? "찜 해제" : "찜하기"}
+                </button>
+                <button
+                    className={`btn ${isRecommended ? "btn-danger" : "btn-primary"} btn-sm`}
+                    onClick={toggleRecommend}
+                    disabled={isLoading}
+                >
+                    {isRecommended ? "추천 취소" : "추천하기"}
+                </button>
+            </div>
         </div>
     );
+    
 };
 
 export default RecipeCard;
+
