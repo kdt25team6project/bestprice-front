@@ -22,7 +22,7 @@ function Header({ handleSearch }) {
       <div className="container-fluid">
         <a className="navbar-brand page-title" href="/">🍽️Best Price🍽️</a>
         <div className="mx-auto">
-          {/* 검색창 */}
+          {/* 헤더의 검색창 */}
           <SearchBar onSearch={handleSearch} />
         </div>
         <div className="login-container">
