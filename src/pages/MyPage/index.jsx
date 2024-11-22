@@ -1,18 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { userState } from "../../state/userState";
 import { changeNickname } from "../../services/changeNicknameApi";
 import { changePassword } from "../../services/changePasswordApi";
 import { deleteUser } from "../../services/deleteUserApi";
 import useLogout from "../../hooks/useLogout";
+import RecipeList from "../Search/RecipeList";
+import axios from "axios";
 import "./styles.css";
 
 const MyPage = () => {
     const user = useRecoilValue(userState); // 사용자 상태
     const [activeTab, setActiveTab] = useState("preference"); // 기본 활성 탭
     const [isSettingsVisible, setIsSettingsVisible] = useState(false); // 설정 화면 표시 여부
+    const [bookmarkedRecipes, setBookmarkedRecipes] = useState([]); // 북마크된 레시피
+    const [isLoading, setIsLoading] = useState(false); // 로딩 상태
 
-    const { nickname, preferences } = user?.user || {};
+    const { nickname, preferences, userId } = user?.user || {};
+
+    useEffect(() => {
+        if (activeTab === "recipe" && userId) {
+            fetchBookmarkedRecipes();
+        }
+    }, [activeTab, userId]);
+
+    const fetchBookmarkedRecipes = async () => {
+        try {
+            setIsLoading(true);
+            const { data } = await axios.get("http://localhost:8001/api/recipe/bookmarks", {
+                params: { userId },
+            });
+            setBookmarkedRecipes(data);
+        } catch (error) {
+            console.error("북마크된 레시피를 가져오는 중 오류 발생:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     return (
         <div className="mypage-container">
@@ -45,13 +69,14 @@ const MyPage = () => {
                     activeTab={activeTab}
                     setActiveTab={setActiveTab}
                     preferences={preferences}
+                    bookmarkedRecipes={bookmarkedRecipes}
+                    isLoading={isLoading}
                 />
             )}
         </div>
     );
 };
 
-// 설정 섹션
 const SettingsSection = ({ user }) => {
     const setUser = useSetRecoilState(userState);
     const [nickname, setNickname] = useState(user?.user?.nickname || "");
@@ -173,8 +198,13 @@ const SettingsSection = ({ user }) => {
     );
 };
 
-// 나의 선호도 및 관심 레시피 섹션
-const PreferencesAndScrapSection = ({ activeTab, setActiveTab, preferences }) => {
+const PreferencesAndScrapSection = ({
+    activeTab,
+    setActiveTab,
+    preferences,
+    bookmarkedRecipes,
+    isLoading,
+}) => {
     const [isEditing, setIsEditing] = useState(false);
     const [updatedPreferences, setUpdatedPreferences] = useState(preferences || {});
 
@@ -186,13 +216,8 @@ const PreferencesAndScrapSection = ({ activeTab, setActiveTab, preferences }) =>
         alert("선호도가 저장되었습니다.");
         setIsEditing(false);
         // API 호출 로직 또는 상태 업데이트를 추가할 수 있습니다.
+        // 예: savePreferencesToAPI(updatedPreferences);
     };
-
-    const scraps = {
-        recipe: [],
-    };
-
-    const items = scraps.recipe;
 
     return (
         <div>
@@ -305,19 +330,12 @@ const PreferencesAndScrapSection = ({ activeTab, setActiveTab, preferences }) =>
                 </div>
             ) : (
                 <div className="scrap-section">
-                    {items.length > 0 ? (
-                        <div className="scrap-list">
-                            {items.map((item, index) => (
-                                <div key={index} className="scrap-item">
-                                    <p>{item}</p>
-                                </div>
-                            ))}
-                        </div>
+                    {isLoading ? (
+                        <p>로딩 중...</p>
+                    ) : bookmarkedRecipes.length > 0 ? (
+                        <RecipeList recipes={bookmarkedRecipes} layout="grid" />
                     ) : (
-                        <div className="no-scraps">
-                            <p>스크랩한 레시피가 없습니다.</p>
-                            <button className="recommend-btn">추천 레시피 보러가기</button>
-                        </div>
+                        <p>스크랩된 레시피가 없습니다.</p>
                     )}
                 </div>
             )}
