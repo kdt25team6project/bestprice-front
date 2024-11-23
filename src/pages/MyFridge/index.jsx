@@ -17,8 +17,8 @@ const MyFridge = () => {
     const navigate = useNavigate();
 
     // 로그인 여부 판별
-    const { isLoggedIn } = useRecoilValue(userState);
     const { user } = useRecoilValue(userState);
+    const isLoggedIn = user && user.userId ? true : false;
     const userId = user?.userId;
 
     // 냉장고 문 상태
@@ -50,7 +50,10 @@ const MyFridge = () => {
     useEffect(() => {
         const storedUser = localStorage.getItem("userLocal");
         if (storedUser) {
-            setUser(JSON.parse(storedUser)); // 로컬 스토리지에서 Recoil로 복원
+            setUser({
+                isLoggedIn: true,
+                user: JSON.parse(storedUser).user, // 사용자 데이터 복원
+            });
         }
     }, [setUser]);
 
@@ -292,6 +295,12 @@ const MyFridge = () => {
         }
     };
 
+    const handleRecipeClick = (recipeItem) => {
+        // 클릭 시 레시피 상세 페이지로 이동
+        navigate(`/recipe/${recipeItem.rcp_SNO}`, { state: { recipeItem } });
+    };
+    
+
     // 식료품 목록(foodItems)이 변경될 때 레시피를 가져옴
     useEffect(() => {
         if (foodItems && foodItems.length > 0) {
@@ -301,13 +310,15 @@ const MyFridge = () => {
 
     
 
+    
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
     return (
         
         <div className="fridge-container">
         {/* 로그인되지 않은 경우: 흐린 배경과 메시지 */}
-        {!isLoggedIn && (
+        {(!user || !user.userId) && (
                 <div className="overlay">
                     <div className="overlay-message">
                         <h2>로그인 해주세요</h2>
@@ -615,11 +626,14 @@ const MyFridge = () => {
 
 				{/* 레시피 링크 */}
                 <div className="recipe-links">
-                    {ingredientName.map((name, index) => (
-                        <div key={index} className="recipe-item">
-                            <p className="recipe-name">식재료 : {name}</p>
-                            <p className="recipe-title">{recipe[index]?.rcp_TTL || "레시피 없음"}</p>
-                        </div>
+                <h3>유통기한 임박 재료 레시피</h3>
+                <h7>해당 레시피는 랜덤으로 표시 됩니다!</h7>
+                {recipe.slice(0, 5).map((recipeItem, index) => (
+                    <div key={index} className="recipe-item"
+                         onClick={() => handleRecipeClick(recipeItem)}>
+                        <p className="recipe-name">식재료 : {ingredientName[index]}</p>
+                        <p className="recipe-title">{recipeItem?.rcp_TTL || "레시피 없음"}</p>
+                    </div>
                     ))}
                     </div>
 				</div>
