@@ -271,11 +271,14 @@ const PreferencesAndScrapSection = ({
 			// 프론트엔드 키 -> API 키로 매핑
 			const apiPreferences = {
 				userId, // 사용자 ID
-				CKG_DODF_NM: updatedPreferences.difficulty,
-				CKG_INBUN_NM: updatedPreferences.portion,
-				CKG_KND_ACTO_NM: updatedPreferences.category,
-				CKG_MTH_ACTO_NM: updatedPreferences.method,
+				difficulty: updatedPreferences.difficulty,
+				portion: updatedPreferences.portion,
+				category: updatedPreferences.category,
+				method: updatedPreferences.method,
 			};
+
+			// 디버깅: 서버로 보낼 데이터 확인
+			console.log("전송될 데이터:", apiPreferences);
 
 			await axios.put(`http://localhost:8001/api/preferences`, apiPreferences);
 			setPreferences(updatedPreferences);
