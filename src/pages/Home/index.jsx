@@ -2,8 +2,12 @@ import React, { useState, useEffect } from "react";
 import Carousel from "react-bootstrap/Carousel";
 import "bootstrap/dist/css/bootstrap.css";
 import "./styles.css";
-import { useNavigate } from 'react-router';
-import { tips } from '../../assets/TipsData';
+import { useNavigate } from "react-router";
+import { useRecoilValue } from "recoil";
+import { userState } from "../../state/userState";
+import { tips } from "../../assets/TipsData";
+import axios from "axios";
+import PreferencesModal from "./PreferencesModal";
 
 import fridgeImage from "../../assets/images/fridge.jpg";
 import productImage from "../../assets/images/product.png";
@@ -12,30 +16,75 @@ import tipImage from "../../assets/images/tip.png";
 import recipeImage from "../../assets/images/recipe.png";
 
 const Home = () => {
-
 	const navigate = useNavigate();
+	const { user } = useRecoilValue(userState); // Recoil 상태에서 사용자 정보 가져오기
+	const [showPreferencesModal, setShowPreferencesModal] = useState(false);
 
+	// 캐러셀 인덱스 상태
 	const [index1, setIndex1] = useState(0);
 	const [index2, setIndex2] = useState(0);
 	const [index3, setIndex3] = useState(0);
-	const [randomTip, setRandomTip] = useState('');
 
+	// 랜덤 꿀팁
+	const [randomTip, setRandomTip] = useState("");
+
+	// 캐러셀 핸들러
 	const handleSelect1 = (selectedIndex) => setIndex1(selectedIndex);
 	const handleSelect2 = (selectedIndex) => setIndex2(selectedIndex);
 	const handleSelect3 = (selectedIndex) => setIndex3(selectedIndex);
 
+	// 초기 로드 시 랜덤 꿀팁 선택
 	useEffect(() => {
 		if (tips && tips.length > 0) {
-		  const randomIndex = Math.floor(Math.random() * tips.length);
-		  setRandomTip(tips[randomIndex].content); // 무작위로 팁 선택
+			const randomIndex = Math.floor(Math.random() * tips.length);
+			setRandomTip(tips[randomIndex].content); // 무작위로 팁 선택
 		}
 	}, []);
 
+	// 로그인 후 preference 확인
+	useEffect(() => {
+		const checkPreferences = async () => {
+			if (!user || !user.userId) {
+				console.warn("사용자 정보가 없습니다.");
+				return;
+			}
+
+			try {
+				// API 호출로 preference 존재 여부 확인
+				const response = await axios.get(
+					"http://localhost:8001/api/preferences/check",
+					{
+						params: { userId: user.userId },
+					}
+				);
+
+				if (!response.data) {
+					// preference가 없으면 모달 띄우기
+					setShowPreferencesModal(true);
+				}
+			} catch (error) {
+				console.error("Preference 확인 중 오류 발생:", error);
+			}
+		};
+
+		checkPreferences();
+	}, [user]);
+
+	// 모달 닫기 핸들러
+	const handleClosePreferencesModal = () => {
+		setShowPreferencesModal(false);
+	};
+
 	return (
 		<div className="main-content-container">
-			{/* 캐러셀과 나만의 냉장고를 가로로 배치 */}
+			{/* 선호도 모달 */}
+			<PreferencesModal
+				show={showPreferencesModal}
+				onClose={handleClosePreferencesModal}
+			/>
+
+			{/* 캐러셀과 나만의 냉장고 */}
 			<div className="carousel-fridge-container">
-				{/* 추천 레시피와 상품/레시피 캐러셀을 세로로 배치한 부모 div */}
 				<div className="carousel-group">
 					{/* 상품/레시피 캐러셀 */}
 					<div className="carousel-container">
@@ -78,9 +127,7 @@ const Home = () => {
 								<img src={rankImage} alt="Slide 4" className="carousel-image" />
 								<Carousel.Caption>
 									<h3>랭킹</h3>
-									<p>
-										어떤 레시피가 많은사람들에게 맛있는 요리를 선물했을까요?
-									</p>
+									<p>어떤 레시피가 많은 사람들에게 사랑받았을까요?</p>
 								</Carousel.Caption>
 							</Carousel.Item>
 							<Carousel.Item>
@@ -124,15 +171,18 @@ const Home = () => {
 				</div>
 
 				{/* 나만의 냉장고 */}
-				<div className="my-fridge">나만의 냉장고</div>
+				<div className="my-fridge">
+					<h3>나만의 냉장고</h3>
+				</div>
 			</div>
 
+			{/* 랜덤 꿀팁 */}
 			<div className="d-flex justify-content-center align-items-center my-3">
 				<div className="tip-box d-flex align-items-center">
 					<h5 className="card-text mb-0">{`자취 꿀팁 한 줄! ${randomTip} `}</h5>
 					<button
 						className="btn btn-outline-secondary btn-sm ms-2"
-						onClick={() => navigate('/tips')}
+						onClick={() => navigate("/tips")}
 					>
 						더보기
 					</button>
@@ -166,7 +216,7 @@ const Home = () => {
 			{/* 알뜰한 살림꾼의 맛있는 한끼 */}
 			<div className="meal-suggestion">
 				<h3>알뜰한 살림꾼의 맛있는 한끼</h3>
-				<div className="meal-content"> {/* 데이터 추가를 위한 영역 */}</div>
+				<div className="meal-content">{/* 데이터 추가 영역 */}</div>
 			</div>
 		</div>
 	);
