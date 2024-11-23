@@ -82,7 +82,7 @@ const PreferencesModal = ({ show, onClose }) => {
 							<option value="2인분">2인분</option>
 							<option value="3인분">3인분</option>
 							<option value="4인분">4인분</option>
-							<option value="6인분 이상">6인분 이상</option>
+							<option value="6인분이상">6인분 이상</option>
 						</select>
 					</div>
 
