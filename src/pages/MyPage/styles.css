@@ -93,6 +93,36 @@
     background-color: #45a049;
 }
 
+.password-section-vertical {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.password-input {
+    padding: 5px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 200px;
+}
+
+.password-section-vertical button {
+    align-self: flex-end;
+    padding: 5px 10px;
+    font-size: 14px;
+    color: #fff;
+    background-color: #4caf50;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.password-section-vertical button:hover {
+    background-color: #45a049;
+}
+
 button.danger {
     background-color: #d9534f;
     color: white;

@@ -1,39 +1,41 @@
 import React from "react";
 import SearchBar from "../components/SearchBar";
 import { useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { userState } from "../state/userState";
+import useLogout from "../hooks/useLogout";
 import "./Header.css";
 
 const Header = ({ onSearch }) => {
 	const navigate = useNavigate();
-	const [user, setUser] = useRecoilState(userState); // 로그인 상태 구독
-
-	const handleLogout = () => {
-		localStorage.removeItem("isLoggedIn"); // 로컬 스토리지에서 상태 제거
-		setUser({ isLoggedIn: false, user: null }); // Recoil 상태 초기화
-		navigate("/"); // 홈으로 이동
-	};
+	const user = useRecoilValue(userState); // Recoil 상태 읽기
+	const logout = useLogout(); // useLogout 훅 사용
 
 	const handleSearch = (keyword, searchType) => {
 		if (!keyword.trim()) {
-		  alert("검색어를 입력하세요.");
-		  return;
+			alert("검색어를 입력하세요.");
+			return;
 		}
-	  
+
 		// 부모 컴포넌트 콜백 호출
 		if (onSearch) {
-		  onSearch(keyword.trim(), searchType);
+			onSearch(keyword.trim(), searchType);
 		}
-	  
+
 		// 경로 설정
-		const targetPath = `/search-results?keyword=${encodeURIComponent(keyword)}&searchType=${encodeURIComponent(searchType)}`;
+		const targetPath = `/search-results?keyword=${encodeURIComponent(
+			keyword
+		)}&searchType=${encodeURIComponent(searchType)}`;
 		if (searchType === "product") {
-		  navigate(`/product-search?keyword=${encodeURIComponent(keyword)}&searchType=${encodeURIComponent(searchType)}`);
+			navigate(
+				`/product-search?keyword=${encodeURIComponent(
+					keyword
+				)}&searchType=${encodeURIComponent(searchType)}`
+			);
 		} else {
-		  navigate(targetPath);
+			navigate(targetPath);
 		}
-	  };
+	};
 
 	return (
 		<nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -46,9 +48,8 @@ const Header = ({ onSearch }) => {
 				</div>
 				<div className="login-container">
 					<ul className="navbar-nav ms-auto">
-						{user.isLoggedIn ? (
+						{user?.user?.userId ? ( // userId 존재 여부로 확인
 							<>
-								{/* 마이페이지 버튼 */}
 								<li className="nav-item">
 									<button
 										className="nav-link my-page-button"
@@ -57,11 +58,10 @@ const Header = ({ onSearch }) => {
 										마이페이지
 									</button>
 								</li>
-								{/* 로그아웃 버튼 */}
 								<li className="nav-item">
 									<button
 										className="nav-link login-button"
-										onClick={handleLogout}
+										onClick={logout}
 									>
 										로그아웃
 									</button>
@@ -84,7 +84,10 @@ const Header = ({ onSearch }) => {
 				<button className="nav-button" onClick={() => navigate("/products")}>
 					상품
 				</button>
-				<button className="nav-button" onClick={() => navigate("/search-results")}>
+				<button
+					className="nav-button"
+					onClick={() => navigate("/search-results")}
+				>
 					레시피
 				</button>
 				<button className="nav-button" onClick={() => navigate("/tips")}>

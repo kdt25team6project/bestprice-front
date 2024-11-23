@@ -78,7 +78,6 @@ const LoginPage = () => {
 				const response = await login(userId, password);
 				// 사용자 데이터 저장
 				const userData = {
-					isLoggedIn: true,
 					user: {
 						userId: response.userId,
 						name: response.name,
