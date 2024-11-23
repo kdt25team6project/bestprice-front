@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./styles.css";
 
-const InquiryForm = ({ onClose, onSubmitSuccess }) => {
+const InquiryForm = ({ onClose, onSubmitSuccess, userId }) => {
     const [formData, setFormData] = useState({
         inquiryTitle: "",
         inquiry: "",
         inquiryType: "일반", // 기본값
         secret: false,
-        userId: "user123", // 테스트용 사용자 ID (추후 교체 가능)
+        userId: userId || null, // 전달받은 userId 사용
     });
 
     const handleChange = (e) => {

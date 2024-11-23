@@ -16,6 +16,7 @@ import RecipeDetailPage from "./pages/Recipe";
 import ProductPage from "./pages/Product";
 import ProductSearchPage from "./pages/Search/ProductSearchPage";
 import InquiryList from "./pages/Inquiry";
+import InquiryDetail from "./pages/Inquiry/InquiryDetail";
 
 const Router = () => {
 	const [searchKeyword, setSearchKeyword] = useState(""); // 검색 상태
@@ -48,6 +49,7 @@ const Router = () => {
 					<Route path="/mypage" element={<MyPage />} />
 					<Route path="/myfridge" element={<MyFridge />} />
 					<Route path="/inquiries" element={<InquiryList />} />
+					<Route path="/inquiries/:id" element={<InquiryDetail />} />
 					<Route path="/rank" element={<Ranking />} />
 					<Route path="/tips" element={<TipsPage />} />
 					<Route path="/search-results" element={<SearchResultsPage />} />
