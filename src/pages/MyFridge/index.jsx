@@ -10,8 +10,12 @@ import Pagination from 'react-bootstrap/Pagination';
 import { Modal, Button } from 'react-bootstrap';
 import { userState } from '../../state/userState';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useNavigate } from 'react-router-dom';
+
 
 const MyFridge = () => {
+    const navigate = useNavigate();
+
     // 로그인 여부 판별
     const { isLoggedIn } = useRecoilValue(userState);
     const { user } = useRecoilValue(userState);
@@ -257,6 +261,47 @@ const MyFridge = () => {
     const handlePageChange = (page) => {
         setCurrentPage(page);
     };
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // 레시피 데이터 상태 관리
+    const [recipe, setRecipes] = useState([]);
+    // 유통기한 기준 상위 5개 항목 추출
+    const topFiveItems = sortedFoodItems.slice(0, 5);
+    const [ingredientName, setIngredientName] = useState([]);
+
+    const fetchRecipesByIngredients = async () => {
+        try {
+            // 냉장고에 저장된 식료품 이름 추출
+            const ingredientName = topFiveItems.map((item) => item.name);
+            setIngredientName(ingredientName);
+
+            const queryString = ingredientName
+                .map(name => `ingredients=${encodeURIComponent(name)}`)
+                .join('&');
+
+            // 백엔드로 GET 요청을 보냄
+            const response = await axios.get(
+                `http://localhost:8001/api/recipe/search?${queryString}`
+            );
+            
+            console.log("Fetched Recipes:", response.data);
+            setRecipes(response.data);
+        } catch (error) {
+            console.error("Failed to fetch recipes:", error.message); // 에러 메시지 출력
+        }
+    };
+
+    // 식료품 목록(foodItems)이 변경될 때 레시피를 가져옴
+    useEffect(() => {
+        if (foodItems && foodItems.length > 0) {
+            fetchRecipesByIngredients();
+        }
+    }, [foodItems]);
+
+    
+
+///////////////////////////////////////////////////////////////////////////////////////////////
 
     return (
         
@@ -526,7 +571,8 @@ const MyFridge = () => {
                     {currentItems.map((item, index) => {
                         const daysLeft = calculateDaysLeft(item.expiration_date);
                         return (
-                            <div key={index} className="expiration-item">
+                            <div key={index} className="expiration-item"
+                                 onClick={(e) => { e.stopPropagation(); handleShowModal(item);}}>
                                 <div className="food-emoji">{item.emoji}</div> {/* 아이콘 */}
                                 <div className="expiration-details">
                                     <p className="expiration-date">남은 일수: {daysLeft}일</p>
@@ -567,17 +613,15 @@ const MyFridge = () => {
                     </Pagination>
                 </div>
 
-					{/* 레시피 링크 */}
-					<div className="recipe-links">
-						{[1, 2, 3, 4, 5].map((item, index) => (
-							<div key={index} className="recipe-item">
-								{" "}
-								{/* 레시피 항목 */}
-								<p className="recipe-link">레시피 링크</p>
-								<p className="recipe-name">식료품 이름</p>
-							</div>
-						))}
-					</div>
+				{/* 레시피 링크 */}
+                <div className="recipe-links">
+                    {ingredientName.map((name, index) => (
+                        <div key={index} className="recipe-item">
+                            <p className="recipe-name">식재료 : {name}</p>
+                            <p className="recipe-title">{recipe[index]?.rcp_TTL || "레시피 없음"}</p>
+                        </div>
+                    ))}
+                    </div>
 				</div>
 			</div>
 		</div>
