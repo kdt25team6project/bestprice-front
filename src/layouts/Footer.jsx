@@ -18,23 +18,18 @@ const Footer = () => {
 						<h5 className="text-success">바로가기</h5>
 						<ul className="list-unstyled">
 							<li>
+								<a href="/inquiries" className="footer-link">
+									문의하기
+								</a>
+							</li>
+							<li>
 								<a href="/recipes" className="footer-link">
 									레시피
 								</a>
 							</li>
 							<li>
-								<a href="#" className="footer-link">
-									식재료
-								</a>
-							</li>
-							<li>
 								<a href="/tips" className="footer-link">
 									자취 꿀팁
-								</a>
-							</li>
-							<li>
-								<a href="#" className="footer-link">
-									나만의 냉장고
 								</a>
 							</li>
 						</ul>
