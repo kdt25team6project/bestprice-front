@@ -4,6 +4,10 @@ import Fuse from 'fuse.js';
 import axios from 'axios';
 import './style.css';
 import SearchResultsPage from '../Search';
+import { userState } from '../../state/userState';
+import { useRecoilValue } from 'recoil';
+import { checkBookmark, toggleBookmark } from '../Search/Bookmark';
+import { checkRecommendation, toggleRecommend } from '../Search/Recommend';
 
 // 제거할 접두사
 const prefixesToRemove = ['통', '송송', '썬', '썬 것', '볶음', '생', '다진', '신', '슬라이스', '다진것', '다진 것', '유기농', '뜨거운', '찬', '차가운'];
@@ -147,12 +151,63 @@ function RecipeDetailPage() {
   const [result, setResult] = useState(null);
   const [appliedIngredients, setAppliedIngredients] = useState([]);
   const [ingredientsList, setIngredientsList] = useState([]);
+  const [isRecommended, setIsRecommended] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { user } = useRecoilValue(userState);
+  const userId = user?.userId;
 
   useEffect(() => {
     if (recipe && nutritionData.length > 0) {
       calculateNutrition();
     }
   }, [recipe, nutritionData]);
+
+    // 추천 및 찜 상태 확인
+    useEffect(() => {
+      if (recipeId && userId) {
+        (async () => {
+          try {
+            const [recommendation, bookmark] = await Promise.all([
+              checkRecommendation(recipeId, userId),
+              checkBookmark(recipeId, userId),
+            ]);
+            setIsRecommended(recommendation);
+            setIsBookmarked(bookmark);
+          } catch (error) {
+            console.error("추천 및 찜 상태 확인 실패:", error);
+          }
+        })();
+      }
+    }, [recipeId, userId]);
+  
+    // 추천 상태 토글
+    const handleToggleRecommend = async () => {
+      if (isLoading) return;
+      setIsLoading(true);
+      try {
+        const newRecommendState = await toggleRecommend(recipeId, userId, isRecommended);
+        setIsRecommended(newRecommendState);
+      } catch (error) {
+        console.error("추천 상태 변경 실패:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+  
+    // 찜 상태 토글
+    const handleToggleBookmark = async () => {
+      if (isLoading) return;
+      setIsLoading(true);
+      try {
+        const newBookmarkState = await toggleBookmark(recipeId, userId, isBookmarked);
+        setIsBookmarked(newBookmarkState);
+      } catch (error) {
+        console.error("찜 상태 변경 실패:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
 
   useEffect(() => {
@@ -279,6 +334,23 @@ function RecipeDetailPage() {
     <div className="recipe-container">
       <div className="recipe-image">
         <img src={recipe.mainThumb} alt={recipe.rcp_TTL} />
+        <div className="button-group">
+            <button
+              className="buttons1"
+              onClick={handleToggleRecommend}
+              disabled={isLoading}
+            >
+              {isRecommended ? "추천 취소" : "추천하기"}
+            </button>
+
+            <button
+              className="buttons2"
+              onClick={handleToggleBookmark}
+              disabled={isLoading}
+            >
+              {isBookmarked ? "찜 해제" : "찜하기"}
+            </button>
+          </div>
       </div>
 
       <div className="recipe-header">
@@ -405,7 +477,6 @@ function RecipeDetailPage() {
             </li>
           ))}
         </ul>
-
       <SearchResultsPage/>
     </div>
   );

@@ -8,6 +8,8 @@ import { userState } from "../../state/userState";
 import { tips } from "../../assets/TipsData";
 import axios from "axios";
 import PreferencesModal from "./PreferencesModal";
+import RecipeList from "../Search/RecipeList";
+
 
 import fridgeImage from "../../assets/images/fridge.jpg";
 import productImage from "../../assets/images/product.png";
@@ -15,9 +17,13 @@ import rankImage from "../../assets/images/rank.jpeg";
 import tipImage from "../../assets/images/tip.png";
 import recipeImage from "../../assets/images/recipe.png";
 import refrigerator from "../../assets/images/refrigerator close.png"
+import Product from "../Product";
+
 
 const Home = () => {
 	const navigate = useNavigate();
+	const [recipes, setRecipes] = useState({ inq: [], srap: [], rcmm: [] });
+
 	const { user } = useRecoilValue(userState); // Recoil 상태에서 사용자 정보 가져오기
 	const [showPreferencesModal, setShowPreferencesModal] = useState(false);
 
@@ -70,6 +76,66 @@ const Home = () => {
 
 		checkPreferences();
 	}, [user]);
+	useEffect(() => {
+		fetch("http://localhost:8001/allrecipes")
+		  .then((response) => {
+			if (!response.ok) {
+			  console.error("API 응답 실패:", response.status, response.statusText);
+			  throw new Error("네트워크 응답이 좋지 않습니다.");
+			}
+			return response.json();
+		  })
+		  .then((data) => {
+			console.log("전체 데이터:", data);
+	  
+			if (!Array.isArray(data)) {
+			  throw new Error("API에서 반환된 데이터가 배열 형식이 아닙니다.");
+			}
+	  
+			// 데이터 변환: 속성 이름 변경 및 숫자 변환
+			const transformedData = data.map((recipe) => ({
+			  id: recipe.rcp_SNO,               // 고유 ID
+			  name: recipe.rcp_TTL,             // 레시피 이름
+			  종류: recipe.ckg_KND_ACTO_NM,     // 레시피 종류
+			  재료: recipe.ckg_MTRL_CN,         // 레시피 재료
+			  요리방법: recipe.ckg_MTH_ACTO_NM, // 요리 방법
+			  RGTR_NM: recipe.rgtr_NM,          // 작성자 이름
+			  RGTR_ID: recipe.rgtr_ID,          // 작성자 ID
+			  INQ_CNT: Number(recipe.inq_CNT),  // 조회수 (숫자 변환)
+			  RCMM_CNT: Number(recipe.rcmm_CNT),// 추천수 (숫자 변환)
+			  CKG_DODF_NM: recipe.ckg_DODF_NM,  // 난이도
+			  mainThumb: recipe.image_URL,      // 메인 이미지 URL
+			}));
+	  
+			console.log("변환된 데이터:", transformedData);
+	  
+			// 정렬 및 상위 3개 데이터 추출
+			const byInqCount = [...transformedData]
+			  .sort((a, b) => b.INQ_CNT - a.INQ_CNT)
+			  .slice(0, 3);
+			console.log("조회수 기준 데이터:", byInqCount);
+	  
+			const bySrapCount = [...transformedData]
+			  .sort((a, b) => b.RCMM_CNT - a.RCMM_CNT) // 추천수 기준
+			  .slice(0, 3);
+			console.log("추천 수 기준 데이터:", bySrapCount);
+	  
+			const byRcmmCount = [...transformedData]
+			  .sort((a, b) => b.RCMM_CNT - a.RCMM_CNT)
+			  .slice(0, 3);
+			console.log("추천 수 기준 데이터:", byRcmmCount);
+	  
+			// 상태 업데이트
+			setRecipes({
+			  inq: byInqCount,
+			  srap: bySrapCount,
+			  rcmm: byRcmmCount,
+			});
+		  })
+		  .catch((error) => {
+			console.error("데이터 가져오기 오류:", error);
+		  });
+	  }, []);
 
 	// 모달 닫기 핸들러
 	const handleClosePreferencesModal = () => {
@@ -153,33 +219,33 @@ const Home = () => {
 								</Carousel.Caption>
 							</Carousel.Item>
 						</Carousel>
-					</div>
+			</div>
+		{/* 추천 레시피 캐러셀 */}
+		<div className="carousel-container">
+			<Carousel
+				activeIndex={index2}
+				onSelect={handleSelect2}
+				data-bs-theme="dark"
+				className="recipe"
+			>
+				{/* 조회수 기준 */}
+				<Carousel.Item>
+				<RecipeList recipes={recipes.inq} />
+				</Carousel.Item>
 
-					{/* 추천 레시피 캐러셀 */}
-					<div className="carousel-container">
-						<Carousel
-							activeIndex={index2}
-							onSelect={handleSelect2}
-							data-bs-theme="dark"
-							className="recipe"
-						>
-							<Carousel.Item>
-								<img src="/logo192.png" alt="Slide 1" />
-								<Carousel.Caption>
-									<h3>추천 레시피 첫 번째 슬라이드</h3>
-									<p>추천 레시피 슬라이드 설명</p>
-								</Carousel.Caption>
-							</Carousel.Item>
-							<Carousel.Item>
-								<img src="/logo192.png" alt="Slide 2" />
-								<Carousel.Caption>
-									<h3>추천 레시피 두 번째 슬라이드</h3>
-									<p>추천 레시피 슬라이드 설명</p>
-								</Carousel.Caption>
-							</Carousel.Item>
-						</Carousel>
-					</div>
-				</div>
+				{/* 스크랩 기준 */}
+				<Carousel.Item>
+				<RecipeList recipes={recipes.srap} />
+				</Carousel.Item>
+
+				{/* 좋아요 기준 */}
+				<Carousel.Item>
+				<RecipeList recipes={recipes.rcmm} />
+				</Carousel.Item>
+			</Carousel>
+			</div>
+		</div>
+
 
 				{/* 나만의 냉장고 */}
 				<div className="my-fridge" onClick={() => navigate("/myfridge")}>
@@ -204,34 +270,8 @@ const Home = () => {
 				</div>
 			</div>
 
-			{/* 할인율 캐러셀 */}
-			<div className="carousel-container2">
-				<Carousel
-					activeIndex={index3}
-					onSelect={handleSelect3}
-					data-bs-theme="dark"
-				>
-					<Carousel.Item>
-						<img src="/logo192.png" alt="Slide 1" />
-						<Carousel.Caption>
-							<h3>첫 번째 슬라이드</h3>
-							<p>슬라이드 설명</p>
-						</Carousel.Caption>
-					</Carousel.Item>
-					<Carousel.Item>
-						<img src="/logo192.png" alt="Slide 2" />
-						<Carousel.Caption>
-							<h3>두 번째 슬라이드</h3>
-							<p>슬라이드 설명</p>
-						</Carousel.Caption>
-					</Carousel.Item>
-				</Carousel>
-			</div>
-
-			{/* 알뜰한 살림꾼의 맛있는 한끼 */}
-			<div className="meal-suggestion">
-				<h3>알뜰한 살림꾼의 맛있는 한끼</h3>
-				<div className="meal-content">{/* 데이터 추가 영역 */}</div>
+			<div className="productstyle">
+				<Product/>
 			</div>
 		</div>
 	);
