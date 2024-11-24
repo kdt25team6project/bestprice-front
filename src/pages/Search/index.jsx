@@ -300,35 +300,40 @@ function SearchResultsPage() {
 			{/* 페이지네이션 */}
 			<nav aria-label="Page navigation example">
 				<ul className="pagination justify-content-center mt-4">
-					<li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+					{/* 이전 그룹 페이지 이동 */}
+					<li className={`page-item ${currentPage <= 5 ? 'disabled' : ''}`}>
 						<button
 							className="page-link"
-							onClick={() => paginate(currentPage - 1)}
+							onClick={() => paginate(Math.max(1, Math.floor((currentPage - 1) / 5) * 5))}
 							aria-label="Previous"
 						>
 							<span aria-hidden="true">&laquo;</span>
 						</button>
-					</li>
-
-					{Array.from({ length: totalPages }, (_, i) => (
-						<li
-							key={i}
-							className={`page-item ${currentPage === i + 1 ? "active" : ""}`}
-						>
-							<button className="page-link" onClick={() => paginate(i + 1)}>
-								{i + 1}
-							</button>
 						</li>
-					))}
 
-					<li
-						className={`page-item ${
-							currentPage === totalPages ? "disabled" : ""
-						}`}
-					>
+						{/* 최대 5페이지 표시 */}
+						{Array.from({ length: 5 }, (_, i) => {
+						const pageNumber = Math.floor((currentPage - 1) / 5) * 5 + i + 1;
+						if (pageNumber <= totalPages) {
+							return (
+							<li
+								key={pageNumber}
+								className={`page-item ${currentPage === pageNumber ? 'active' : ''}`}
+							>
+								<button className="page-link" onClick={() => paginate(pageNumber)}>
+								{pageNumber}
+								</button>
+							</li>
+							);
+						}
+						return null;
+						})}
+
+						{/* 다음 그룹 페이지 이동 */}
+						<li className={`page-item ${currentPage + 5 > totalPages ? 'disabled' : ''}`}>
 						<button
 							className="page-link"
-							onClick={() => paginate(currentPage + 1)}
+							onClick={() => paginate(Math.min(totalPages, Math.floor((currentPage - 1) / 5) * 5 + 6))}
 							aria-label="Next"
 						>
 							<span aria-hidden="true">&raquo;</span>

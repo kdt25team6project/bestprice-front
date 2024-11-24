@@ -41,7 +41,7 @@ const Header = ({ onSearch }) => {
 		<nav className="navbar navbar-expand-lg bg-body-tertiary">
 			<div className="container-fluid">
 				<a className="navbar-brand page-title" href="/">
-					🍽️Best Price🍽️
+					🍽️Cook Cook🍽️
 				</a>
 				<div className="mx-auto">
 					<SearchBar onSearch={handleSearch} />
@@ -91,10 +91,10 @@ const Header = ({ onSearch }) => {
 					레시피
 				</button>
 				<button className="nav-button" onClick={() => navigate("/tips")}>
-					자취팁
+					생활팁
 				</button>
 				<button className="nav-button" onClick={() => navigate("/rank")}>
-					랭킹
+					레시피 랭킹
 				</button>
 				<button className="nav-button" onClick={() => navigate("/myfridge")}>
 					나만의 냉장고

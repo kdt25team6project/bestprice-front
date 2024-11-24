@@ -7,10 +7,9 @@ const Footer = () => {
 			<div className="container">
 				<div className="row">
 					<div className="col-md-4">
-						<h5 className="text-success">Best Price</h5>
+						<h5 className="text-success">Cook! Cook!</h5>
 						<p>
-							다양한 요리 레시피를 제공하고 식재료의<br></br>가격 비교 서비스를
-							제공합니다.
+							다양한 요리 레시피를 기반으로<br></br>식재료의 가격 비교 및<br></br>나만의 냉장고 서비스를 제공합니다.
 						</p>
 					</div>
 
@@ -18,8 +17,8 @@ const Footer = () => {
 						<h5 className="text-success">바로가기</h5>
 						<ul className="list-unstyled">
 							<li>
-								<a href="/inquiries" className="footer-link">
-									문의하기
+								<a href="products" className="footer-link">
+									상품
 								</a>
 							</li>
 							<li>
@@ -29,15 +28,30 @@ const Footer = () => {
 							</li>
 							<li>
 								<a href="/tips" className="footer-link">
-									자취 꿀팁
+									생활팁
+								</a>
+							</li>
+							<li>
+								<a href="/rank" className="footer-link">
+									랭킹
+								</a>
+							</li>
+							<li>
+								<a href="/myfridge" className="footer-link">
+									나만의 냉장고
 								</a>
 							</li>
 						</ul>
 					</div>
 
 					<div className="col-md-4">
-						<h5 className="text-success">SNS</h5>
+						<h5 className="text-success">고객지원</h5>
 						<ul className="list-unstyled">
+						<li>
+								<a href="/inquiries" className="footer-link">
+									문의하기
+								</a>
+							</li>
 							<li>
 								<a href="#" className="footer-link">
 									인스타그램
@@ -45,12 +59,7 @@ const Footer = () => {
 							</li>
 							<li>
 								<a href="#" className="footer-link">
-									카페
-								</a>
-							</li>
-							<li>
-								<a href="#" className="footer-link">
-									X
+									블로그
 								</a>
 							</li>
 						</ul>
