@@ -6,6 +6,7 @@ import { changePassword } from "../../services/changePasswordApi";
 import { deleteUser } from "../../services/deleteUserApi";
 import useLogout from "../../hooks/useLogout";
 import RecipeList from "../Search/RecipeList";
+import InquiryList from "../Inquiry";
 import axios from "axios";
 import "./styles.css";
 
@@ -15,15 +16,20 @@ const MyPage = () => {
 	const [isSettingsVisible, setIsSettingsVisible] = useState(false); // 설정 화면 표시 여부
 	const [bookmarkedRecipes, setBookmarkedRecipes] = useState([]); // 북마크된 레시피
 	const [preferences, setPreferences] = useState(null); // 사용자 선호도
+	const [filteredInquiries, setFilteredInquiries] = useState([]); // 필터링된 문의
 	const [isLoading, setIsLoading] = useState(false); // 로딩 상태
 
 	const { nickname, userId } = user?.user || {};
 
 	useEffect(() => {
-		if (activeTab === "preference" && userId) {
-			fetchPreferences();
-		} else if (activeTab === "recipe" && userId) {
-			fetchBookmarkedRecipes();
+		if (userId) {
+			if (activeTab === "preference") {
+				fetchPreferences();
+			} else if (activeTab === "recipe") {
+				fetchBookmarkedRecipes();
+			} else if (activeTab === "inquiries") {
+				fetchUserInquiries();
+			}
 		}
 	}, [activeTab, userId]);
 
@@ -75,6 +81,20 @@ const MyPage = () => {
 		}
 	};
 
+	const fetchUserInquiries = async () => {
+		setIsLoading(true);
+		try {
+			const response = await axios.get(`http://localhost:8001/api/inquiries`, {
+				params: { userId }, // userId로 필터링
+			});
+			setFilteredInquiries(response.data.content || []);
+		} catch (error) {
+			console.error("사용자 문의를 가져오는 중 오류 발생:", error);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
 	return (
 		<div className="mypage-container">
 			{/* 사용자 정보 섹션 */}
@@ -98,18 +118,57 @@ const MyPage = () => {
 				</div>
 			</div>
 
-			{/* 설정 섹션 */}
+			{/* 탭 섹션 */}
+			<div className="user-actions">
+				<div
+					className={`action-item ${
+						activeTab === "preference" ? "active-tab" : ""
+					}`}
+					onClick={() => setActiveTab("preference")}
+				>
+					<i className="bi bi-heart"></i>
+					<p>나의 선호도</p>
+				</div>
+				<div
+					className={`action-item ${
+						activeTab === "recipe" ? "active-tab" : ""
+					}`}
+					onClick={() => setActiveTab("recipe")}
+				>
+					<i className="bi bi-bookmark"></i>
+					<p>관심 레시피</p>
+				</div>
+				<div
+					className={`action-item ${
+						activeTab === "inquiries" ? "active-tab" : ""
+					}`}
+					onClick={() => setActiveTab("inquiries")}
+				>
+					<i className="bi bi-question-circle"></i>
+					<p>나의 문의</p>
+				</div>
+			</div>
+
+			{/* 탭 내용 */}
 			{isSettingsVisible ? (
 				<SettingsSection user={user} />
-			) : (
-				<PreferencesAndScrapSection
-					activeTab={activeTab}
-					setActiveTab={setActiveTab}
+			) : activeTab === "preference" ? (
+				<PreferencesSection
 					preferences={preferences}
 					setPreferences={setPreferences}
+					isLoading={isLoading}
+					userId={userId}
+				/>
+			) : activeTab === "recipe" ? (
+				<ScrapSection
 					bookmarkedRecipes={bookmarkedRecipes}
 					isLoading={isLoading}
-                    userId={userId}
+				/>
+			) : (
+				<InquirySection 
+					inquiries={filteredInquiries} 
+					isLoading={isLoading}
+					userId={userId}
 				/>
 			)}
 		</div>
@@ -237,14 +296,12 @@ const SettingsSection = ({ user }) => {
 	);
 };
 
-const PreferencesAndScrapSection = ({
-	activeTab,
-	setActiveTab,
+// PreferencesSection: 사용자 선호도를 관리하는 컴포넌트
+const PreferencesSection = ({
 	preferences,
 	setPreferences,
-	bookmarkedRecipes,
 	isLoading,
-    userId,
+	userId,
 }) => {
 	const [isEditing, setIsEditing] = useState(false);
 	const [updatedPreferences, setUpdatedPreferences] = useState(
@@ -252,15 +309,15 @@ const PreferencesAndScrapSection = ({
 	);
 
 	useEffect(() => {
-        if (preferences) {
-            setUpdatedPreferences({
-                difficulty: preferences.difficulty || "",
-                portion: preferences.portion || "",
-                category: preferences.category || "",
-                method: preferences.method || "",
-            });
-        }
-    }, [preferences]);
+		if (preferences) {
+			setUpdatedPreferences({
+				difficulty: preferences.difficulty || "",
+				portion: preferences.portion || "",
+				category: preferences.category || "",
+				method: preferences.method || "",
+			});
+		}
+	}, [preferences]);
 
 	const handleInputChange = (key, value) => {
 		setUpdatedPreferences((prev) => ({ ...prev, [key]: value }));
@@ -268,7 +325,6 @@ const PreferencesAndScrapSection = ({
 
 	const savePreferences = async () => {
 		try {
-			// 프론트엔드 키 -> API 키로 매핑
 			const apiPreferences = {
 				userId, // 사용자 ID
 				difficulty: updatedPreferences.difficulty,
@@ -277,7 +333,6 @@ const PreferencesAndScrapSection = ({
 				method: updatedPreferences.method,
 			};
 
-			// 디버깅: 서버로 보낼 데이터 확인
 			console.log("전송될 데이터:", apiPreferences);
 
 			await axios.put(`http://localhost:8001/api/preferences`, apiPreferences);
@@ -291,30 +346,11 @@ const PreferencesAndScrapSection = ({
 	};
 
 	return (
-		<div>
-			<div className="user-actions">
-				<div
-					className={`action-item ${
-						activeTab === "preference" ? "active-tab" : ""
-					}`}
-					onClick={() => setActiveTab("preference")}
-				>
-					<i className="bi bi-heart"></i>
-					<p>나의 선호도</p>
-				</div>
-				<div
-					className={`action-item ${
-						activeTab === "recipe" ? "active-tab" : ""
-					}`}
-					onClick={() => setActiveTab("recipe")}
-				>
-					<i className="bi bi-bookmark"></i>
-					<p>관심 레시피</p>
-				</div>
-			</div>
-
-			{activeTab === "preference" ? (
-				<div className="preferences-section">
+		<div className="preferences-section">
+			{isLoading ? (
+				<p>로딩 중...</p>
+			) : (
+				<>
 					{/* 난이도 */}
 					<div className="preferences-item">
 						<label>난이도:</label>
@@ -356,7 +392,7 @@ const PreferencesAndScrapSection = ({
 						)}
 					</div>
 
-					{/* 분류 (종류별) */}
+					{/* 분류 */}
 					<div className="preferences-item">
 						<label>분류:</label>
 						{isEditing ? (
@@ -406,23 +442,41 @@ const PreferencesAndScrapSection = ({
 					>
 						{isEditing ? "저장" : "수정"}
 					</button>
-				</div>
+				</>
+			)}
+		</div>
+	);
+};
+
+// ScrapSection: 북마크된 레시피를 관리하는 컴포넌트
+const ScrapSection = ({ bookmarkedRecipes, isLoading }) => {
+	return (
+		<div className="scrap-section">
+			{isLoading ? (
+				<p>로딩 중...</p>
+			) : bookmarkedRecipes.length > 0 ? (
+				<RecipeList recipes={bookmarkedRecipes} layout="grid" />
 			) : (
-				<div className="scrap-section">
-					{isLoading ? (
-						<p>로딩 중...</p>
-					) : bookmarkedRecipes.length > 0 ? (
-						<RecipeList recipes={bookmarkedRecipes} layout="grid" />
-					) : (
-						<div className="no-scraps">
-							<p>스크랩한 레시피가 없습니다.</p>
-							<button className="recommend-btn">추천 레시피 보러가기</button>
-						</div>
-					)}
+				<div className="no-scraps">
+					<p>스크랩한 레시피가 없습니다.</p>
+					<button className="recommend-btn">추천 레시피 보러가기</button>
 				</div>
 			)}
 		</div>
 	);
 };
 
+const InquirySection = ({ inquiries, isLoading }) => {
+	return (
+		<div className="inquiry-list-container">
+			{isLoading ? (
+				<p>로딩 중...</p>
+			) : inquiries.length > 0 ? (
+				<InquiryList inquiries={inquiries} />
+			) : (
+				<p>문의 내역이 없습니다.</p>
+			)}
+		</div>
+	);
+};
 export default MyPage;
