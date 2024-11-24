@@ -76,6 +76,13 @@ const LoginPage = () => {
 			e.preventDefault();
 			try {
 				const response = await login(userId, password);
+
+				// verify 값 확인
+				if (response.verified === false) {
+					alert("이메일 인증이 필요합니다. 이메일 인증 후 다시 시도해주세요.");
+					return;
+				}
+
 				// 사용자 데이터 저장
 				const userData = {
 					user: {
@@ -83,6 +90,8 @@ const LoginPage = () => {
 						name: response.name,
 						nickname: response.nickname,
 						email: response.email,
+						role: response.role,
+						verified: response.verified,
 					},
 				};
 

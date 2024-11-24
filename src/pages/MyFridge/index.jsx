@@ -8,8 +8,19 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Pagination from 'react-bootstrap/Pagination';
 import { Modal, Button } from 'react-bootstrap';
+import { userState } from '../../state/userState';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useNavigate } from 'react-router-dom';
+
 
 const MyFridge = () => {
+    const navigate = useNavigate();
+
+    // 로그인 여부 판별
+    const { user } = useRecoilValue(userState);
+    const isLoggedIn = user && user.userId ? true : false;
+    const userId = user?.userId;
+
     // 냉장고 문 상태
     const [isTopDoorOpen, setIsTopDoorOpen] = useState(false);
     const [isBottomDoorOpen, setIsBottomDoorOpen] = useState(false);
@@ -34,10 +45,22 @@ const MyFridge = () => {
     // API URL 설정
     const API_URL = 'http://localhost:8001/refrigerator';
 
+    const setUser = useSetRecoilState(userState);
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem("userLocal");
+        if (storedUser) {
+            setUser({
+                isLoggedIn: true,
+                user: JSON.parse(storedUser).user, // 사용자 데이터 복원
+            });
+        }
+    }, [setUser]);
+
     // 데이터 로드 (페이지 최초 렌더링 시 실행)
     useEffect(() => {
         fetchFoodItems();
-    }, []);
+    }, [userId]);
 
     // 상단 냉장고 문 열기/닫기 함수
     const toggleTopDoor = () => {
@@ -83,8 +106,13 @@ const MyFridge = () => {
 
     // 서버에서 식료품 목록 가져오는 함수
     const fetchFoodItems = async () => {
+        if (!userId) {
+            console.log("userId가 없습니다.");
+            return;
+        }
         try {
-            const response = await axios.get(API_URL);
+            const response = await axios.get(`${API_URL}?userId=${userId}`);
+            console.log(userId);
             setFoodItems(response.data);
             console.log('데이터 로드:', response.data);
         } catch (error) {
@@ -100,7 +128,14 @@ const MyFridge = () => {
             return;
         }
 
+        if (!userId) {
+            console.error("userId가 없습니다. 로그인이 필요합니다.");
+            alert("로그인이 필요합니다.");
+            return;
+        }
+
         const newFoodItem = {
+            userId,
             category: selectedCategory,
             emoji: selectedEmoji,
             name: foodName,
@@ -230,8 +265,69 @@ const MyFridge = () => {
         setCurrentPage(page);
     };
 
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // 레시피 데이터 상태 관리
+    const [recipe, setRecipes] = useState([]);
+    // 유통기한 기준 상위 5개 항목 추출
+    const topFiveItems = sortedFoodItems.slice(0, 5);
+    const [ingredientName, setIngredientName] = useState([]);
+
+    const fetchRecipesByIngredients = async () => {
+        try {
+            // 냉장고에 저장된 식료품 이름 추출
+            const ingredientName = topFiveItems.map((item) => item.name);
+            setIngredientName(ingredientName);
+
+            const queryString = ingredientName
+                .map(name => `ingredients=${encodeURIComponent(name)}`)
+                .join('&');
+
+            // 백엔드로 GET 요청을 보냄
+            const response = await axios.get(
+                `http://localhost:8001/api/recipe/search?${queryString}`
+            );
+            
+            console.log("Fetched Recipes:", response.data);
+            setRecipes(response.data);
+        } catch (error) {
+            console.error("Failed to fetch recipes:", error.message); // 에러 메시지 출력
+        }
+    };
+
+    const handleRecipeClick = (recipeItem) => {
+        // 클릭 시 레시피 상세 페이지로 이동
+        navigate(`/recipe/${recipeItem.rcp_SNO}`, { state: { recipeItem } });
+    };
+    
+
+    // 식료품 목록(foodItems)이 변경될 때 레시피를 가져옴
+    useEffect(() => {
+        if (foodItems && foodItems.length > 0) {
+            fetchRecipesByIngredients();
+        }
+    }, [foodItems]);
+
+    
+
+    
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+
     return (
+        
         <div className="fridge-container">
+        {/* 로그인되지 않은 경우: 흐린 배경과 메시지 */}
+        {(!user || !user.userId) && (
+                <div className="overlay">
+                    <div className="overlay-message">
+                        <h2>로그인 해주세요</h2>
+                    </div>
+                </div>
+            )}
+
+            {/* 냉장고 UI */}
+            <div className={`fridge-content ${!isLoggedIn ? "blurred" : ""}`}>
 
             <button className="add-button" onClick={() => setIsLeftCanvasOpen(!isLeftCanvasOpen)}>추가하기</button>
 
@@ -486,7 +582,8 @@ const MyFridge = () => {
                     {currentItems.map((item, index) => {
                         const daysLeft = calculateDaysLeft(item.expiration_date);
                         return (
-                            <div key={index} className="expiration-item">
+                            <div key={index} className="expiration-item"
+                                 onClick={(e) => { e.stopPropagation(); handleShowModal(item);}}>
                                 <div className="food-emoji">{item.emoji}</div> {/* 아이콘 */}
                                 <div className="expiration-details">
                                     <p className="expiration-date">남은 일수: {daysLeft}일</p>
@@ -527,20 +624,22 @@ const MyFridge = () => {
                     </Pagination>
                 </div>
 
-					{/* 레시피 링크 */}
-					<div className="recipe-links">
-						{[1, 2, 3, 4, 5].map((item, index) => (
-							<div key={index} className="recipe-item">
-								{" "}
-								{/* 레시피 항목 */}
-								<p className="recipe-link">레시피 링크</p>
-								<p className="recipe-name">식료품 이름</p>
-							</div>
-						))}
-					</div>
+				{/* 레시피 링크 */}
+                <div className="recipe-links">
+                <h3>유통기한 임박 재료 레시피</h3>
+                <h7>해당 레시피는 랜덤으로 표시 됩니다!</h7>
+                {recipe.slice(0, 5).map((recipeItem, index) => (
+                    <div key={index} className="recipe-item"
+                         onClick={() => handleRecipeClick(recipeItem)}>
+                        <p className="recipe-name">식재료 : {ingredientName[index]}</p>
+                        <p className="recipe-title">{recipeItem?.rcp_TTL || "레시피 없음"}</p>
+                    </div>
+                    ))}
+                    </div>
 				</div>
 			</div>
 		</div>
+        </div>
 	);
 }
 
