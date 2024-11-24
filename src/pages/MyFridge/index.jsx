@@ -627,7 +627,7 @@ const MyFridge = () => {
 				{/* 레시피 링크 */}
                 <div className="recipe-links">
                 <h3>유통기한 임박 재료 레시피</h3>
-                <h7>해당 레시피는 랜덤으로 표시 됩니다!</h7>
+                <h6>해당 레시피는 랜덤으로 표시 됩니다!</h6>
                 {recipe.slice(0, 5).map((recipeItem, index) => (
                     <div key={index} className="recipe-item"
                          onClick={() => handleRecipeClick(recipeItem)}>
