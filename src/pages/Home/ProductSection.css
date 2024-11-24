@@ -1,0 +1,249 @@
+.title.main_title h2 {
+    text-align: center;
+    font-size: 46px;
+    color: #333;
+    font-weight: 600;
+    margin: 50px;
+  }
+  
+  .prdList {
+    display: grid;
+    max-width: 1200px;
+    margin: 0 auto;
+    grid-template-columns: repeat(3, 360px);
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 100px;
+  }
+  
+  .product-item {
+    border: 1px solid #e6e6e6;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .product-item.large {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+  
+  /* 이미지 영역 */
+  .thumbnail {
+    padding: 20px;
+    position: relative;
+  }
+  
+  .thumbnail img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+  
+  /* 숫자 배지 스타일 */
+  .thumbnail .cnt {
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    width: 54px;
+    height: 54px;
+    text-align: center;
+    box-sizing: border-box;
+    border-radius: 15px 0 15px;
+    background: #888;
+    z-index: 5;
+  }
+  
+  .prdrank {
+    font-size: 22px;
+    color: #fff;
+    font-weight: 700;
+    line-height: 54px;
+  }
+  
+  /* 베스트 배지 */
+  .thumbnail .cnt.best-badge {
+    width: 80px;
+    height: 80px;
+    background: #ff600f;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0 15px 15px 0;
+    color: #fff;
+    top: 10px;
+    left: 10px;
+  }
+  
+  /* 상품 설명 영역 */
+  .description {
+    padding: 13px 19px;
+    background: #f5f5f5;
+    border-radius: 10px;
+    margin-top: 10px;
+  }
+  
+  .item_name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .item_money_box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 5px;
+  }
+  
+  .c_price {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .sale {
+    font-size: 16px;
+    color: #ff6f00;
+    font-weight: bold;
+  }
+  
+  /* ProductSection 스타일 */
+  .prod-ed {
+    position: relative;
+    width: 100%;
+    margin: 20px;
+    max-width: 1280px;
+    overflow: hidden;
+  }
+  
+  .prod-ed .prod-ed-header {
+    width: 100%;
+    height: 29px;
+    margin-bottom: 18px;
+  }
+  
+  .prod-ed .prod-ed-header .title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #111;
+    padding-left: 10px;
+  }
+  
+  .prod-ed .prod-ed-body {
+    position: relative;
+    width: auto;
+    left: 10px;
+    margin-top: 30px;
+    margin-left: 20px;
+    display: flex;
+    align-items: center;
+    overflow-x: hidden;
+  }
+  
+  .prod-ed .prod-ed-wrap {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    overflow-x: hidden;
+    scroll-snap-type: x mandatory;
+    width: calc(100% - 80px);
+    margin-top: 30px;
+  }
+  
+  .prod-ed .prod-ed-list {
+    display: flex;
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+  }
+  
+  .prod-ed .prod-ed-item {
+    flex: 0 0 auto;
+    width: 212px;
+    scroll-snap-align: start;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    background-color: #fff;
+    text-align: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .prod-ed .prod-item-img {
+    max-height: 190px;
+    max-width: 190px;
+    height: auto;
+    padding: 10px;
+  }
+  
+  .prod-ed .prod-item-info {
+    padding: 13px 19px;
+    border-radius: 10px;
+    margin-top: 10px;
+  }
+  
+  .prod-ed .prod-item-info .title {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 5px;
+  }
+  
+  .prod-ed .prod-item-info .price {
+    font-size: 14px;
+    color: #0070c9;
+  }
+  
+  /* 스크롤 버튼 스타일 */
+  .scroll-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    border: none;
+    padding: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    z-index: 1;
+  }
+  
+  .scroll-button.right {
+    right: 80px;
+  }
+  
+  
+  .top-ingredients {
+    margin-top: 10px; /* 제목과 버튼 사이 여백 */
+    display: flex; /* 플렉스 컨테이너로 설정 */
+    flex-wrap: wrap; /* 버튼이 줄바꿈되도록 설정 */
+    gap: 10px; /* 버튼 사이 간격 */
+  }
+  
+  .ingredient-info {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    border: 1px solid #dee2e6;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  
+  .ingredient-info:hover {
+    background-color: #e9ecef;
+    border-color: #adb5bd;
+  }
+  
+  
+  .empty-refrigerator {
+    text-align: center;
+    color: gray;
+    font-size: 1.5rem;
+    margin: 20px 0;
+  }
+  
