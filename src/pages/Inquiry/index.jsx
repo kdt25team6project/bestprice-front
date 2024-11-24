@@ -7,7 +7,7 @@ import Pagination from "./Pagination";
 import InquiryForm from "./InquiryForm";
 import "./styles.css";
 
-const InquiryList = () => {
+const InquiryList = ({ userId }) => {
     const user = useRecoilValue(userState);
     const [inquiries, setInquiries] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -16,7 +16,9 @@ const InquiryList = () => {
 
     const fetchInquiries = async (page = 1) => {
         try {
-            const response = await axios.get(`http://localhost:8001/api/inquiries`, { params: { page } });
+            const response = await axios.get("http://localhost:8001/api/inquiries", {
+                params: { page, userId }, // userId를 API 요청에 포함
+            });
             const mappedInquiries = response.data.content.map((item) => ({
                 inquiryId: item.inquiryId,
                 inquiryTitle: item.inquiryTitle,
@@ -36,7 +38,7 @@ const InquiryList = () => {
 
     useEffect(() => {
         fetchInquiries(currentPage);
-    }, [currentPage]);
+    }, [currentPage, userId]);
 
     const handleFormSubmit = () => {
         setShowForm(false);

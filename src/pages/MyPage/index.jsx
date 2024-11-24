@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useNavigate } from "react-router-dom"; 
 import { userState } from "../../state/userState";
 import { changeNickname } from "../../services/changeNicknameApi";
 import { changePassword } from "../../services/changePasswordApi";
@@ -85,7 +86,7 @@ const MyPage = () => {
 		setIsLoading(true);
 		try {
 			const response = await axios.get(`http://localhost:8001/api/inquiries`, {
-				params: { userId }, // userId로 필터링
+				params: { userId, page: 1 }, // page를 1로 설정
 			});
 			setFilteredInquiries(response.data.content || []);
 		} catch (error) {
@@ -467,6 +468,12 @@ const ScrapSection = ({ bookmarkedRecipes, isLoading }) => {
 };
 
 const InquirySection = ({ inquiries, isLoading }) => {
+	const navigate = useNavigate();
+
+	const NavigateInquiries = () => {
+        navigate("/inquiries"); // /inquiries 경로로 이동
+    };
+
 	return (
 		<div className="inquiry-list-container">
 			{isLoading ? (
@@ -474,7 +481,11 @@ const InquirySection = ({ inquiries, isLoading }) => {
 			) : inquiries.length > 0 ? (
 				<InquiryList inquiries={inquiries} />
 			) : (
-				<p>문의 내역이 없습니다.</p>
+				<div className="no-scraps">
+					<p>문의 내역이 없습니다.</p>
+					<button className="recommend-btn"
+							onClick={NavigateInquiries}>문의하러 가기</button>
+				</div>
 			)}
 		</div>
 	);
