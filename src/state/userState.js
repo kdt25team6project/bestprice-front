@@ -24,6 +24,8 @@ export const userState = atom({
 			name: null,
 			nickname: null,
 			email: null,
+			role: null,
+			verified: null,
 		},
 	}),
 	// 로컬 스토리지와 상태 동기화
