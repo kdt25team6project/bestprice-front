@@ -334,9 +334,9 @@ function RecipeDetailPage() {
     <div className="recipe-container">
       <div className="recipe-image">
         <img src={recipe.mainThumb} alt={recipe.rcp_TTL} />
-        <div className="recipe-buttonss">
+        <div className="button-group">
             <button
-              className={`btn ${isRecommended ? "btn-danger" : "btn-success"} btn-sm`}
+              className="buttons1"
               onClick={handleToggleRecommend}
               disabled={isLoading}
             >
@@ -344,7 +344,7 @@ function RecipeDetailPage() {
             </button>
 
             <button
-              className={`btn ${isBookmarked ? "btn-warning" : "btn-success"} btn-sm`}
+              className="buttons2"
               onClick={handleToggleBookmark}
               disabled={isLoading}
             >

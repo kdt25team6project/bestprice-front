@@ -5,20 +5,28 @@ import './style.css';
 
 // 개별 상품 컴포넌트
 function ProductItem({ product }) {
+  const rawPrice = product.price ? product.price.replace(/,/g, '') : null;
+  const formattedPrice = !isNaN(Number(rawPrice))
+    ? Number(rawPrice).toLocaleString() 
+    : null;
+
   return (
-    <li className='prod-ed-item'>
+    <li className="prod-ed-item">
       <a href={product.link} target="_blank" rel="noopener noreferrer">
-        <div className='prod-item-img'>
-          <img src={product.imgUrl} alt={product.productName} style={{ width: '100%', height: 'auto' }} />
+        <div className="prod-item-img">
+          <img src={product.imgUrl} alt={product.productName} className="prod-item-img" />
         </div>
-        <div className='prod-item-info'>
-          <div className='title'>{product.productName}</div>
-          <div className='price'>{product.price ? `${product.price}원` : '가격 정보 없음'}</div>
+        <div className="prod-item-info">
+          <div className="title">{product.productName}</div>
+          <div className="price">
+            {formattedPrice ? `${formattedPrice}원` : "가격 정보 없음"}
+          </div>
         </div>
       </a>
     </li>
   );
 }
+
 
 // 상품 섹션 컴포넌트
 function ProductSection({ title, defaultQuery, topIngredients }) {
@@ -149,7 +157,7 @@ function ProductPage() {
     };
 
     if (userId) {
-      fetchRefrigeratorData(); 
+      fetchRefrigeratorData(); // userId가 있을 때만 API 호출
     }
   }, [userId]);
 
