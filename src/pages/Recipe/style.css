@@ -1,209 +1,218 @@
 .recipe-image{
-    position: relative;
-  }
-  
-  .recipe-image img {
-    width: 100%;
-  }
-  
-  .recipe-container {
-    max-width: 1200px;
-     position: relative;
-    margin-right: auto;
-    margin-left: auto;
-  }
-  
-  .recipeD-title {
-    font-size: 50px;
-    font-weight: bold;
-    text-align: center;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    background: none;
-    border: none;
-    color: #000000;
-    cursor: pointer;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    min-height: 48px;
-  }
-  
-  .recipeD-summary {
-    text-align: center;
-    padding: 0 22px 8px;
-    font-size: 20px;
-    line-height: 1.6;
-    letter-spacing: -0.05em;
-  }
-  .recipeD-info {
-    text-align: center;
-    padding: 20px 0 36px;
-  }
-  
-  .recipeD-info span {
-    font-size: 16px;
-    display: inline-block;
-    width: 28%;
-  }
-  
-  .recipeD-info span img {
-    width: 42px;
-    vertical-align: middle;
-    margin-right: 6px;
-    margin-top: -4px;
-  }
-  
-  a {
-    color: #2d2d2d;
-    text-decoration: none;
-  }
-  
-  .recipeD-box {
-    display: flex;
-    background: #fff;
-    border-bottom: 10px solid #f4f4f4;
-  }
-  .recipe-ingredients {
-    width: 50%;
-    margin-bottom: 0;
-    padding-bottom: 20px;
-  }
-  .recipe-ingredients dt {
-    margin: 0 18px;
-    padding: 10px 2px 6px;
-    border-bottom: 1px solid #191919;
-  }
-  .recipe-ingredients dt span {
-    font-size: 30px;
-    display: inline-block;
-    line-height: 1;
-    padding: 6px 0 7px;
-    vertical-align: middle;
-  }
-  .recipe-ingredients dd {
-    margin: 0 18px;
-    padding: 2px 2px 15px;
-  }
-  .ingredient-list {
-    flex-wrap: wrap;
-  }
-  .ingredient-list li {
-    padding: 8px 4px 9px;
-    border-bottom: 1px solid #EDEDED;
-    display: flex;
-    flex-direction: column;
-  }
-  .ingredient-list_1 {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .ingredient-name {
-    font-size: 20px;
-    line-height: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    min-width: 36%;
-    padding: 2px 8px 2px 0px
-  }
-  .ingredient-amount {
-    font-size: 20px;
-    line-height: 1;
-    display: flex;
-    align-items: baseline;
-  }
-  .ingredient-amount span{
-    padding-left: 10px;
-    width: 40px;
-    font-size: 20px;
-    line-height: 1;
-    display: flex;
-    align-items: baseline;
-  }
-  .view3_box_tit {
-    font-size: 50px;
-    padding: 28px 18px 55px;
-    font-weight: bold;
-    letter-spacing: -0.06em;
-    line-height: 1;
-  }
-  
-  ul, li {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-  .step_list.st_thumb li, .step_list.st_txt li {
-    padding-bottom: 50px;
-    display: table;
-    width: 100%;
-  }
-  .step_list.st_thumb .step_list_num {
-    font-size: 40px;
-    display: table-cell;
-    vertical-align: top;
-    width: 38px;
-    padding-right: 40px;
-    padding-bottom: 4px;
-  }
-  .step_list_num {
-    font-family: 'Roboto';
-    font-size: 22px;
-    padding: 0 3px 0 22px;
-    font-weight: 800;
-    line-height: 1;
-  }
-  .step_list_txt {
-    display: table-cell;
-  }
-  .step_list_txt_cont {
-    font-size: 20px;
-    line-height: 1.5;
-    letter-spacing: -0.02em;
-    padding-right: 50px;
-    padding-bottom: 8px;
-  }
-  .step_list.st_thumb .step_list_txt_pic {
-    display: table-cell;
-    vertical-align: top;
-    width: 330px;
-    padding: 2px 20px 5px 0;
-    margin-left: 10px;
-  }
-  .step_list.st_thumb .step_list_txt_pic img {
-    border-radius: 5px;
-  }
-  .step_list_txt_pic img {
-    width: 100%;
-  }
-  
-  .step_list.st_thumb .step_list_num span {
-    display: none;
-  }
-  .step_cooktip {
-    margin: 0 18px 40px;
-    background: #f0f1f3;
-    border-radius: 8px;
-    padding: 26px;
-  }
-  .step_cooktip dd {
-    font-size: 16px;
-    font-style: italic;
-    color: #666;
-    letter-spacing: -0.02em;
-    line-height: 1.5;
-    padding-top: 14px;
-  }
-  
-  .search-button {
-    margin-top: 10px;
-    padding: 10px;
-    font-size: 16px;
-    cursor: pointer;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-  }
+  position: relative;
+}
+
+.recipe-image img {
+  width: 94%;
+  margin: 3%;
+}
+
+.recipe-container {
+  max-width: 1200px;
+   position: relative;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.recipeD-title {
+  font-size: 50px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background: none;
+  border: none;
+  color: #000000;
+  cursor: pointer;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 48px;
+}
+
+.recipeD-summary {
+  text-align: center;
+  padding: 0 22px 8px;
+  font-size: 20px;
+  line-height: 1.6;
+  letter-spacing: -0.05em;
+}
+.recipeD-info {
+  text-align: center;
+  padding: 20px 0 36px;
+}
+
+.recipeD-info span {
+  font-size: 16px;
+  display: inline-block;
+  width: 28%;
+}
+
+.recipeD-info span img {
+  width: 42px;
+  vertical-align: middle;
+  margin-right: 6px;
+  margin-top: -4px;
+}
+
+a {
+  color: #2d2d2d;
+  text-decoration: none;
+}
+
+.recipeD-box {
+  display: flex;
+  background: #fff;
+  border-bottom: 10px solid #f4f4f4;
+}
+.recipe-ingredients {
+  width: 50%;
+  margin-bottom: 0;
+  padding-bottom: 20px;
+}
+.recipe-ingredients dt {
+  margin: 0 18px;
+  padding: 10px 2px 6px;
+  border-bottom: 1px solid #191919;
+}
+.recipe-ingredients dt span {
+  font-size: 30px;
+  display: inline-block;
+  line-height: 1;
+  padding: 6px 0 7px;
+  vertical-align: middle;
+}
+.recipe-ingredients dd {
+  margin: 0 18px;
+  padding: 2px 2px 15px;
+}
+.ingredient-list {
+  flex-wrap: wrap;
+}
+.ingredient-list li {
+  padding: 8px 4px 9px;
+  border-bottom: 1px solid #EDEDED;
+  display: flex;
+  flex-direction: column;
+}
+.ingredient-list_1 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.ingredient-name {
+  font-size: 20px;
+  line-height: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 36%;
+  padding: 2px 8px 2px 0px
+}
+.ingredient-amount {
+  font-size: 20px;
+  line-height: 1;
+  display: flex;
+  align-items: baseline;
+}
+.ingredient-amount span{
+  padding-left: 10px;
+  width: 40px;
+  font-size: 20px;
+  line-height: 1;
+  display: flex;
+  align-items: baseline;
+}
+.view3_box_tit {
+  font-size: 50px;
+  padding: 28px 18px 55px;
+  font-weight: bold;
+  letter-spacing: -0.06em;
+  line-height: 1;
+}
+
+ul, li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.step_list.st_thumb li, .step_list.st_txt li {
+  padding-bottom: 50px;
+  display: table;
+  width: 100%;
+}
+.step_list.st_thumb .step_list_num {
+  font-size: 40px;
+  display: table-cell;
+  vertical-align: top;
+  width: 38px;
+  padding-right: 40px;
+  padding-bottom: 4px;
+}
+.step_list_num {
+  font-family: 'Roboto';
+  font-size: 22px;
+  padding: 0 3px 0 22px;
+  font-weight: 800;
+  line-height: 1;
+}
+.step_list_txt {
+  display: table-cell;
+}
+.step_list_txt_cont {
+  font-size: 20px;
+  line-height: 1.5;
+  letter-spacing: -0.02em;
+  padding-right: 50px;
+  padding-bottom: 8px;
+}
+.step_list.st_thumb .step_list_txt_pic {
+  display: table-cell;
+  vertical-align: top;
+  width: 330px;
+  padding: 2px 20px 5px 0;
+  margin-left: 10px;
+}
+.step_list.st_thumb .step_list_txt_pic img {
+  border-radius: 5px;
+}
+.step_list_txt_pic img {
+  width: 100%;
+}
+
+.step_list.st_thumb .step_list_num span {
+  display: none;
+}
+.step_cooktip {
+  margin: 0 18px 40px;
+  background: #f0f1f3;
+  border-radius: 8px;
+  padding: 26px;
+}
+.step_cooktip dd {
+  font-size: 16px;
+  font-style: italic;
+  color: #666;
+  letter-spacing: -0.02em;
+  line-height: 1.5;
+  padding-top: 14px;
+}
+
+.search-button {
+  margin-top: 10px;
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+.recipe-buttonss {
+  position: absolute; 
+  bottom: -30px; 
+  right: 10px; 
+  display: flex;
+  gap: 0.5rem;
+  z-index: 10;
+}

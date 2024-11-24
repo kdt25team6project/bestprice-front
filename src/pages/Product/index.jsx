@@ -149,7 +149,7 @@ function ProductPage() {
     };
 
     if (userId) {
-      fetchRefrigeratorData(); // userId가 있을 때만 API 호출
+      fetchRefrigeratorData(); 
     }
   }, [userId]);
 
