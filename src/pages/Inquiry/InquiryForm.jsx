@@ -6,7 +6,7 @@ const InquiryForm = ({ onClose, onSubmitSuccess, userId }) => {
     const [formData, setFormData] = useState({
         inquiryTitle: "",
         inquiry: "",
-        inquiryType: "일반", // 기본값
+        inquiryType: "답변 대기", // 기본값
         secret: false,
         userId: userId || null, // 전달받은 userId 사용
     });
@@ -54,18 +54,6 @@ const InquiryForm = ({ onClose, onSubmitSuccess, userId }) => {
                             onChange={handleChange}
                             required
                         ></textarea>
-                    </div>
-                    <div className="form-group">
-                        <label>문의 유형</label>
-                        <select
-                            name="inquiryType"
-                            value={formData.inquiryType}
-                            onChange={handleChange}
-                        >
-                            <option value="일반">일반</option>
-                            <option value="버그">버그</option>
-                            <option value="요청">요청</option>
-                        </select>
                     </div>
                     <div className="form-group">
                         <label>
