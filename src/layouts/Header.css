@@ -31,17 +31,23 @@
 	margin-left: 30px; /* 브랜드 로고와 메뉴 사이 간격 */
 }
 
+/* 메뉴 링크 */
 .menu-link {
 	font-size: 1rem;
 	color: #333;
 	cursor: pointer;
 	text-decoration: none;
-	transition: color 0.3s ease;
+	transition: color 0.3s ease, font-weight 0.3s ease;
 }
 
 .menu-link:hover {
-	color: #000;
-	text-decoration: underline;
+	color: #000; /* hover 시 색상 변경 */
+	text-decoration: none; /* 밑줄 제거 */
+}
+
+.menu-link.active {
+	color: #ff5833; /* 활성화된 상태의 글자 색상 */
+	font-weight: bold; /* 활성화된 상태의 글씨 두께 */
 }
 
 /* 검색바 컨테이너 */
@@ -85,16 +91,21 @@
 	align-items: center;
 	gap: 15px;
 }
-
+/* 사용자 링크 */
 .user-link {
 	font-size: 1rem;
 	color: #333;
 	cursor: pointer;
 	text-decoration: none;
-	transition: color 0.3s ease;
+	transition: color 0.3s ease, font-weight 0.3s ease;
 }
 
 .user-link:hover {
-	color: #000;
-	text-decoration: underline;
+	color: #000; /* hover 시 색상 변경 */
+	text-decoration: none; /* 밑줄 제거 */
+}
+
+.user-link.active {
+	color: #ff5833; /* 활성화된 상태의 글자 색상 */
+	font-weight: bold; /* 활성화된 상태의 글씨 두께 */
 }

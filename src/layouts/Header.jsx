@@ -1,6 +1,6 @@
 import React from "react";
 import SearchBar from "../components/SearchBar";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { userState } from "../state/userState";
 import useLogout from "../hooks/useLogout";
@@ -8,6 +8,7 @@ import "./Header.css";
 
 const Header = ({ onSearch }) => {
 	const navigate = useNavigate();
+	const location = useLocation(); // 현재 경로 확인
 	const user = useRecoilValue(userState);
 	const logout = useLogout();
 
@@ -45,19 +46,44 @@ const Header = ({ onSearch }) => {
 
 			{/* 메뉴 */}
 			<div className="menu-container">
-				<span className="menu-link" onClick={() => navigate("/products")}>
+				<span
+					className={`menu-link ${
+						location.pathname === "/products" ? "active" : ""
+					}`}
+					onClick={() => navigate("/products")}
+				>
 					상품
 				</span>
-				<span className="menu-link" onClick={() => navigate("/search-results")}>
+				<span
+					className={`menu-link ${
+						location.pathname === "/search-results" ? "active" : ""
+					}`}
+					onClick={() => navigate("/search-results")}
+				>
 					레시피
 				</span>
-				<span className="menu-link" onClick={() => navigate("/tips")}>
+				<span
+					className={`menu-link ${
+						location.pathname === "/tips" ? "active" : ""
+					}`}
+					onClick={() => navigate("/tips")}
+				>
 					자취팁
 				</span>
-				<span className="menu-link" onClick={() => navigate("/rank")}>
+				<span
+					className={`menu-link ${
+						location.pathname === "/rank" ? "active" : ""
+					}`}
+					onClick={() => navigate("/rank")}
+				>
 					랭킹
 				</span>
-				<span className="menu-link" onClick={() => navigate("/myfridge")}>
+				<span
+					className={`menu-link ${
+						location.pathname === "/myfridge" ? "active" : ""
+					}`}
+					onClick={() => navigate("/myfridge")}
+				>
 					나만의 냉장고
 				</span>
 			</div>
@@ -71,7 +97,12 @@ const Header = ({ onSearch }) => {
 			<div className="user-container">
 				{user?.user?.userId ? (
 					<>
-						<span className="user-link" onClick={() => navigate("/mypage")}>
+						<span
+							className={`user-link ${
+								location.pathname === "/mypage" ? "active" : ""
+							}`}
+							onClick={() => navigate("/mypage")}
+						>
 							마이페이지
 						</span>
 						<span className="user-link" onClick={logout}>
@@ -79,7 +110,12 @@ const Header = ({ onSearch }) => {
 						</span>
 					</>
 				) : (
-					<span className="user-link" onClick={() => navigate("/login")}>
+					<span
+						className={`user-link ${
+							location.pathname === "/login" ? "active" : ""
+						}`}
+						onClick={() => navigate("/login")}
+					>
 						로그인/회원가입
 					</span>
 				)}

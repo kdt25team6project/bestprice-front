@@ -28,11 +28,13 @@
 	align-items: center;
 }
 
+/* 화살표 */
 .dropdown-arrow {
 	margin-left: 5px;
 	font-size: 0.8rem;
 }
 
+/* 드롭다운 메뉴 */
 .dropdown-menu {
 	display: none;
 	position: absolute;
@@ -49,19 +51,24 @@
 	z-index: 1000;
 }
 
-.dropdown:hover .dropdown-menu {
-	display: block;
-}
-
+/* 강제로 초록색 제거 */
 .dropdown-menu li {
 	padding: 8px 12px;
 	cursor: pointer;
 	font-size: 0.9rem;
 	color: #333;
+	background-color: transparent !important; /* 강제로 배경색 제거 */
 }
 
+/* 드롭다운 항목 hover 스타일 */
 .dropdown-menu li:hover {
-	background-color: #f0f0f0;
+	background-color: #f0f0f0 !important; /* hover 시 밝은 회색으로 설정 */
+	color: #333; /* 텍스트 색상 유지 */
+}
+
+/* 드롭다운 메뉴 활성화 */
+.dropdown:hover .dropdown-menu {
+	display: block;
 }
 
 /* 검색 입력 */
