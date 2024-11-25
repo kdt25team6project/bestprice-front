@@ -1,0 +1,90 @@
+/* 검색바 컨테이너 */
+.custom-search-bar {
+	display: flex;
+	align-items: center;
+	background-color: #ffffff;
+	border: 1px solid #ddd;
+	border-radius: 20px;
+	padding: 3px 8px; /* 내부 여백만 남김 */
+	width: 100%;
+	max-width: 500px;
+	position: relative;
+	margin: 0; /* 외부 여백 제거 */
+}
+
+/* 드롭다운 */
+.dropdown {
+	position: relative;
+	display: flex;
+	align-items: center;
+}
+
+.dropdown-button {
+	border: none;
+	background: none;
+	font-size: 0.9rem;
+	cursor: pointer;
+	padding: 0 8px;
+	color: #333;
+	display: flex;
+	align-items: center;
+}
+
+.dropdown-arrow {
+	margin-left: 5px;
+	font-size: 0.7rem;
+}
+
+.dropdown-menu {
+	display: none;
+	position: absolute;
+	top: 120%;
+	left: 0;
+	background-color: white;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	list-style: none;
+	margin: 0;
+	padding: 5px 0;
+	width: 150px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-menu li {
+	padding: 8px 12px;
+	cursor: pointer;
+	font-size: 0.9rem;
+	color: #333;
+}
+
+.dropdown-menu li:hover {
+	background-color: #f0f0f0;
+}
+
+/* 드롭다운 메뉴 활성화 */
+.dropdown:hover .dropdown-menu {
+	display: block;
+}
+
+/* 검색 입력 */
+.search-input {
+	flex: 1;
+	border: none;
+	outline: none;
+	background: none;
+	font-size: 1rem;
+	padding: 0 8px;
+	color: #333;
+}
+
+/* SVG 아이콘 (검색 버튼) */
+.search-icon {
+	fill: none;
+	stroke: #333;
+	cursor: pointer;
+	transition: stroke 0.2s ease;
+}
+
+.search-icon:hover {
+	stroke: #000;
+}

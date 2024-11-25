@@ -8,8 +8,8 @@ import "./Header.css";
 
 const Header = ({ onSearch }) => {
 	const navigate = useNavigate();
-	const user = useRecoilValue(userState); // Recoil 상태 읽기
-	const logout = useLogout(); // useLogout 훅 사용
+	const user = useRecoilValue(userState);
+	const logout = useLogout();
 
 	const handleSearch = (keyword, searchType) => {
 		if (!keyword.trim()) {
@@ -17,15 +17,14 @@ const Header = ({ onSearch }) => {
 			return;
 		}
 
-		// 부모 컴포넌트 콜백 호출
 		if (onSearch) {
 			onSearch(keyword.trim(), searchType);
 		}
 
-		// 경로 설정
 		const targetPath = `/search-results?keyword=${encodeURIComponent(
 			keyword
 		)}&searchType=${encodeURIComponent(searchType)}`;
+
 		if (searchType === "product") {
 			navigate(
 				`/product-search?keyword=${encodeURIComponent(
@@ -38,67 +37,52 @@ const Header = ({ onSearch }) => {
 	};
 
 	return (
-		<nav className="navbar navbar-expand-lg bg-body-tertiary">
-			<div className="container-fluid">
-				<a className="navbar-brand page-title" href="/">
-					🍽️Best Price🍽️
-				</a>
-				<div className="mx-auto">
-					<SearchBar onSearch={handleSearch} />
-				</div>
-				<div className="login-container">
-					<ul className="navbar-nav ms-auto">
-						{user?.user?.userId ? ( // userId 존재 여부로 확인
-							<>
-								<li className="nav-item">
-									<button
-										className="nav-link my-page-button"
-										onClick={() => navigate("/mypage")}
-									>
-										마이페이지
-									</button>
-								</li>
-								<li className="nav-item">
-									<button
-										className="nav-link login-button"
-										onClick={logout}
-									>
-										로그아웃
-									</button>
-								</li>
-							</>
-						) : (
-							<li className="nav-item">
-								<button
-									className="nav-link login-button"
-									onClick={() => navigate("/login")}
-								>
-									로그인/회원가입
-								</button>
-							</li>
-						)}
-					</ul>
-				</div>
+		<nav className="header-container">
+			{/* 브랜드 로고 */}
+			<div className="brand-container" onClick={() => navigate("/")}>
+				<span className="brand-title">쿡쿡</span>
 			</div>
-			<div className="container-fluid mt-3 button-group">
-				<button className="nav-button" onClick={() => navigate("/products")}>
+
+			{/* 메뉴 */}
+			<div className="menu-container">
+				<span className="menu-link" onClick={() => navigate("/products")}>
 					상품
-				</button>
-				<button
-					className="nav-button"
-					onClick={() => navigate("/search-results")}
-				>
+				</span>
+				<span className="menu-link" onClick={() => navigate("/search-results")}>
 					레시피
-				</button>
-				<button className="nav-button" onClick={() => navigate("/tips")}>
+				</span>
+				<span className="menu-link" onClick={() => navigate("/tips")}>
 					자취팁
-				</button>
-				<button className="nav-button" onClick={() => navigate("/rank")}>
+				</span>
+				<span className="menu-link" onClick={() => navigate("/rank")}>
 					랭킹
-				</button>
-				<button className="nav-button" onClick={() => navigate("/myfridge")}>
+				</span>
+				<span className="menu-link" onClick={() => navigate("/myfridge")}>
 					나만의 냉장고
-				</button>
+				</span>
+			</div>
+
+			{/* 검색바 */}
+			<div className="search-container">
+				<SearchBar onSearch={handleSearch} />
+			</div>
+
+			{/* 사용자 메뉴 */}
+			<div className="user-container">
+				{user?.user?.userId ? (
+					<>
+						<span className="user-link" onClick={() => navigate("/mypage")}>
+							마이페이지
+						</span>
+						<span className="user-link" onClick={logout}>
+							로그아웃
+						</span>
+					</>
+				) : (
+					<span className="user-link" onClick={() => navigate("/login")}>
+						로그인/회원가입
+					</span>
+				)}
 			</div>
 		</nav>
 	);
