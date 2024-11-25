@@ -1,210 +1,85 @@
-
-
-/* 페이지 제목 스타일 */
+/* 페이지 제목 스타일 - 주황색으로 변경 */
 .tips-container .tips-title {
-	text-align: left;
-	font-size: 2rem;
-	font-weight: bold;
-	color: #28a745;
-	margin-bottom: 20px;
-	padding-bottom: 10px;
-	border-bottom: 3px solid #4ed66e;
-	letter-spacing: 1px;
-  }
-  
-  /* 검색창 스타일 */
-  .tips-container .search-bar-input {
-	width: 100%;
-	max-width: 600px;
-	margin: 0 auto;
-	padding: 10px;
-	font-size: 1rem;
-	border: 1px solid #ddd;
-	border-radius: 5px;
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-	background-color: #f9f9f9;
-  }
-  
-  /* 상단 영역과 저장된 메모 보기 섹션 간 간격 줄이기 */
-.tips-container .top-container {
-  margin-bottom: -20px !important; /* 우선순위 강제 적용 */
+  text-align: left; /* 왼쪽 정렬 */
+  font-size: 1.7rem; /* 제목 크기 */
+  font-weight: bold; /* 굵은 글씨 */
+  color: #10100f; 
+  margin-bottom: 20px; /* 아래 여백 */
+  padding-bottom: 10px; /* 내부 여백 */
+  letter-spacing: 1px; /* 글자 간격 */
 }
 
-.tips-container .memo-container {
-  margin-bottom: -20px !important; /* 우선순위 강제 적용 */
+/* 제목과 검색창을 나란히 배치 */
+.tips-container .search-bar-container {
+  display: flex; /* Flexbox 사용 */
+  justify-content: space-between; /* 양쪽 정렬 */
+  align-items: center; /* 수직 가운데 정렬 */
+  margin-bottom: 20px; /* 아래 여백 */
 }
 
-  /* 검색 결과 컨테이너 */
-  .tips-container .search-results {
-	background-color: #f9f9f9;
-	border: 1px solid #ddd;
-	padding: 15px;
-	border-radius: 5px;
-	margin-top: 10px;
-  }
-  
-  .tips-container .search-results h3 {
-	font-size: 1.5rem;
-	margin-bottom: 15px;
-  }
-  
-  /* 검색 결과 아이템 */
-  .tips-container .search-results .list-group-item {
-	background-color: #fff; /* 흰 배경 */
-	border: 1px solid #ddd; /* 테두리 */
-	margin-bottom: 10px; /* 항목 간 간격 */
-	padding: 10px;
-	border-radius: 5px;
-  }
-  
-  /* 리스트 아이템 스타일 */
-  .tips-container .list-group-item {
-    display: flex; /* Flexbox 사용 */
-    flex-direction: row; /* 가로 정렬 */
-    justify-content: space-between; /* 내용 간격 균등 배치 */
-    align-items: center; /* 세로 축 가운데 정렬 */
-    text-align: left; /* 텍스트는 왼쪽 정렬 */
-    padding: 20px; /* 내부 여백 조정 */
-    background-color: #fff; /* 흰색 배경 */
-    border-radius: 8px; /* 모서리 둥글게 */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 박스 그림자 추가 */
-    margin-bottom: 15px; /* 아래 간격 */
+/* 검색 입력창 스타일 */
+.tips-container .search-bar-container .search-bar-input {
+  width: 50%; /* 너비를 50%로 설정 */
+  max-width: 500px; /* 최대 너비 설정 */
+  padding: 10px; /* 내부 여백 */
+  font-size: 1rem; /* 글자 크기 */
+  border: 1px solid #ddd; /* 연한 테두리 */
+  border-radius: 5px; /* 모서리 둥글게 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  background-color: #f9f9f9; /* 배경색 */
 }
 
-.tip-details h5 {
-    font-weight: bold; /* 타이틀에 볼드 효과 */
-    font-size: 1.1 rem; /* 적절한 크기 조정 */
-    margin-bottom: 20px; /* 제목과 내용 간격 */
-    color: #333; /* 텍스트 색상 */
-}
-  
-.tip-content {
-	display: flex;
-	justify-content: space-between; /* 좌우로 정렬 */
-	align-items: center; /* 수직 정렬 */
-	width: 100%; /* 체크박스가 오른쪽 끝으로 이동 */
-  }
-  
-.tip-details p {
-    margin: 0; /* 텍스트 기본 간격 제거 */
-    line-height: 1.5; /* 줄 간격 조정 */
-    font-size: 1.1rem; /* 내용 텍스트 크기 */
-    color: #333; /* 약간 흐린 색상 */
+/* 페이지네이션 활성화된 상태 스타일 */
+.tips-container .pagination .page-item.active .page-link {
+  background-color: #ff5833; /* 주황색 배경 */
+  color: white; /* 흰색 텍스트 */
+  border-color: #ff5833; /* 테두리 색 */
 }
 
-.list-group-item input[type="checkbox"] {
-    margin-left: auto; /* 체크박스를 오른쪽 끝으로 이동 */
-    transform: scale(1.2); /* 크기 약간 키우기 */
-    cursor: pointer; /* 클릭 가능한 커서 표시 */
+/* 페이지네이션 기본 스타일 */
+.tips-container .pagination .page-link {
+  color: #ff5833; /* 기본 텍스트 색상 */
+  background-color: transparent; /* 투명 배경 */
+  border: 1px solid #ffb09d; /* 연한 주황색 테두리 */
 }
 
-  /* 텍스트 컨테이너 */
-  .tip-details {
-	display: flex;
-	flex-direction: column; /* 텍스트를 위아래로 배치 */
-	justify-content: center; /* 수직 정렬 */
-	margin: 0;
-	flex-grow: 1; /* 공간 채우기 */
-	padding-right: 10px; /* 체크박스와 간격 */
-  }
-  
-  /* 체크박스 크기 및 위치 조정 */
-  .tips-container .list-group-item input[type="checkbox"] {
-    transform: scale(1.5); /* 체크박스 크기 확대 */
-    accent-color: #28a745; /* 초록색 */
-	margin-right: 10px;
+/* 페이지네이션 호버 스타일 */
+.tips-container .pagination .page-link:hover {
+  background-color: #ffb09d; /* 연한 주황색 배경 */
+  color: white; /* 흰색 텍스트 */
 }
-  
-  /* 저장된 메모 섹션 스타일 */
-  .tips-container .memo-section {
-    border-top: 2px solid #28a745; /* 초록색 경계선 */
-    margin-top: 5px; /* 간격 줄임 */
-    padding-top: 10px; /* 위쪽 여백 줄임 */
-    margin-bottom: 10px; /* 아래쪽 간격 추가 */
-  }
-  
-  /* 저장 버튼 섹션 */
-  .save-button-container {
-	display: flex;
-	gap: 10px; /* 버튼 간격 추가 */
-	margin-top: 10px;
-  }
-  
-  /* 저장된 메모 보기 버튼 */
-  .custom-toggle-btn {
-	border: none;
-	color: white;
-	font-size: 1rem;
-	padding: 10px 20px;
-	border-radius: 5px;
-	cursor: pointer;
-	transition: background-color 0.3s ease;
-  }
-  
-  /* 저장된 메모 보기 버튼 */
-  .custom-toggle-btn.view-btn {
-	background-color: #28a745; /* 초록색 배경 */
-  }
-  
-  .custom-toggle-btn.view-btn:hover {
-	background-color: #218838; /* 호버 시 어두운 초록색 */
-  }
-  
-  /* 저장된 메모 닫기 버튼 */
-  .custom-toggle-btn.close-btn {
-	background-color: #da3d4d; /* 빨간색 배경 */
-  }
-  
-  .custom-toggle-btn.close-btn:hover {
-	background-color: #c82333; /* 호버 시 더 어두운 빨간색 */
-  }
-  
-  .memo-close-btn:hover {
-	background-color: #c53a48; /* 호버 시 더 어두운 빨간색 */
-  }
-  
-  /* 메모 저장하기 버튼 */
-  .btn-success {
-	background-color: #28a745; /* 초록색 배경 */
-	border: none;
-	color: white;
-	font-size: 1rem;
-	padding: 10px 20px;
-	border-radius: 5px;
-	cursor: pointer;
-  }
-  
-  .btn-success:disabled {
-	background-color: #c3e6cb; /* 비활성화 상태 */
-	cursor: not-allowed;
-  }
-  
-  /* 페이지네이션 스타일 */
-  .tips-container .pagination .page-item.active .page-link {
-	background-color: transparent;
-	color: inherit;
-	border-color: #28a745;
-  }
-  
-  .tips-container .pagination .page-link {
-	color: inherit;
-	background-color: transparent;
-	border: 1px solid #80ffc3;
-  }
-  
-  .tips-container .pagination .page-link:hover {
-	background-color: #80ffc3;
-	color: inherit;
-  }
-  
-  .tips-containe .pagination .page-link:focus {
-	box-shadow: none;
-  }
-  
-  /* 비활성화된 버튼 스타일 */
-  .tips-container .pagination .page-item.disabled .page-link {
-	color: #d3d3d3;
-	pointer-events: none;
-	border-color: #d3d3d3;
-  }
-  
+
+/* 삭제 버튼 스타일 */
+.tips-container .btn-danger {
+  background-color: #ff5833; /* 주황색 배경 */
+  border: none; /* 테두리 제거 */
+}
+
+.tips-container .btn-danger:hover {
+  background-color: #e54b2c; /* 더 어두운 주황색으로 변경 */
+}
+
+/* 제목과 검색창 간격 조정 */
+.tips-container .bottom-container h2 {
+  margin-bottom: 0; /* 아래 여백 제거 */
+}
+
+/* 리스트 아이템 스타일 */
+.tips-container .list-group-item {
+  display: flex; /* Flexbox 사용 */
+  justify-content: space-between; /* 좌우 정렬 */
+  align-items: center; /* 수직 가운데 정렬 */
+  text-align: left; /* 텍스트 왼쪽 정렬 */
+  padding: 20px; /* 내부 여백 */
+  background-color: #fff; /* 흰 배경 */
+  border-radius: 8px; /* 모서리 둥글게 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  margin-bottom: 15px; /* 아래 간격 */
+}
+
+/* 리스트 텍스트 스타일 */
+.tips-container .list-group-item h5 {
+  font-weight: bold; /* 제목 굵게 */
+  font-size: 1.2rem; /* 크기 조정 */
+  color: #333; /* 기본 텍스트 색상 */
+}
