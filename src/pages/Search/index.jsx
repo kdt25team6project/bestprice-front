@@ -21,6 +21,8 @@ function SearchResultsPage() {
 	const [error, setError] = useState(null); // 에러 상태
 	const [loading, setLoading] = useState(true); // 로딩 상태
 	const [selectedCategory, setSelectedCategory] = useState("");
+	const [selectedType, setSelectedType] = useState("");
+	const [selectedIngredient, setSelectedIngredient] = useState("");
 
 	const [preferences, setPreferences] = useState(null);
 	const { userId } = user?.user || {};
@@ -158,6 +160,16 @@ function SearchResultsPage() {
 		goSearchRecipe("cat1", category);
 	};
 
+	const handleTypeClick = (type) => {
+		setSelectedType(type);
+		goSearchRecipe("cat4", type);
+	};
+
+	const handleIngredientClick = (ingredient) => {
+		setSelectedIngredient(ingredient);
+		goSearchRecipe("cat3", ingredient);
+	};
+
 	const handleLayoutChange = (e) => {
 		setLayout(e.target.value);
 	};
@@ -218,96 +230,93 @@ function SearchResultsPage() {
 		<div className="container">
 			<div className={`filter-container ${isFilterVisible ? "show" : ""}`}>
 				<div className="button-group">
-					<h3>종류 별</h3>
-					<button onClick={() => goSearchRecipe("cat4", "")}>전체</button>
-					<button onClick={() => goSearchRecipe("cat4", "밑반찬")}>
-						밑반찬
-					</button>
-					<button onClick={() => goSearchRecipe("cat4", "메인반찬")}>
-						메인반찬
-					</button>
-					<button onClick={() => goSearchRecipe("cat4", "국/탕")}>국/탕</button>
-					<button onClick={() => goSearchRecipe("cat4", "찌개")}>찌개</button>
-					<button onClick={() => goSearchRecipe("cat4", "디저트")}>
-						디저트
-					</button>
-					<button onClick={() => goSearchRecipe("cat4", "면/만두")}>
-						면/만두
-					</button>
-					<button onClick={() => goSearchRecipe("cat4", "퓨전")}>퓨전</button>
-					<button onClick={() => goSearchRecipe("cat4", "김치/젓갈/장류")}>
-						김치/젓갈/장류
-					</button>
-					<button onClick={() => goSearchRecipe("cat4", "양식")}>양식</button>
-					<button onClick={() => goSearchRecipe("cat4", "샐러드")}>
-						샐러드
-					</button>
-					<button onClick={() => goSearchRecipe("cat4", "스프")}>스프</button>
-					<button onClick={() => goSearchRecipe("cat4", "차/음료/술")}>
-						차/음료/술
-					</button>
-					<button onClick={() => goSearchRecipe("cat4", "기타")}>기타</button>
+					<h3>분류</h3>
+					{[
+						"",
+						"밑반찬",
+						"메인반찬",
+						"국/탕",
+						"찌개",
+						"디저트",
+						"면/만두",
+						"퓨전",
+						"김치/젓갈/장류",
+						"양식",
+						"샐러드",
+						"스프",
+						"차/음료/술",
+						"기타",
+					].map((type) => (
+						<button
+							key={type}
+							className={`button ${selectedType === type ? "selected" : ""}`}
+							onClick={() => handleTypeClick(type)}
+						>
+							{type || "전체"}
+						</button>
+					))}
+				</div>
+
+				{/* 재료 별 */}
+				<div className="button-group">
+					<h3>재료</h3>
+					{[
+						"",
+						"소고기",
+						"돼지고기",
+						"닭고기",
+						"육류",
+						"채소류",
+						"해물류",
+						"달걀/유제품",
+						"가공식품류",
+						"쌀",
+						"밀가루",
+						"버섯류",
+						"과일류",
+						"기타",
+					].map((ingredient) => (
+						<button
+							key={ingredient}
+							className={`button ${
+								selectedIngredient === ingredient ? "selected" : ""
+							}`}
+							onClick={() => handleIngredientClick(ingredient)}
+						>
+							{ingredient || "전체"}
+						</button>
+					))}
 				</div>
 
 				<div className="button-group">
-					<h3>재료 별</h3>
-					<button onClick={() => goSearchRecipe("cat3", "")}>전체</button>
-					<button onClick={() => goSearchRecipe("cat3", "소고기")}>
-						소고기
-					</button>
-					<button onClick={() => goSearchRecipe("cat3", "돼지고기")}>
-						돼지고기
-					</button>
-					<button onClick={() => goSearchRecipe("cat3", "닭고기")}>
-						닭고기
-					</button>
-					<button onClick={() => goSearchRecipe("cat3", "육류")}>육류</button>
-					<button onClick={() => goSearchRecipe("cat3", "채소류")}>
-						채소류
-					</button>
-					<button onClick={() => goSearchRecipe("cat3", "해물류")}>
-						해물류
-					</button>
-					<button onClick={() => goSearchRecipe("cat3", "달걀/유제품")}>
-						달걀/유제품
-					</button>
-					<button onClick={() => goSearchRecipe("cat3", "가공식품류")}>
-						가공식품류
-					</button>
-					<button onClick={() => goSearchRecipe("cat3", "쌀")}>쌀</button>
-					<button onClick={() => goSearchRecipe("cat3", "밀가루")}>
-						밀가루
-					</button>
-					<button onClick={() => goSearchRecipe("cat3", "버섯류")}>
-						버섯류
-					</button>
-					<button onClick={() => goSearchRecipe("cat3", "과일류")}>
-						과일류
-					</button>
-					<button onClick={() => goSearchRecipe("cat3", "기타")}>기타</button>
-				</div>
-
-				<div className="button-group">
-					<h3>요리 방법 별</h3>
-					<button onClick={() => goSearchRecipe("cat1", "")}>전체</button>
-					<button onClick={() => goSearchRecipe("cat1", "볶음")}>볶음</button>
-					<button onClick={() => goSearchRecipe("cat1", "끓이기")}>
-						끓이기
-					</button>
-					<button onClick={() => goSearchRecipe("cat1", "부침")}>부침</button>
-					<button onClick={() => goSearchRecipe("cat1", "조림")}>조림</button>
-					<button onClick={() => goSearchRecipe("cat1", "무침")}>무침</button>
-					<button onClick={() => goSearchRecipe("cat1", "비빔")}>비빔</button>
-					<button onClick={() => goSearchRecipe("cat1", "찜")}>찜</button>
-					<button onClick={() => goSearchRecipe("cat1", "절임")}>절임</button>
-					<button onClick={() => goSearchRecipe("cat1", "튀김")}>튀김</button>
-					<button onClick={() => goSearchRecipe("cat1", "삶기")}>삶기</button>
-					<button onClick={() => goSearchRecipe("cat1", "굽기")}>굽기</button>
-					<button onClick={() => goSearchRecipe("cat1", "데치기")}>
-						데치기
-					</button>
-					<button onClick={() => goSearchRecipe("cat1", "회")}>회</button>
-					<button onClick={() => goSearchRecipe("cat1", "기타")}>기타</button>
+					<h3>조리 방식</h3>
+					{[
+						"",
+						"볶음",
+						"끓이기",
+						"부침",
+						"조림",
+						"무침",
+						"비빔",
+						"찜",
+						"절임",
+						"튀김",
+						"삶기",
+						"굽기",
+						"데치기",
+						"회",
+						"기타",
+					].map((category) => (
+						<button
+							key={category}
+							className={`button ${
+								selectedCategory === category ? "selected" : ""
+							}`}
+							onClick={() => handleCategoryClick(category)}
+						>
+							{category || "전체"}
+						</button>
+					))}
 				</div>
 			</div>
 
