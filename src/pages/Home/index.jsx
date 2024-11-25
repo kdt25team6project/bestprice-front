@@ -13,8 +13,9 @@ import { Modal, Button } from "react-bootstrap";
 
 import fridgeImage from "../../assets/images/fridges.png";
 import fridgeClosedImage from "../../assets/images/fridgeclosed.png";
+import fridgeOpenImage from "../../assets/images/fridgeopen.png";
 import productImage from "../../assets/images/products.png";
-import rankImage from "../../assets/images/ranking.png";
+import rankImage from "../../assets/images/rank.png";
 import tipImage from "../../assets/images/tips.png";
 import recipeImage from "../../assets/images/recipes.png";
 import ProductSection from "./ProductSection";
@@ -25,6 +26,8 @@ const Home = () => {
 
 	const { user } = useRecoilValue(userState); // Recoil 상태에서 사용자 정보 가져오기
 	const [showPreferencesModal, setShowPreferencesModal] = useState(false);
+	const [isHovering, setIsHovering] = useState(false);
+
 
 	// 캐러셀 인덱스 상태
 	const [index1, setIndex1] = useState(0);
@@ -255,7 +258,7 @@ const Home = () => {
 						<Carousel
 							activeIndex={index1}
 							onSelect={handleSelect1}
-							indicators={true} 
+							indicators={true}
 							controls={true}
 							className="movecarousel"
 						>
@@ -328,18 +331,27 @@ const Home = () => {
 				</div>
 
 				{/* 나만의 냉장고 */}
-				<div className="my-fridge" onClick={() => navigate("/myfridge")}>
-					<h3 className="fridgeh3">나만의 냉장고</h3>
-					<img src={fridgeClosedImage} className="fridgediv" />
+				<div
+					className="my-fridge"
+					onClick={() => navigate("/myfridge")}
+					onMouseEnter={() => setIsHovering(true)}
+					onMouseLeave={() => setIsHovering(false)}
+				>
+					<img
+						src={isHovering ? fridgeOpenImage : fridgeClosedImage}
+						alt="Fridge"
+						className="fridgediv"
+					/>
 				</div>
 			</div>
-
 			{/* 랜덤 꿀팁 */}
-			<div className="d-flex justify-content-center align-items-center my-3 tip-container">
+			<div className="tip-container">
 				<div className="tip-box">
-					<h5 className="card-text mb-0">{`생활팁 한 줄! ${randomTip}`}</h5>
+					<h5 className="card-text mb-0">
+						<span className="highlight-text">생활팁 한 줄!</span> {randomTip}
+					</h5>
 					<button
-						className="btn btn-outline-secondary btn-sm ms-2"
+						className="custom-more-button"
 						onClick={() => navigate("/tips")}
 					>
 						더보기
