@@ -137,7 +137,7 @@ const LoginPage = () => {
 					}`}
 				>
 					<div>
-						<h2>Best Price 로그인</h2>
+						<h2>Cook Cook 로그인</h2>
 						<form className="wrapper-box" role="form" onSubmit={handleLogin}>
 							<input
 								type="text"
