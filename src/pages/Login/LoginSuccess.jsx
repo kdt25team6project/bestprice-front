@@ -18,6 +18,10 @@ function LoginSuccess() {
 
 		if (accessToken && userId && name && nickname) {
 			setUser({ name, userId, accessToken, nickname });
+
+			const modalShownKey = `modalShown_${userId}`;
+        	localStorage.removeItem(modalShownKey);
+			
 			navigate("/");
 		}
 	}, [location, navigate, setUser]);

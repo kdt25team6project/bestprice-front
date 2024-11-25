@@ -98,6 +98,11 @@ const LoginPage = () => {
 				// Recoil 상태 업데이트
 				setUser(userData);
 
+				// 로그인 시 모달 상태 초기화
+				const modalShownKey = `modalShown_${response.userId}`;
+				localStorage.removeItem(modalShownKey);
+	
+
 				// 로그인 성공 시 홈으로 이동
 				navigate("/");
 			} catch (error) {

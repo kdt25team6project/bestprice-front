@@ -9,6 +9,7 @@ import { tips } from "../../assets/TipsData";
 import axios from "axios";
 import PreferencesModal from "./PreferencesModal";
 import RecipeList from "../Search/RecipeList";
+import { Modal, Button } from "react-bootstrap";
 
 
 import fridgeImage from "../../assets/images/fridge.jpg";
@@ -76,6 +77,7 @@ const Home = () => {
 
 		checkPreferences();
 	}, [user]);
+
 	useEffect(() => {
 		fetch("http://localhost:8001/allrecipes")
 		  .then((response) => {
@@ -142,8 +144,101 @@ const Home = () => {
 		setShowPreferencesModal(false);
 	};
 
+	///////////////////////////////////////////////////////////////////////////
+
+	// 유통기한 임박 모달 상태
+	const [isExpiryModalOpen, setIsExpiryModalOpen] = useState(false);
+	const [nearExpiryItems, setNearExpiryItems] = useState([]);
+
+	// 유통기한 임박 식재료 필터링 함수
+	const filterNearExpiryItems = (foodItems) => {
+		const currentDate = new Date();
+		return foodItems.filter((item) => {
+			const expirationDate = new Date(item.expiration_date);
+			const timeDiff = expirationDate - currentDate;
+			const daysLeft = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+			return daysLeft > 0 && daysLeft <= 7;
+		});
+	};
+
+	// 유통기한 임박 데이터 가져오기
+	useEffect(() => {
+		const fetchNearExpiryItems = async () => {
+			if (!user || !user.userId) {
+				console.warn("로그인이 필요합니다.");
+				return;
+			}
+
+			const modalShownKey = `modalShown_${user.userId}`; // 유저별 상태 저장 키
+			const isModalShown = localStorage.getItem(modalShownKey);
+	
+			// 모달이 이미 표시된 경우, 데이터만 가져오고 모달은 띄우지 않음
+			if (isModalShown === "true") {
+				return;
+			}
+
+			try {
+				const response = await axios.get(
+					`http://localhost:8001/refrigerator`,
+					{
+						params: { userId: user.userId },
+					}
+				);
+
+				const nearExpiryItems = filterNearExpiryItems(response.data);
+				if (nearExpiryItems.length > 0) {
+					setNearExpiryItems(nearExpiryItems);
+					setIsExpiryModalOpen(true); // 모달 열기
+				}
+			} catch (error) {
+				console.error("유통기한 임박 데이터 가져오기 실패:", error);
+			}
+		};
+
+		fetchNearExpiryItems();
+	}, [user]);
+
+	// 모달 닫기 핸들러
+	const handleCloseExpiryModal = () => {
+		if (user && user.userId) {
+			// localStorage에 모달 본 상태 저장
+			const modalShownKey = `modalShown_${user.userId}`;
+			localStorage.setItem(modalShownKey, "true");
+		}
+		setIsExpiryModalOpen(false);
+	};
+
+	/////////////////////////////////////////////////////////
+	
+
 	return (
 		<div className="main-content-container">
+
+			{/* 유통기한 임박 모달 */}
+			<Modal show={isExpiryModalOpen} onHide={handleCloseExpiryModal} centered>
+				<Modal.Header closeButton>
+					<Modal.Title>유통기한 임박 재료</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					{nearExpiryItems.length > 0 ? (
+						nearExpiryItems.map((item, index) => (
+							<div key={index} className="near-expiry-item">
+								<p><strong>이름:</strong> {item.name}</p>
+								<p><strong>남은 일수:</strong> {Math.ceil((new Date(item.expiration_date) - new Date()) / (1000 * 60 * 60 * 24))}일</p>
+								<hr></hr>
+							</div>
+						))
+					) : (
+						<p>유통기한이 임박한 재료가 없습니다.</p>
+					)}
+				</Modal.Body>
+				<Modal.Footer>
+					<Button variant="secondary" onClick={handleCloseExpiryModal}>
+						닫기
+					</Button>
+				</Modal.Footer>
+			</Modal>
+
 			{/* 선호도 모달 */}
 			<PreferencesModal
 				show={showPreferencesModal}
