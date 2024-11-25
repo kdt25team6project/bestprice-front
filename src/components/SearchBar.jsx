@@ -29,11 +29,6 @@ function SearchBar({ onSearch }) {
 		navigate(targetPath);
 	};
 
-	// 드롭다운 선택
-	const handleSelect = (type) => {
-		setSearchType(type);
-	};
-
 	// Enter 키로 검색 실행
 	const handleKeyPress = (e) => {
 		if (e.key === "Enter") {
@@ -43,8 +38,14 @@ function SearchBar({ onSearch }) {
 
 	return (
 		<div className="custom-search-bar">
+			{/* 드롭다운 */}
 			<div className="dropdown">
-				<button className="dropdown-button" type="button">
+				<button
+					className="dropdown-button"
+					type="button"
+					data-bs-toggle="dropdown"
+					aria-expanded="false"
+				>
 					{searchType === "name"
 						? "요리 이름"
 						: searchType === "ingredient"
@@ -53,12 +54,13 @@ function SearchBar({ onSearch }) {
 					<span className="dropdown-arrow">▼</span>
 				</button>
 				<ul className="dropdown-menu">
-					<li onClick={() => handleSelect("name")}>요리 이름</li>
-					<li onClick={() => handleSelect("ingredient")}>재료</li>
-					<li onClick={() => handleSelect("product")}>상품</li>
+					<li onClick={() => setSearchType("name")}>요리 이름</li>
+					<li onClick={() => setSearchType("ingredient")}>재료</li>
+					<li onClick={() => setSearchType("product")}>상품</li>
 				</ul>
 			</div>
 
+			{/* 검색 입력 */}
 			<input
 				type="text"
 				className="search-input"

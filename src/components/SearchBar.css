@@ -1,15 +1,13 @@
-/* 검색바 컨테이너 */
 .custom-search-bar {
 	display: flex;
 	align-items: center;
 	background-color: #ffffff;
 	border: 1px solid #ddd;
 	border-radius: 20px;
-	padding: 3px 8px; /* 내부 여백만 남김 */
+	padding: 10px 12px; /* 세로 높이를 늘림 */
 	width: 100%;
 	max-width: 500px;
 	position: relative;
-	margin: 0; /* 외부 여백 제거 */
 }
 
 /* 드롭다운 */
@@ -22,9 +20,9 @@
 .dropdown-button {
 	border: none;
 	background: none;
-	font-size: 0.9rem;
+	font-size: 1rem;
 	cursor: pointer;
-	padding: 0 8px;
+	padding: 0 12px;
 	color: #333;
 	display: flex;
 	align-items: center;
@@ -32,13 +30,13 @@
 
 .dropdown-arrow {
 	margin-left: 5px;
-	font-size: 0.7rem;
+	font-size: 0.8rem;
 }
 
 .dropdown-menu {
 	display: none;
 	position: absolute;
-	top: 120%;
+	top: 110%;
 	left: 0;
 	background-color: white;
 	border: 1px solid #ddd;
@@ -48,6 +46,11 @@
 	padding: 5px 0;
 	width: 150px;
 	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	z-index: 1000;
+}
+
+.dropdown:hover .dropdown-menu {
+	display: block;
 }
 
 .dropdown-menu li {
@@ -61,19 +64,14 @@
 	background-color: #f0f0f0;
 }
 
-/* 드롭다운 메뉴 활성화 */
-.dropdown:hover .dropdown-menu {
-	display: block;
-}
-
 /* 검색 입력 */
 .search-input {
 	flex: 1;
 	border: none;
 	outline: none;
 	background: none;
-	font-size: 1rem;
-	padding: 0 8px;
+	font-size: 1.1rem;
+	padding: 0 10px;
 	color: #333;
 }
 
