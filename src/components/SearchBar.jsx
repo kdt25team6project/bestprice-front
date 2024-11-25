@@ -1,98 +1,95 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./SearchBar.css";
 
 function SearchBar({ onSearch }) {
-  const [keyword, setKeyword] = useState("");
-  const [searchType, setSearchType] = useState("name"); // 기본 검색 타입은 'name'
-  const navigate = useNavigate();
+	const [keyword, setKeyword] = useState("");
+	const [searchType, setSearchType] = useState("name"); // 기본 검색 타입
+	const navigate = useNavigate();
 
-  // 검색 실행
-  const handleSearch = () => {
-    if (!keyword.trim()) {
-      alert("검색어를 입력하세요.");
-      return;
-    }
+	// 검색 실행
+	const handleSearch = () => {
+		if (!keyword.trim()) {
+			alert("검색어를 입력하세요.");
+			return;
+		}
 
-    // 부모 컴포넌트 콜백 호출 (선택 사항)
-    if (onSearch) {
-      onSearch(keyword.trim(), searchType);
-    }
+		if (onSearch) {
+			onSearch(keyword.trim(), searchType);
+		}
 
-    // 검색 타입에 따라 다른 경로로 이동
-    const targetPath =
-      searchType === "product"
-        ? `/product-search?keyword=${encodeURIComponent(keyword)}&searchType=${encodeURIComponent(searchType)}`
-        : `/search-results?keyword=${encodeURIComponent(keyword)}&searchType=${encodeURIComponent(searchType)}`;
-    navigate(targetPath);
-  };
+		const targetPath =
+			searchType === "product"
+				? `/product-search?keyword=${encodeURIComponent(
+						keyword
+				  )}&searchType=${encodeURIComponent(searchType)}`
+				: `/search-results?keyword=${encodeURIComponent(
+						keyword
+				  )}&searchType=${encodeURIComponent(searchType)}`;
+		navigate(targetPath);
+	};
 
-  // Enter 키로 검색 실행
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      handleSearch();
-    }
-  };
+	// Enter 키로 검색 실행
+	const handleKeyPress = (e) => {
+		if (e.key === "Enter") {
+			handleSearch();
+		}
+	};
 
-  // 검색 타입 선택
-  const handleSelect = (type) => {
-    setSearchType(type);
-  };
+	return (
+		<div className="custom-search-bar">
+			{/* 드롭다운 */}
+			<div className="dropdown">
+				<button
+					className="dropdown-button"
+					type="button"
+					data-bs-toggle="dropdown"
+					aria-expanded="false"
+				>
+					{searchType === "name"
+						? "요리 이름"
+						: searchType === "ingredient"
+						? "재료"
+						: "상품"}
+					<span className="dropdown-arrow">▼</span>
+				</button>
+				<ul className="dropdown-menu">
+					<li onClick={() => setSearchType("name")}>요리 이름</li>
+					<li onClick={() => setSearchType("ingredient")}>재료</li>
+					<li onClick={() => setSearchType("product")}>상품</li>
+				</ul>
+			</div>
 
-  return (
-    <div className="search-bar">
-      {/* 드롭다운 */}
-      <div className="dropdown">
-        <button
-          className="btn btn-secondary dropdown-toggle"
-          type="button"
-          id="dropdownMenuButton"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-          style={{ width: "100px", height: "50px", margin: "5px" }}
-        >
-          {searchType === "name" ? "요리 이름" : searchType === "ingredient" ? "재료" : "상품"}
-        </button>
-        <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <li>
-            <button className="dropdown-item" onClick={() => handleSelect("name")}>
-              요리 이름
-            </button>
-          </li>
-          <li>
-            <button className="dropdown-item" onClick={() => handleSelect("ingredient")}>
-              재료
-            </button>
-          </li>
-          <li>
-            <button className="dropdown-item" onClick={() => handleSelect("product")}>
-              상품
-            </button>
-          </li>
-        </ul>
-      </div>
+			{/* 검색 입력 */}
+			<input
+				type="text"
+				className="search-input"
+				value={keyword}
+				onChange={(e) => setKeyword(e.target.value)}
+				onKeyPress={handleKeyPress}
+				placeholder="검색어를 입력하세요."
+			/>
 
-      {/* 검색 입력 */}
-      <input
-        type="text"
-        value={keyword}
-        onChange={(e) => setKeyword(e.target.value)}
-        onKeyPress={handleKeyPress}
-        placeholder={
-          searchType === "name"
-            ? "요리 이름을 입력하세요."
-            : searchType === "ingredient"
-            ? "재료를 입력하세요."
-            : "상품을 입력하세요."
-        }
-        style={{ marginRight: "10px" }}
-      />
-
-      {/* 검색 버튼 */}
-      <button type="button" className="btn btn-secondary" onClick={handleSearch}>
-        검색
-      </button>
-    </div>
-  );
+			{/* 검색 버튼으로 SVG 사용 */}
+			<svg
+				className="search-icon"
+				onClick={handleSearch}
+				xmlns="http://www.w3.org/2000/svg"
+				viewBox="0 0 24 24"
+				width="20"
+				height="20"
+				fill="none"
+				stroke="currentColor"
+				strokeWidth="2"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				style={{ cursor: "pointer" }}
+			>
+				<circle cx="11" cy="11" r="8" />
+				<line x1="21" y1="21" x2="16.65" y2="16.65" />
+			</svg>
+		</div>
+	);
 }
 
 export default SearchBar;

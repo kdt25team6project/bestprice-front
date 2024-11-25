@@ -1,0 +1,95 @@
+.custom-search-bar {
+	display: flex;
+	align-items: center;
+	background-color: #ffffff;
+	border: 1px solid #ddd;
+	border-radius: 20px;
+	padding: 10px 12px; /* 세로 높이를 늘림 */
+	width: 100%;
+	max-width: 500px;
+	position: relative;
+}
+
+/* 드롭다운 */
+.dropdown {
+	position: relative;
+	display: flex;
+	align-items: center;
+}
+
+.dropdown-button {
+	border: none;
+	background: none;
+	font-size: 1rem;
+	cursor: pointer;
+	padding: 0 12px;
+	color: #333;
+	display: flex;
+	align-items: center;
+}
+
+/* 화살표 */
+.dropdown-arrow {
+	margin-left: 5px;
+	font-size: 0.8rem;
+}
+
+/* 드롭다운 메뉴 */
+.dropdown-menu {
+	display: none;
+	position: absolute;
+	top: 110%;
+	left: 0;
+	background-color: white;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	list-style: none;
+	margin: 0;
+	padding: 5px 0;
+	width: 150px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	z-index: 1000;
+}
+
+/* 강제로 초록색 제거 */
+.dropdown-menu li {
+	padding: 8px 12px;
+	cursor: pointer;
+	font-size: 0.9rem;
+	color: #333;
+	background-color: transparent !important; /* 강제로 배경색 제거 */
+}
+
+/* 드롭다운 항목 hover 스타일 */
+.dropdown-menu li:hover {
+	background-color: #f0f0f0 !important; /* hover 시 밝은 회색으로 설정 */
+	color: #333; /* 텍스트 색상 유지 */
+}
+
+/* 드롭다운 메뉴 활성화 */
+.dropdown:hover .dropdown-menu {
+	display: block;
+}
+
+/* 검색 입력 */
+.search-input {
+	flex: 1;
+	border: none;
+	outline: none;
+	background: none;
+	font-size: 1.1rem;
+	padding: 0 10px;
+	color: #333;
+}
+
+/* SVG 아이콘 (검색 버튼) */
+.search-icon {
+	fill: none;
+	stroke: #333;
+	cursor: pointer;
+	transition: stroke 0.2s ease;
+}
+
+.search-icon:hover {
+	stroke: #000;
+}
