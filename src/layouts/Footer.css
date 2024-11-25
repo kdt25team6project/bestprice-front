@@ -1,14 +1,14 @@
 /* Footer 스타일 */
 .footer {
-	background-color: #ffffff; /* Header와 동일한 배경색 */
+	background-color: #c5bcbc !important; 
 	padding: 20px 0;
-	border-top: 2px solid #28a745; /* Header와 동일한 구분선 */
 	text-align: center; /* 텍스트 가운데 정렬 */
 }
 
 .footer h5 {
-	color: #28a745; /* 초록색 제목 */
+	color: #ff5833 !important; /* 강제로 초록색을 덮어씁니다 */
 	margin-bottom: 15px;
+	font-weight: 500;
 }
 
 .footer p,

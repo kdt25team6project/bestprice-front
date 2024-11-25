@@ -11,15 +11,13 @@ import PreferencesModal from "./PreferencesModal";
 import RecipeList from "../Search/RecipeList";
 import { Modal, Button } from "react-bootstrap";
 
-
-import fridgeImage from "../../assets/images/fridge.jpg";
-import productImage from "../../assets/images/product.png";
-import rankImage from "../../assets/images/rank.jpeg";
-import tipImage from "../../assets/images/tip.png";
-import recipeImage from "../../assets/images/recipe.png";
-import refrigerator from "../../assets/images/refrigerator close.png"
+import fridgeImage from "../../assets/images/fridges.png";
+import fridgeClosedImage from "../../assets/images/fridgeclosed.png";
+import productImage from "../../assets/images/products.png";
+import rankImage from "../../assets/images/ranking.png";
+import tipImage from "../../assets/images/tips.png";
+import recipeImage from "../../assets/images/recipes.png";
 import ProductSection from "./ProductSection";
-
 
 const Home = () => {
 	const navigate = useNavigate();
@@ -80,64 +78,64 @@ const Home = () => {
 
 	useEffect(() => {
 		fetch("http://localhost:8001/allrecipes")
-		  .then((response) => {
-			if (!response.ok) {
-			  console.error("API 응답 실패:", response.status, response.statusText);
-			  throw new Error("네트워크 응답이 좋지 않습니다.");
-			}
-			return response.json();
-		  })
-		  .then((data) => {
-			console.log("전체 데이터:", data);
-	  
-			if (!Array.isArray(data)) {
-			  throw new Error("API에서 반환된 데이터가 배열 형식이 아닙니다.");
-			}
-	  
-			// 데이터 변환: 속성 이름 변경 및 숫자 변환
-			const transformedData = data.map((recipe) => ({
-			  id: recipe.rcp_SNO,               // 고유 ID
-			  name: recipe.rcp_TTL,             // 레시피 이름
-			  종류: recipe.ckg_KND_ACTO_NM,     // 레시피 종류
-			  재료: recipe.ckg_MTRL_CN,         // 레시피 재료
-			  요리방법: recipe.ckg_MTH_ACTO_NM, // 요리 방법
-			  RGTR_NM: recipe.rgtr_NM,          // 작성자 이름
-			  RGTR_ID: recipe.rgtr_ID,          // 작성자 ID
-			  INQ_CNT: Number(recipe.inq_CNT),  // 조회수 (숫자 변환)
-			  RCMM_CNT: Number(recipe.rcmm_CNT),// 추천수 (숫자 변환)
-			  CKG_DODF_NM: recipe.ckg_DODF_NM,  // 난이도
-			  mainThumb: recipe.image_URL,      // 메인 이미지 URL
-			}));
-	  
-			console.log("변환된 데이터:", transformedData);
-	  
-			// 정렬 및 상위 3개 데이터 추출
-			const byInqCount = [...transformedData]
-			  .sort((a, b) => b.INQ_CNT - a.INQ_CNT)
-			  .slice(0, 3);
-			console.log("조회수 기준 데이터:", byInqCount);
-	  
-			const bySrapCount = [...transformedData]
-			  .sort((a, b) => b.RCMM_CNT - a.RCMM_CNT) // 추천수 기준
-			  .slice(0, 3);
-			console.log("추천 수 기준 데이터:", bySrapCount);
-	  
-			const byRcmmCount = [...transformedData]
-			  .sort((a, b) => b.RCMM_CNT - a.RCMM_CNT)
-			  .slice(0, 3);
-			console.log("추천 수 기준 데이터:", byRcmmCount);
-	  
-			// 상태 업데이트
-			setRecipes({
-			  inq: byInqCount,
-			  srap: bySrapCount,
-			  rcmm: byRcmmCount,
+			.then((response) => {
+				if (!response.ok) {
+					console.error("API 응답 실패:", response.status, response.statusText);
+					throw new Error("네트워크 응답이 좋지 않습니다.");
+				}
+				return response.json();
+			})
+			.then((data) => {
+				console.log("전체 데이터:", data);
+
+				if (!Array.isArray(data)) {
+					throw new Error("API에서 반환된 데이터가 배열 형식이 아닙니다.");
+				}
+
+				// 데이터 변환: 속성 이름 변경 및 숫자 변환
+				const transformedData = data.map((recipe) => ({
+					id: recipe.rcp_SNO, // 고유 ID
+					name: recipe.rcp_TTL, // 레시피 이름
+					종류: recipe.ckg_KND_ACTO_NM, // 레시피 종류
+					재료: recipe.ckg_MTRL_CN, // 레시피 재료
+					요리방법: recipe.ckg_MTH_ACTO_NM, // 요리 방법
+					RGTR_NM: recipe.rgtr_NM, // 작성자 이름
+					RGTR_ID: recipe.rgtr_ID, // 작성자 ID
+					INQ_CNT: Number(recipe.inq_CNT), // 조회수 (숫자 변환)
+					RCMM_CNT: Number(recipe.rcmm_CNT), // 추천수 (숫자 변환)
+					CKG_DODF_NM: recipe.ckg_DODF_NM, // 난이도
+					mainThumb: recipe.image_URL, // 메인 이미지 URL
+				}));
+
+				console.log("변환된 데이터:", transformedData);
+
+				// 정렬 및 상위 3개 데이터 추출
+				const byInqCount = [...transformedData]
+					.sort((a, b) => b.INQ_CNT - a.INQ_CNT)
+					.slice(0, 3);
+				console.log("조회수 기준 데이터:", byInqCount);
+
+				const bySrapCount = [...transformedData]
+					.sort((a, b) => b.RCMM_CNT - a.RCMM_CNT) // 추천수 기준
+					.slice(0, 3);
+				console.log("추천 수 기준 데이터:", bySrapCount);
+
+				const byRcmmCount = [...transformedData]
+					.sort((a, b) => b.RCMM_CNT - a.RCMM_CNT)
+					.slice(0, 3);
+				console.log("추천 수 기준 데이터:", byRcmmCount);
+
+				// 상태 업데이트
+				setRecipes({
+					inq: byInqCount,
+					srap: bySrapCount,
+					rcmm: byRcmmCount,
+				});
+			})
+			.catch((error) => {
+				console.error("데이터 가져오기 오류:", error);
 			});
-		  })
-		  .catch((error) => {
-			console.error("데이터 가져오기 오류:", error);
-		  });
-	  }, []);
+	}, []);
 
 	// 모달 닫기 핸들러
 	const handleClosePreferencesModal = () => {
@@ -171,19 +169,16 @@ const Home = () => {
 
 			const modalShownKey = `modalShown_${user.userId}`; // 유저별 상태 저장 키
 			const isModalShown = localStorage.getItem(modalShownKey);
-	
+
 			// 모달이 이미 표시된 경우, 데이터만 가져오고 모달은 띄우지 않음
 			if (isModalShown === "true") {
 				return;
 			}
 
 			try {
-				const response = await axios.get(
-					`http://localhost:8001/refrigerator`,
-					{
-						params: { userId: user.userId },
-					}
-				);
+				const response = await axios.get(`http://localhost:8001/refrigerator`, {
+					params: { userId: user.userId },
+				});
 
 				const nearExpiryItems = filterNearExpiryItems(response.data);
 				if (nearExpiryItems.length > 0) {
@@ -209,11 +204,9 @@ const Home = () => {
 	};
 
 	/////////////////////////////////////////////////////////
-	
 
 	return (
 		<div className="main-content-container">
-
 			{/* 유통기한 임박 모달 */}
 			<Modal show={isExpiryModalOpen} onHide={handleCloseExpiryModal} centered>
 				<Modal.Header closeButton>
@@ -223,8 +216,17 @@ const Home = () => {
 					{nearExpiryItems.length > 0 ? (
 						nearExpiryItems.map((item, index) => (
 							<div key={index} className="near-expiry-item">
-								<p><strong>이름:</strong> {item.name}</p>
-								<p><strong>남은 일수:</strong> {Math.ceil((new Date(item.expiration_date) - new Date()) / (1000 * 60 * 60 * 24))}일</p>
+								<p>
+									<strong>이름:</strong> {item.name}
+								</p>
+								<p>
+									<strong>남은 일수:</strong>{" "}
+									{Math.ceil(
+										(new Date(item.expiration_date) - new Date()) /
+											(1000 * 60 * 60 * 24)
+									)}
+									일
+								</p>
 								<hr></hr>
 							</div>
 						))
@@ -253,102 +255,82 @@ const Home = () => {
 						<Carousel
 							activeIndex={index1}
 							onSelect={handleSelect1}
-							data-bs-theme="dark"
+							indicators={true} 
+							controls={true}
 							className="movecarousel"
 						>
-							<Carousel.Item onClick={() => navigate("/products")}>
+							<Carousel.Item>
 								<img
 									src={productImage}
-									alt="Slide 1"
-									className="carousel-image1"
+									alt="Product Image"
+									className="d-block w-100" // Bootstrap 클래스로 꽉 차게 설정
+									style={{ objectFit: "cover", height: "100%" }} // 이미지 비율 유지
 								/>
-								<Carousel.Caption style={{ transform: "translateY(-10px)"}}>
-									<h3>상품</h3>
-									<p>냉장고를 가득 채울 신선한 상품을 만나보세요!</p>
-								</Carousel.Caption>
-							</Carousel.Item >
-							<Carousel.Item onClick={() => navigate("/search-results")}>
+							</Carousel.Item>
+							<Carousel.Item>
 								<img
 									src={recipeImage}
-									alt="Slide 2"
-									className="carousel-image2"
+									alt="Recipe Image"
+									className="d-block w-100"
+									style={{ objectFit: "cover", height: "100%" }}
 								/>
-								<Carousel.Caption style={{ transform: "translateY(-10px)"}}>
-									<h3>레시피</h3>
-									<p>신선한 재료와 좋은 레시피로 맛있는 요리를 만나보세요!</p>
-								</Carousel.Caption>
 							</Carousel.Item>
-							<Carousel.Item onClick={() => navigate("/tips")}>
-								<img 
-									src={tipImage} 
-									alt="Slide 3"
-									className="carousel-image3" 	 
+							<Carousel.Item>
+								<img
+									src={tipImage}
+									alt="Tip Image"
+									className="d-block w-100"
+									style={{ objectFit: "cover", height: "100%" }}
 								/>
-								<Carousel.Caption style={{ transform: "translateY(-10px)"}}>
-									<h3>생활 팁</h3>
-									<p>살면서 유용한 조언, 팁을 만나보세요!</p>
-								</Carousel.Caption>
 							</Carousel.Item>
-							<Carousel.Item onClick={() => navigate("/rank")}>
-								<img 
-									src={rankImage} 
-									alt="Slide 4"
-									className="carousel-image4"
+							<Carousel.Item>
+								<img
+									src={rankImage}
+									alt="Rank Image"
+									className="d-block w-100"
+									style={{ objectFit: "cover", height: "100%" }}
 								/>
-								<Carousel.Caption style={{ transform: "translateY(22px)"}}>
-									<h3>랭킹</h3>
-									<p>
-										가장 사랑을 많이 받은 레시피를 만나보세요!
-									</p>
-								</Carousel.Caption>
 							</Carousel.Item>
-							<Carousel.Item onClick={() => navigate("/myfridge")}>
+							<Carousel.Item>
 								<img
 									src={fridgeImage}
-									alt="Slide 5"
-									className="carousel-image5"
+									alt="Fridge Image"
+									className="d-block w-100"
+									style={{ objectFit: "cover", height: "100%" }}
 								/>
-								<Carousel.Caption style={{ transform: "translateY(-13px)"}}>
-									<h3>나만의 냉장고</h3>
-									<p>자신의 냉장고를 관리해 보세요!</p>
-								</Carousel.Caption>
 							</Carousel.Item>
 						</Carousel>
-			</div>
-		{/* 추천 레시피 캐러셀 */}
-		<div className="carousel-container">
-			<Carousel
-				activeIndex={index2}
-				onSelect={handleSelect2}
-				data-bs-theme="dark"
-				className="recipe"
-			>
-				{/* 조회수 기준 */}
-				<Carousel.Item>
-				<RecipeList recipes={recipes.inq} />
-				</Carousel.Item>
+					</div>
+					{/* 추천 레시피 캐러셀 */}
+					<div className="carousel-container">
+						<Carousel
+							activeIndex={index2}
+							onSelect={handleSelect2}
+							data-bs-theme="dark"
+							className="recipe"
+						>
+							{/* 조회수 기준 */}
+							<Carousel.Item>
+								<RecipeList recipes={recipes.inq} />
+							</Carousel.Item>
 
-				{/* 스크랩 기준 */}
-				<Carousel.Item>
-				<RecipeList recipes={recipes.srap} />
-				</Carousel.Item>
+							{/* 스크랩 기준 */}
+							<Carousel.Item>
+								<RecipeList recipes={recipes.srap} />
+							</Carousel.Item>
 
-				{/* 좋아요 기준 */}
-				<Carousel.Item>
-				<RecipeList recipes={recipes.rcmm} />
-				</Carousel.Item>
-			</Carousel>
-			</div>
-		</div>
-
+							{/* 좋아요 기준 */}
+							<Carousel.Item>
+								<RecipeList recipes={recipes.rcmm} />
+							</Carousel.Item>
+						</Carousel>
+					</div>
+				</div>
 
 				{/* 나만의 냉장고 */}
 				<div className="my-fridge" onClick={() => navigate("/myfridge")}>
 					<h3 className="fridgeh3">나만의 냉장고</h3>
-					<img
-						src={refrigerator}
-						className="fridgediv"
-					/>
+					<img src={fridgeClosedImage} className="fridgediv" />
 				</div>
 			</div>
 
@@ -357,16 +339,16 @@ const Home = () => {
 				<div className="tip-box">
 					<h5 className="card-text mb-0">{`생활팁 한 줄! ${randomTip}`}</h5>
 					<button
-					className="btn btn-outline-secondary btn-sm ms-2"
-					onClick={() => navigate("/tips")}
+						className="btn btn-outline-secondary btn-sm ms-2"
+						onClick={() => navigate("/tips")}
 					>
-					더보기
+						더보기
 					</button>
 				</div>
 			</div>
 
 			<div className="productstyle">
-				<ProductSection/>
+				<ProductSection />
 			</div>
 		</div>
 	);
