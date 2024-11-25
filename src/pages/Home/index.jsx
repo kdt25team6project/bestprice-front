@@ -18,7 +18,7 @@ import rankImage from "../../assets/images/rank.jpeg";
 import tipImage from "../../assets/images/tip.png";
 import recipeImage from "../../assets/images/recipe.png";
 import refrigerator from "../../assets/images/refrigerator close.png"
-import Product from "../Product";
+import ProductSection from "./ProductSection";
 
 
 const Home = () => {
@@ -366,7 +366,7 @@ const Home = () => {
 			</div>
 
 			<div className="productstyle">
-				<Product/>
+				<ProductSection/>
 			</div>
 		</div>
 	);
