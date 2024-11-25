@@ -25,6 +25,15 @@
 	background-color: #f9f9f9;
   }
   
+  /* 상단 영역과 저장된 메모 보기 섹션 간 간격 줄이기 */
+.tips-container .top-container {
+  margin-bottom: -20px !important; /* 우선순위 강제 적용 */
+}
+
+.tips-container .memo-container {
+  margin-bottom: -20px !important; /* 우선순위 강제 적용 */
+}
+
   /* 검색 결과 컨테이너 */
   .tips-container .search-results {
 	background-color: #f9f9f9;
@@ -107,10 +116,11 @@
 }
   
   /* 저장된 메모 섹션 스타일 */
-  .memo-section {
-	border-top: 2px solid #28a745; /* 초록색 경계선 */
-	margin-top: 10px; /* 간격 줄임 */
-	padding-top: 20px;
+  .tips-container .memo-section {
+    border-top: 2px solid #28a745; /* 초록색 경계선 */
+    margin-top: 5px; /* 간격 줄임 */
+    padding-top: 10px; /* 위쪽 여백 줄임 */
+    margin-bottom: 10px; /* 아래쪽 간격 추가 */
   }
   
   /* 저장 버튼 섹션 */

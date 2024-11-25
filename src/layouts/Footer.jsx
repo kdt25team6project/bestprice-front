@@ -22,7 +22,7 @@ const Footer = () => {
 								</a>
 							</li>
 							<li>
-								<a href="/recipes" className="footer-link">
+								<a href="/search-results" className="footer-link">
 									레시피
 								</a>
 							</li>
@@ -33,7 +33,7 @@ const Footer = () => {
 							</li>
 							<li>
 								<a href="/rank" className="footer-link">
-									랭킹
+									레시피 랭킹
 								</a>
 							</li>
 							<li>
@@ -67,7 +67,7 @@ const Footer = () => {
 				</div>
 
 				<div className="text-center mt-4">
-					<p>&copy; 2024. Best Price. All rights reserved.</p>
+					<p>&copy; 2024. Cook Cook. All rights reserved.</p>
 				</div>
 			</div>
 		</footer>

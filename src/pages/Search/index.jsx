@@ -299,47 +299,60 @@ function SearchResultsPage() {
 
 			{/* 페이지네이션 */}
 			<nav aria-label="Page navigation example">
-				<ul className="pagination justify-content-center mt-4">
-					{/* 이전 그룹 페이지 이동 */}
-					<li className={`page-item ${currentPage <= 5 ? 'disabled' : ''}`}>
-						<button
-							className="page-link"
-							onClick={() => paginate(Math.max(1, Math.floor((currentPage - 1) / 5) * 5))}
-							aria-label="Previous"
-						>
-							<span aria-hidden="true">&laquo;</span>
-						</button>
-						</li>
+			<ul className="pagination justify-content-center mt-4">
+				{/* 이전 그룹 페이지 이동 */}
+				<li className={`page-item ${currentPage <= 5 ? "disabled" : ""}`}>
+				<button
+					className="page-link"
+					onClick={() =>
+					paginate(Math.max(1, Math.floor((currentPage - 1) / 5) * 5))
+					}
+					aria-label="Previous"
+				>
+					<span aria-hidden="true">&laquo;</span>
+				</button>
+				</li>
 
-						{/* 최대 5페이지 표시 */}
-						{Array.from({ length: 5 }, (_, i) => {
-						const pageNumber = Math.floor((currentPage - 1) / 5) * 5 + i + 1;
-						if (pageNumber <= totalPages) {
-							return (
-							<li
-								key={pageNumber}
-								className={`page-item ${currentPage === pageNumber ? 'active' : ''}`}
-							>
-								<button className="page-link" onClick={() => paginate(pageNumber)}>
-								{pageNumber}
-								</button>
-							</li>
-							);
-						}
-						return null;
-						})}
-
-						{/* 다음 그룹 페이지 이동 */}
-						<li className={`page-item ${currentPage + 5 > totalPages ? 'disabled' : ''}`}>
+				{/* 최대 5페이지 표시 */}
+				{Array.from({ length: 5 }, (_, i) => {
+				const pageNumber = Math.floor((currentPage - 1) / 5) * 5 + i + 1;
+				if (pageNumber <= totalPages) {
+					return (
+					<li
+						key={pageNumber}
+						className={`page-item ${currentPage === pageNumber ? "active" : ""}`}
+					>
 						<button
-							className="page-link"
-							onClick={() => paginate(Math.min(totalPages, Math.floor((currentPage - 1) / 5) * 5 + 6))}
-							aria-label="Next"
+						className="page-link"
+						onClick={() => paginate(pageNumber)}
 						>
-							<span aria-hidden="true">&raquo;</span>
+						{pageNumber}
 						</button>
 					</li>
-				</ul>
+					);
+				}
+				return null;
+				})}
+
+				{/* 다음 그룹 페이지 이동 */}
+				<li
+				className={`page-item ${
+					Math.floor((currentPage - 1) / 5) * 5 + 5 >= totalPages ? "disabled" : ""
+				}`}
+				>
+				<button
+					className="page-link"
+					onClick={() =>
+					paginate(
+						Math.min(totalPages, Math.floor((currentPage - 1) / 5) * 5 + 6)
+					)
+					}
+					aria-label="Next"
+				>
+					<span aria-hidden="true">&raquo;</span>
+				</button>
+				</li>
+			</ul>
 			</nav>
 		</div>
 	);
