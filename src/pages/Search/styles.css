@@ -148,20 +148,22 @@
 }
 
 .button-group button {
-	background-color: #80ffc3; /* 버튼 배경색 */
-	color: rgb(0, 0, 0); /* 버튼 글자색 */
-	border: none;
-	padding: 8px 12px; /* 버튼 안쪽 여백을 줄임 */
-	border-radius: 5px; /* 둥근 모서리 */
-	cursor: pointer; /* 포인터 커서 */
-	transition: background-color 0.3s; /* 부드러운 배경색 변화 */
-	font-size: 0.9rem; /* 글자 크기 조정 */
+	background-color: transparent; /* 배경 투명 */
+	color: #ff5833; /* 기본 텍스트 색상 */
+	border: 1px solid #ff5833; /* 테두리 */
+	padding: 8px 12px;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s, color 0.3s;
+	font-size: 0.9rem;
 	white-space: nowrap; /* 텍스트 줄바꿈 방지 */
 }
 
 .button-group button:hover {
-	background-color: #3aaf5d; /* 호버 시 배경색 변화 */
+	background-color: #ffe5dc; /* 호버 시 배경색 */
+	color: #ff5833; /* 텍스트 유지 */
 }
+
 
 h3 {
 	margin-top: 20px;
@@ -190,28 +192,25 @@ h3 {
 	color: inherit;
 }
 
-/* 카테고리 열기/닫기 버튼 스타일 */
 .custom-filter-button {
-	background-color: #28a745; /* 원하는 배경색 (초록색 예시) */
-	color: white; /* 텍스트 색상 */
+	background-color: transparent; /* 배경 투명 */
+	color: #ff5833; /* 기본 색상 */
 	font-weight: bold;
-	border: none; /* 테두리 제거 */
-	padding: 10px 15px; /* 버튼 패딩 */
-	font-size: 16px; /* 텍스트 크기 */
-	cursor: pointer; /* 마우스 커서 포인터로 변경 */
-	border-radius: 5px; /* 모서리 둥글게 */
-	margin-right: 85px; /* 오른쪽에 15px 마진 추가 */
+	border: 1px solid #ff5833; /* 테두리 색상 */
+	padding: 10px 15px;
+	font-size: 16px;
+	cursor: pointer;
+	border-radius: 5px;
+	margin-left: 0; /* 왼쪽으로 정렬 */
+	margin-right: auto; /* 오른쪽으로 여백 */
 }
 
-/* hover 상태에서 스타일 변경 */
 .custom-filter-button:hover {
-	background-color: #218838; /* hover 시 더 진한 초록색 */
+	background-color: #ffe5dc; /* 호버 시 연한 배경 */
+	color: #ff5833; /* 텍스트 유지 */
+	border: 1px solid #ff5833; /* 테두리 유지 */
 }
 
-/* active 상태에서 스타일 변경 (버튼 클릭 시) */
-.custom-filter-button:active {
-	background-color: #218838; /* 클릭 시 더 어두운 초록색 */
-}
 
 /* 필터 영역에 슬라이드 애니메이션 추가 */
 .filter-container {

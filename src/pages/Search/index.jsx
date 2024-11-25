@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom"; // useLocation 추가
+import { useRecoilValue } from "recoil";
+import { userState } from "../../state/userState";
 import axios from "axios";
 import RecipeList from "./RecipeList";
 import "./styles.css";
@@ -7,6 +9,7 @@ import "./RecipeCard.css";
 import "./RecipeList.css";
 
 function SearchResultsPage() {
+	const user = useRecoilValue(userState); // 사용자 상태
 	const [allRecipes, setAllRecipes] = useState([]);
 	const [filteredRecipes, setFilteredRecipes] = useState([]);
 	const [bookmarkedRecipes, setBookmarkedRecipes] = useState([]);
@@ -17,6 +20,88 @@ function SearchResultsPage() {
 	const location = useLocation(); // 현재 URL 경로 가져오기
 	const [error, setError] = useState(null); // 에러 상태
 	const [loading, setLoading] = useState(true); // 로딩 상태
+	const [selectedCategory, setSelectedCategory] = useState("");
+
+	const [preferences, setPreferences] = useState(null);
+	const { userId } = user?.user || {};
+
+	const fetchPreferences = async () => {
+		try {
+			const response = await axios.get(
+				`http://localhost:8001/api/preferences/${userId}`
+			);
+			setPreferences(response.data);
+		} catch (error) {
+			console.error("Error fetching preferences:", error);
+		}
+	};
+
+	useEffect(() => {
+		fetchPreferences();
+	}, []);
+
+	useEffect(() => {
+		// preferences가 로드된 후 fetchRecipes 실행
+		if (preferences !== null) {
+			fetchRecipes();
+		}
+	}, [preferences]); // preferences가 업데이트될 때마다 실행
+
+	const fetchRecipes = async () => {
+		try {
+			let response;
+
+			if (preferences) {
+				// 선호도가 있는 경우, 필터링된 레시피를 가져옴
+				response = await axios.get("http://localhost:8001/recipes", {
+					params: {
+						difficulty: preferences.ckg_DODF_NM,
+						portion: preferences.ckg_INBUN_NM,
+						category: preferences.ckg_KND_ACTO_NM,
+						method: preferences.ckg_MTH_ACTO_NM,
+					},
+				});
+			} else {
+				// 선호도가 없는 경우, 전체 레시피를 가져옴
+				response = await axios.get("http://localhost:8001/allrecipes");
+			}
+
+			const basicRecipes = response.data.map((recipe) => ({
+				id: recipe.rcp_SNO, // 고유 ID
+				name: recipe.rcp_TTL, // 레시피 이름
+				종류: recipe.ckg_KND_ACTO_NM, // 레시피 종류
+				재료: recipe.ckg_MTRL_CN, // 레시피 재료
+				요리방법: recipe.ckg_MTH_ACTO_NM, // 요리 방법
+				RGTR_NM: recipe.rgtr_NM, // 작성자 이름
+				RGTR_ID: recipe.rgtr_ID, // 작성자 ID
+				INQ_CNT: Number(recipe.inq_CNT), // 조회수
+				RCMM_CNT: Number(recipe.rcmm_CNT), // 추천수
+				CKG_DODF_NM: recipe.ckg_DODF_NM, // 난이도
+				mainThumb: recipe.image_URL,
+			}));
+
+			setAllRecipes(basicRecipes); // 모든 레시피 저장
+			setFilteredRecipes(basicRecipes); // 필터링된 레시피 초기값 설정
+			setLoading(false);
+		} catch (error) {
+			console.error("Error fetching recipes:", error);
+			setError(error);
+			setLoading(false);
+		}
+	};
+
+	useEffect(() => {
+		const fetchInitialData = async () => {
+			try {
+				await fetchPreferences(); // 선호도를 먼저 가져옴
+				fetchRecipes(); // 이후 레시피를 가져옴
+			} catch (error) {
+				console.error("Error initializing data:", error);
+			}
+		};
+
+		fetchInitialData();
+	}, []);
 
 	const handleSearch = (keyword, searchType) => {
 		const filtered = allRecipes.filter((recipe) =>
@@ -50,36 +135,6 @@ function SearchResultsPage() {
 		recipesPerPage = 20; // 5열 보기일 때 최대 20개
 	}
 
-	useEffect(() => {
-		const fetchRecipes = async () => {
-			try {
-				const response = await axios.get("http://localhost:8001/allrecipes");
-				const basicRecipes = response.data.map((recipe) => ({
-					id: recipe.rcp_SNO, // 고유 ID
-					name: recipe.rcp_TTL, // 레시피 이름
-					종류: recipe.ckg_KND_ACTO_NM, // 레시피 종류
-					재료: recipe.ckg_MTRL_CN, // 레시피 재료
-					요리방법: recipe.ckg_MTH_ACTO_NM, // 요리 방법
-					RGTR_NM: recipe.rgtr_NM, // 작성자 이름
-					RGTR_ID: recipe.rgtr_ID, // 작성자 ID
-					INQ_CNT: Number(recipe.inq_CNT), // 조회수
-					RCMM_CNT: Number(recipe.rcmm_CNT), // 추천수
-					CKG_DODF_NM: recipe.ckg_DODF_NM, // 난이도
-					mainThumb: recipe.image_URL,
-				}));
-				setAllRecipes(basicRecipes); // 모든 레시피를 상태에 저장
-				setFilteredRecipes(basicRecipes); // 초기값을 전체 레시피로 설정
-				setLoading(false);
-			} catch (error) {
-				console.error("Error fetching recipes:", error);
-				setError(error);
-				setLoading(false);
-			}
-		};
-
-		fetchRecipes(); // 비동기 함수 호출
-	}, []); // 빈 배열로 useEffect를 처음 렌더링 시에만 실행
-
 	// 로딩 상태 처리
 	if (loading) {
 		return <p>Loading recipes...</p>;
@@ -96,6 +151,11 @@ function SearchResultsPage() {
 				? prev.filter((r) => r.id !== recipe.id)
 				: [...prev, recipe]
 		);
+	};
+
+	const handleCategoryClick = (category) => {
+		setSelectedCategory(category);
+		goSearchRecipe("cat1", category);
 	};
 
 	const handleLayoutChange = (e) => {
@@ -265,19 +325,10 @@ function SearchResultsPage() {
 					onChange={handleSortChange}
 				>
 					<option value="">-정렬 기준-</option>
-					<option value="difficulty">최신 순</option>
+					<option value="newest">최신 순</option>
 					<option value="difficulty">난이도 쉬운 순</option>
 					<option value="views">조회수 높은 순</option>
 					<option value="recommendations">추천수 높은 순</option>
-				</select>
-
-				<select className="form-select w-auto me-2" aria-label="찜 목록">
-					<option>찜 목록</option>
-					{bookmarkedRecipes.map((recipe) => (
-						<option key={recipe.id} value={recipe.id}>
-							{recipe.name}
-						</option>
-					))}
 				</select>
 
 				<select
@@ -290,6 +341,7 @@ function SearchResultsPage() {
 					<option value="five-column">5열 보기</option>
 				</select>
 			</div>
+
 			<RecipeList
 				recipes={currentRecipes}
 				onBookmark={handleBookmark}
@@ -299,60 +351,67 @@ function SearchResultsPage() {
 
 			{/* 페이지네이션 */}
 			<nav aria-label="Page navigation example">
-			<ul className="pagination justify-content-center mt-4">
-				{/* 이전 그룹 페이지 이동 */}
-				<li className={`page-item ${currentPage <= 5 ? "disabled" : ""}`}>
-				<button
-					className="page-link"
-					onClick={() =>
-					paginate(Math.max(1, Math.floor((currentPage - 1) / 5) * 5))
-					}
-					aria-label="Previous"
-				>
-					<span aria-hidden="true">&laquo;</span>
-				</button>
-				</li>
-
-				{/* 최대 5페이지 표시 */}
-				{Array.from({ length: 5 }, (_, i) => {
-				const pageNumber = Math.floor((currentPage - 1) / 5) * 5 + i + 1;
-				if (pageNumber <= totalPages) {
-					return (
-					<li
-						key={pageNumber}
-						className={`page-item ${currentPage === pageNumber ? "active" : ""}`}
-					>
+				<ul className="pagination justify-content-center mt-4">
+					{/* 이전 그룹 페이지 이동 */}
+					<li className={`page-item ${currentPage <= 5 ? "disabled" : ""}`}>
 						<button
-						className="page-link"
-						onClick={() => paginate(pageNumber)}
+							className="page-link"
+							onClick={() =>
+								paginate(Math.max(1, Math.floor((currentPage - 1) / 5) * 5))
+							}
+							aria-label="Previous"
 						>
-						{pageNumber}
+							<span aria-hidden="true">&laquo;</span>
 						</button>
 					</li>
-					);
-				}
-				return null;
-				})}
 
-				{/* 다음 그룹 페이지 이동 */}
-				<li
-				className={`page-item ${
-					Math.floor((currentPage - 1) / 5) * 5 + 5 >= totalPages ? "disabled" : ""
-				}`}
-				>
-				<button
-					className="page-link"
-					onClick={() =>
-					paginate(
-						Math.min(totalPages, Math.floor((currentPage - 1) / 5) * 5 + 6)
-					)
-					}
-					aria-label="Next"
-				>
-					<span aria-hidden="true">&raquo;</span>
-				</button>
-				</li>
-			</ul>
+					{/* 최대 5페이지 표시 */}
+					{Array.from({ length: 5 }, (_, i) => {
+						const pageNumber = Math.floor((currentPage - 1) / 5) * 5 + i + 1;
+						if (pageNumber <= totalPages) {
+							return (
+								<li
+									key={pageNumber}
+									className={`page-item ${
+										currentPage === pageNumber ? "active" : ""
+									}`}
+								>
+									<button
+										className="page-link"
+										onClick={() => paginate(pageNumber)}
+									>
+										{pageNumber}
+									</button>
+								</li>
+							);
+						}
+						return null;
+					})}
+
+					{/* 다음 그룹 페이지 이동 */}
+					<li
+						className={`page-item ${
+							Math.floor((currentPage - 1) / 5) * 5 + 5 >= totalPages
+								? "disabled"
+								: ""
+						}`}
+					>
+						<button
+							className="page-link"
+							onClick={() =>
+								paginate(
+									Math.min(
+										totalPages,
+										Math.floor((currentPage - 1) / 5) * 5 + 6
+									)
+								)
+							}
+							aria-label="Next"
+						>
+							<span aria-hidden="true">&raquo;</span>
+						</button>
+					</li>
+				</ul>
 			</nav>
 		</div>
 	);
