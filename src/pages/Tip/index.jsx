@@ -1,144 +1,279 @@
-import React, { useState } from "react";
-import { tips } from "../../assets/TipsData.js"
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { userState } from "../../state/userState";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import "./styles.css";
 
+axios.defaults.baseURL = "http://localhost:8001";
+
 function TipsPage() {
-	const [likes, setLikes] = useState(
-		tips.reduce((acc, tip) => {
-			acc[tip.id] = 0;
-			return acc;
-		}, {})
-	);
+  const { user } = useRecoilValue(userState); // 로그인 상태와 유저 정보
+  const isLoggedIn = user && user.userId ? true : false; // 로그인 여부 확인
+  const userId = user?.userId; // 유저 ID
 
-	const [memo, setMemo] = useState([]); // 메모에 저장된 팁 상태 추가
-	const [selectedTips, setSelectedTips] = useState([]); // 체크된 팁 상태
-	const [isMemoVisible, setIsMemoVisible] = useState(false); // 메모 열고 닫기 상태
+  const setUser = useSetRecoilState(userState); // 로그인 상태를 업데이트 할 수 있는 setUser 함수
 
-	// 좋아요 기능
-	const handleLike = (id) => {
-		setLikes((prevLikes) => ({
-			...prevLikes,
-			[id]: prevLikes[id] + 1,
-		}));
-	};
+  const [memo, setMemo] = useState([]); // 저장된 메모 상태
+  const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 상태
+  const [tips, setTips] = useState([]); // 팁 목록 상태
+  const tipsPerPage = 5;
+  const paginate = (pageNumber) => {
+	setCurrentPage(pageNumber); // 현재 페이지 상태 업데이트
+  };
 
-	// 체크박스 선택 기능
-	const handleSelectTip = (id) => {
-		setSelectedTips(
-			(prevSelected) =>
-				prevSelected.includes(id)
-					? prevSelected.filter((tipId) => tipId !== id) // 이미 선택된 경우 해제
-					: [...prevSelected, id] // 선택되지 않은 경우 추가
-		);
-	};
+  // 로컬스토리지에서 사용자 정보 복원 및 로그인 상태 업데이트
+  useEffect(() => {
+    const storedUser = localStorage.getItem("userLocal");
+    if (storedUser) {
+      const userInfo = JSON.parse(storedUser);
+      setUser({
+        isLoggedIn: true,
+        user: userInfo.user, // 사용자 정보 복원
+      });
+    }
+  }, [setUser]);
 
-	// 메모에 선택된 팁 저장
-	const handleSaveToMemo = () => {
-		const selectedMemoTips = tips.filter((tip) =>
-			selectedTips.includes(tip.id)
-		);
-		setMemo(selectedMemoTips);
-		setIsMemoVisible(true); // 메모를 저장하면 자동으로 열리도록 설정
-	};
+  // 팁 목록 가져오기 및 로그인 상태 반영
+  useEffect(() => {
+    axios
+      .get("/api/tips") // 팁 목록 가져오기
+      .then((response) => {
+        setTips(response.data);
 
-	// 메모 열고 닫기 함수
-	const toggleMemoVisibility = () => {
-		setIsMemoVisible(!isMemoVisible);
-	};
+        // 로그인 상태일 경우 사용자 좋아요 목록 가져오기
+        if (isLoggedIn && userId) {
+          axios
+            .get(`/api/tips/likes?userId=${userId}`) // 사용자 좋아요 목록 가져오기
+            .then((res) => {
+              const likedTipIds = res.data;
+              const likedTips = response.data.filter((tip) =>
+                likedTipIds.includes(tip.tipId)
+              );
+              setMemo(likedTips);
+            })
+            .catch((error) => {
+              console.error("사용자 좋아요 목록 가져오기 실패:", error);
+            });
+        } else {
+          setMemo([]); // 로그아웃 상태에서는 좋아요 목록 초기화
+        }
+      })
+      .catch((error) => {
+        console.error("팁 목록 가져오기 실패:", error);
+      });
+  }, [isLoggedIn, userId]); // 로그인 상태와 사용자 ID가 변경될 때마다 실행
 
-	// 개별 메모 삭제 기능
-	const handleDeleteMemo = (id) => {
-		setMemo(memo.filter((tip) => tip.id !== id));
-	};
+  // 좋아요 추가/삭제 함수
+  const toggleRecommendation = (id) => {
+    if (!isLoggedIn) {
+      alert("로그인을 해주세요.");
+      return;
+    }
 
-	return (
-		<div className="container">
-			{/* 자취 꿀팁 모음 */}
-			<div className="tips-page container my-5">
-				<h1 className="tips-title mb-4">✨자취 꿀팁 모음</h1>
+    const isAlreadyRecommended = memo.some((tip) => tip.tipId === id);
 
-				{/* 메모에 저장 및 저장된 메모 버튼 */}
-				<div className="d-flex justify-content-end mb-4">
-					{/* 메모에 저장하기 버튼 */}
-					<button
-						onClick={handleSaveToMemo}
-						className="btn btn-success me-2" /* 초록색 버튼 */
-						disabled={selectedTips.length === 0} // 선택된 팁이 없으면 비활성화
+    if (isAlreadyRecommended) {
+      // 좋아요 삭제
+      const updatedMemo = memo.filter((tip) => tip.tipId !== id);
+      setMemo(updatedMemo);
+
+      axios
+        .delete(`/api/tips/like`, {
+          params: { userId, tipId: id },
+        })
+        .then(() => {
+          setTips((prevTips) =>
+            prevTips.map((tip) =>
+              tip.tipId === id
+                ? { ...tip, recommendation: tip.recommendation - 1 }
+                : tip
+            )
+          );
+        })
+        .catch((error) => {
+          console.error("좋아요 삭제 실패:", error);
+        });
+    } else {
+      const selectedTip = tips.find((tip) => tip.tipId === id);
+      if (selectedTip) {
+        const updatedMemo = [...memo, selectedTip];
+        setMemo(updatedMemo);
+
+        axios
+          .post(`/api/tips/like`, null, {
+            params: { userId, tipId: id },
+          })
+          .then(() => {
+            setTips((prevTips) =>
+              prevTips.map((tip) =>
+                tip.tipId === id
+                  ? { ...tip, recommendation: tip.recommendation + 1 }
+                  : tip
+              )
+            );
+          })
+          .catch((error) => {
+            console.error("좋아요 추가 실패:", error);
+          });
+      }
+    }
+  };
+
+  // 팁 검색 필터링
+  const filteredTips = tips.filter((tip) =>
+    tip.tipTitle.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // 페이지 계산
+  const indexOfLastTip = currentPage * tipsPerPage;
+  const indexOfFirstTip = indexOfLastTip - tipsPerPage;
+  const currentTips = filteredTips.slice(indexOfFirstTip, indexOfLastTip);
+  const totalPages = Math.ceil(filteredTips.length / tipsPerPage);
+
+  // 페이지 변경 함수
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  return (
+    <div className="tips-container">
+      {/* 상단 영역 */}
+      <div className="top-container container my-5">
+        <h1 className="tips-title mb-4">🔍 생활팁 검색</h1>
+
+        {/* 검색 바 */}
+        <input
+          type="text"
+          className="form-control mb-4 search-bar-input"
+          placeholder="검색어를 입력하세요."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+
+      {/* 저장된 메모 보기 */}
+      <div className="memo-container container my-5">
+        <h2 className="tips-title mb-4">📋 좋아요 팁 목록</h2>
+        {memo.length > 0 ? (
+          <div className="list-group">
+            {memo.map((tip) => (
+              <div
+                key={tip.tipId}
+                className="list-group-item d-flex justify-content-between align-items-center"
+              >
+                <div>
+                  <h5>{tip.tipTitle}</h5>
+                  <p>{tip.tips}</p>
+                </div>
+                <button
+                  onClick={() => toggleRecommendation(tip.tipId)}
+                  className="btn btn-danger"
+                >
+                  삭제
+                </button>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p>아직 좋아요를 누른 생활팁이 없습니다.</p>
+        )}
+      </div>
+
+      {/* 하단 영역 */}
+      <div className="bottom-container container my-5">
+        <h2 className="tips-title mb-4">✨ 생활팁 전체보기</h2>
+        <div className="list-group">
+          {currentTips.map((tip) => (
+            <div
+              key={tip.tipId}
+              className="list-group-item d-flex justify-content-between align-items-center"
+            >
+              <div>
+                <h5>{tip.tipTitle}</h5>
+                <p>{tip.tips}</p>
+              </div>
+              {/* 하트 버튼 */}
+              <button
+                className="btn"
+                onClick={() => toggleRecommendation(tip.tipId)}
+                style={{
+                  fontSize: "1.5rem",
+                  color: memo.some(
+                    (savedTip) => savedTip.tipId === tip.tipId
+                  )
+                    ? "red"
+                    : "gray",
+                }}
+              >
+                {memo.some((savedTip) => savedTip.tipId === tip.tipId)
+                  ? "❤️"
+                  : "🤍"}
+              </button>
+            </div>
+          ))}
+        </div>
+
+        {/* 페이지네이션 */}
+		<nav aria-label="Page navigation example">
+			<ul className="pagination justify-content-center mt-4">
+				{/* 이전 그룹 페이지 이동 */}
+				<li className={`page-item ${currentPage <= 5 ? "disabled" : ""}`}>
+				<button
+					className="page-link"
+					onClick={() =>
+					paginate(Math.max(1, Math.floor((currentPage - 1) / 5) * 5))
+					}
+					aria-label="Previous"
+				>
+					<span aria-hidden="true">&laquo;</span>
+				</button>
+				</li>
+
+				{/* 최대 5페이지 표시 */}
+				{Array.from({ length: 5 }, (_, i) => {
+				const pageNumber = Math.floor((currentPage - 1) / 5) * 5 + i + 1;
+				if (pageNumber <= totalPages) {
+					return (
+					<li
+						key={pageNumber}
+						className={`page-item ${currentPage === pageNumber ? "active" : ""}`}
 					>
-						메모에 저장하기 ({selectedTips.length})
-					</button>
-
-					{/* 메모 열고 닫기 버튼 */}
-					<button
-						onClick={toggleMemoVisibility}
-						className={`btn btn-success`} /* 초록색으로 변경 */
-					>
-						{isMemoVisible ? "메모 닫기" : "저장된 메모 보기"}
-					</button>
-				</div>
-
-				{/* 저장된 메모 섹션 - 버튼 아래에 표시 */}
-				{isMemoVisible && memo.length > 0 && (
-					<div className={`memo-section mb-4`}>
-						<h3>저장된 메모</h3>
-						{memo.map((tip) => (
-							<div
-								key={tip.id}
-								className="list-group-item mb-2 d-flex justify-content-between align-items-center"
-							>
-								<div>
-									<h5>{tip.title}</h5>
-									<p>{tip.content}</p>
-								</div>
-								{/* 메모 삭제 버튼 */}
-								<button
-									onClick={() => handleDeleteMemo(tip.id)}
-									className="btn btn-danger btn-sm"
-								>
-									삭제
-								</button>
-							</div>
-						))}
-					</div>
-				)}
-
-				{/* 팁 리스트 */}
-				<div className="list-group">
-					{tips.map((tip) => (
-						<div
-							key={tip.id}
-							className="list-group-item list-group-item-action mb-2"
+						<button
+						className="page-link"
+						onClick={() => paginate(pageNumber)}
 						>
-							{/* 체크박스와 내용 컨테이너 */}
-							<div className="tip-content">
-								<input
-									type="checkbox"
-									checked={selectedTips.includes(tip.id)}
-									onChange={() => handleSelectTip(tip.id)}
-									style={{ transform: "scale(1.5)", accentColor: "#28a745" }}
-								/>
-								<div className="tip-details">
-									<h5 className="mb-1">{tip.title}</h5>
-									<p className="mb-1">{tip.content}</p>
-								</div>
-							</div>
+						{pageNumber}
+						</button>
+					</li>
+					);
+				}
+				return null;
+				})}
 
-							{/* 좋아요 버튼 */}
-							<div className="like-section">
-								<button
-									className="like-button"
-									onClick={() => handleLike(tip.id)}
-								>
-									❤️
-								</button>
-								<span className="like-count">{likes[tip.id]}</span>
-							</div>
-						</div>
-					))}
-				</div>
-			</div>
-		</div>
-	);
+				{/* 다음 그룹 페이지 이동 */}
+				<li
+				className={`page-item ${
+					Math.floor((currentPage - 1) / 5) * 5 + 5 >= totalPages ? "disabled" : ""
+				}`}
+				>
+				<button
+					className="page-link"
+					onClick={() =>
+					paginate(
+						Math.min(totalPages, Math.floor((currentPage - 1) / 5) * 5 + 6)
+					)
+					}
+					aria-label="Next"
+				>
+					<span aria-hidden="true">&raquo;</span>
+				</button>
+				</li>
+			</ul>
+		</nav>
+      </div>
+    </div>
+  );
 }
 
 export default TipsPage;

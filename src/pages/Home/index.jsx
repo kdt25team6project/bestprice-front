@@ -353,14 +353,14 @@ const Home = () => {
 			</div>
 
 			{/* 랜덤 꿀팁 */}
-			<div className="d-flex justify-content-center align-items-center my-3">
-				<div className="tip-box d-flex align-items-center">
-					<h5 className="card-text mb-0">{`자취 꿀팁 한 줄! ${randomTip} `}</h5>
+			<div className="d-flex justify-content-center align-items-center my-3 tip-container">
+				<div className="tip-box">
+					<h5 className="card-text mb-0">{`생활팁 한 줄! ${randomTip}`}</h5>
 					<button
-						className="btn btn-outline-secondary btn-sm ms-2"
-						onClick={() => navigate("/tips")}
+					className="btn btn-outline-secondary btn-sm ms-2"
+					onClick={() => navigate("/tips")}
 					>
-						더보기
+					더보기
 					</button>
 				</div>
 			</div>
