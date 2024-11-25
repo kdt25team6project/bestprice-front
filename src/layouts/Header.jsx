@@ -68,7 +68,7 @@ const Header = ({ onSearch }) => {
 					}`}
 					onClick={() => navigate("/tips")}
 				>
-					자취팁
+					생활팁
 				</span>
 				<span
 					className={`menu-link ${
