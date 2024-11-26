@@ -258,6 +258,33 @@
 	color: #333;
 }
 
+/* 닫기 버튼 및 재료 추가 헤더 스타일 */
+.right-canvas-header {
+	display: flex; /* Flexbox로 정렬 */
+	justify-content: space-between; /* 버튼과 제목 양쪽 배치 */
+	align-items: center; /* 세로 중앙 정렬 */
+	margin-bottom: 20px;
+}
+
+.right-canvas-title {
+	font-size: 1.5rem; /* 제목 크기 */
+	font-weight: bold; /* 굵게 표시 */
+	color: #333;
+}
+
+/* 유통기한 임박 재료 레시피 제목 및 서브타이틀 */
+.recipe-links-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.recipe-links-subtitle {
+    font-size: 0.9rem;
+    color: #888; /* 회색 텍스트 */
+    margin-bottom: 20px;
+}
+
 .close-button {
 	background: none; /* 배경 제거 */
 	border: none; /* 테두리 제거 */

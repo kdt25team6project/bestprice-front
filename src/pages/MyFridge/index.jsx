@@ -640,7 +640,7 @@ const MyFridge = () => {
 								<option value="냉동">냉동</option>
 							</select>
 
-							<p className="input-prompt">소비기한</p>
+							<p className="input-prompt">유통기한</p>
 							<DatePicker
 								selected={expirationDate}
 								onChange={(date) => setExpirationDate(date)}
@@ -650,7 +650,9 @@ const MyFridge = () => {
 
 							{/* 날짜 추가 버튼 */}
 							<div className="date-buttons">
-                            <button onClick={() => addDays(1)} className="category-button">+1일</button>
+								<button onClick={() => addDays(1)} className="category-button">
+									+1일
+								</button>
 								<button onClick={addWeeks}>+1주</button>
 								<button onClick={addMonths}>+1달</button>
 							</div>
@@ -663,44 +665,20 @@ const MyFridge = () => {
 						</div>
 					</div>
 				</div>
-				{/* 오른쪽 패널 (유통기한 알림 패널) */}
-				<div
-					className={`off-canvas right-canvas ${
-						isRightCanvasOpen ? "open" : ""
-					}`}
-				>
-					<button className="close-button" onClick={toggleRightCanvas}>
-						닫기
-					</button>
-					<div className="right-canvas-content">
-						<h2>유통기한 알림</h2>
-						{foodItems.slice(0, 5).map((item, index) => (
-							<div key={index} className="expiration-item">
-								<div className="icon-placeholder">{item.emoji}</div>
-								<div className="expiration-details">
-									<p className="expiration-date">
-										유통기한: {item.expirationDate}
-									</p>
-									<p className="food-name">{item.name}</p>
-								</div>
-							</div>
-						))}
-					</div>
-				</div>
-				{/* 오른쪽 패널 (유통기한 알림 패널) */}
-				<div
-					className={`off-canvas right-canvas ${
-						isRightCanvasOpen ? "open" : ""
-					}`}
-				>
-					<button className="close-button" onClick={toggleRightCanvas}>
-						닫기
-					</button>
 
+				{/* 오른쪽 패널 (유통기한 알림 패널) */}
+				<div
+					className={`off-canvas right-canvas ${
+						isRightCanvasOpen ? "open" : ""
+					}`}
+				>
+					<div className="right-canvas-header">
+						<h2 className="right-canvas-title">유통기한 알림</h2>
+						<button className="close-button" onClick={toggleRightCanvas}>
+							<IoClose size={24} />
+						</button>
+					</div>
 					<div className="right-canvas-content">
-						{" "}
-						{/* 오른쪽 패널 내용 */}
-						<h2>유통기한 알림</h2>
 						{/* 유통기한이 다가오는 항목 표시 */}
 						{currentItems.map((item, index) => {
 							const daysLeft = calculateDaysLeft(item.expiration_date);
@@ -713,7 +691,7 @@ const MyFridge = () => {
 										handleShowModal(item);
 									}}
 								>
-									<div className="food-emoji">{item.emoji}</div> {/* 아이콘 */}
+									<div className="food-emoji">{item.emoji}</div>
 									<div className="expiration-details">
 										<p className="expiration-date">남은 일수: {daysLeft}일</p>
 										<p className="food-name">{item.name}</p>
@@ -721,6 +699,7 @@ const MyFridge = () => {
 								</div>
 							);
 						})}
+
 						{/* 페이지네이션 */}
 						<div className="pagination">
 							<Pagination>
@@ -751,10 +730,11 @@ const MyFridge = () => {
 								/>
 							</Pagination>
 						</div>
+
 						{/* 레시피 링크 */}
 						<div className="recipe-links">
-							<h3>유통기한 임박 재료 레시피</h3>
-							<h6>해당 레시피는 랜덤으로 표시 됩니다!</h6>
+                        <h2 className="recipe-links-title">유통기한 임박 재료 레시피</h2>
+                        <h6 className="recipe-links-subtitle">해당 레시피는 랜덤으로 표시됩니다!</h6>
 							{recipe.slice(0, 5).map((recipeItem, index) => (
 								<div
 									key={index}
