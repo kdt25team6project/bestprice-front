@@ -1,15 +1,58 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-function Graph({ basePrice, price }) {
-  // 쉼표가 포함된 문자열을 숫자로 변환하는 함수
-  const parsePrice = (price) => Number(price.replace(/,/g, ''));
+function Graph({ productId }) {
+  const [graphData, setGraphData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const prices = [parsePrice(basePrice), parsePrice(price)];
-  const labels = ['2024-11-05', '2024-11-12'];
+  // 데이터 Fetch
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`http://localhost:8001/product/prices?productId=${productId}`);
+        const data = await response.json();
+        setGraphData(data);
+      } catch (err) {
+        console.error("Error fetching graph data:", err);
+        setError("그래프 데이터를 가져오는 중 오류가 발생했습니다.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (productId) {
+      fetchData();
+    }
+  }, [productId]);
+
+  // 로딩 상태 처리
+  if (loading) {
+    return <div>그래프 데이터를 불러오는 중입니다...</div>;
+  }
+
+  // 에러 상태 처리
+  if (error) {
+    return <div>{error}</div>;
+  }
+
+  // 데이터가 없을 때 처리
+  if (!graphData || graphData.length === 0) {
+    return 
+  }
+
+  const labels = graphData.map((data) =>
+    new Date(data.last_updated).toLocaleDateString('ko-KR', {
+      month: '2-digit',
+      day: '2-digit',
+    })
+  );  
+  const prices = graphData.map((data) => data.price);
+
 
   const maxPrice = Math.max(...prices); // 가장 높은 가격
   const minPrice = Math.min(...prices); // 가장 낮은 가격
@@ -96,8 +139,20 @@ function Graph({ basePrice, price }) {
         },
       },
       x: {
-        grid: {
-          drawBorder: false,
+          ticks: {
+            callback: function (value, index, values) {
+              const totalLabels = values.length;
+              if (index === 0 || index === totalLabels - 1 || index === Math.floor(totalLabels / 2)) {
+                return labels[index]; // 처음, 마지막, 중앙 레이블 반환
+              }
+
+              return ''; // 나머지는 빈 문자열 반환
+            },
+            maxRotation: 0,
+            minRotation: 0, 
+          grid: {
+            drawBorder: false,
+          },
         },
       },
     },

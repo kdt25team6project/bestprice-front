@@ -225,12 +225,10 @@ function ProductSearchPage() {
             </div>
             <div className="prod_info">
               <p className="prod_name">{product.productName}</p>
-              {product.basePrice && product.price ? (
-                <Graph
-                  basePrice={formatPrice(product.basePrice)}
-                  price={formatPrice(product.price)}
-                />
-              ) : null}
+              {product.productId ? (
+                <Graph productId={product.productId} />
+            ) : null}
+
             </div>
             <div className="prod_pricelist">
               <ul>

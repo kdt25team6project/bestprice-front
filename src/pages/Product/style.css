@@ -143,6 +143,8 @@ ul {
 
 .button-group{
   margin-left: 3%;
+  max-width: 1200px;
+  flex-wrap: wrap;
 }
 .button-group button {
   display: flex;
