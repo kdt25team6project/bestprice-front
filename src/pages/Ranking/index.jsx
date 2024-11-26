@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./styles.css";
 import { useNavigate } from "react-router-dom";
+import { Card, Row, Col } from "react-bootstrap";
 
 const Ranking = () => {
     // 상태 정의: 상위 3개와 그 외 순위
@@ -81,35 +82,121 @@ const Ranking = () => {
             ) : (
                 <>
                     {/* Top 3 Ranking Display */}
-                    <div className="top-three-container">
-                        {topThree && topThree.length > 0 ? (
-                            topThree.map((item, index) => (
-                                <div
-                                    key={index}
-                                    className="top-item"
-                                    style={{ backgroundColor: item?.bgColor || "#FFF5CC" }} // 기본 배경 색상 설정
-                                    onClick={() => handleRecipeClick(item)}
-                                >
-                                    <span className="rank-icon" style={{ color: item?.color || "#FFD700" }}>
-                                        {item?.icon || "⭐"}
-                                    </span>
-                                    <div className="rank-number" style={{ color: item?.color || "#FFD700" }}>
-                                        {item?.rank || index + 1}
-                                    </div>
-                                    <div className="rank-title">{item?.rcpTtl || "Unknown Title"}</div>
-                                    <div className="rank-nickname">{item?.rgtrNm || "Unknown User"}</div>
-                                    <div className="rank-stat">
-                                        {selectedCategory === "inquiry" && `조회수: ${item?.inqCnt || 0}`}
-                                        {selectedCategory === "recommendation" && `추천수: ${item?.rcmmCnt || 0}`}
-                                        {selectedCategory === "weekly_views" && `주간 조회수: ${item?.weeklyViews || 0}`}
-                                        {selectedCategory === "weekly_recommendations" && `주간 추천수: ${item?.weeklyRecommendations || 0}`}
-                                    </div>
-                                </div>
-                            ))
-                        ) : (
-                            <div>No Data Available</div>
-                        )}
-                    </div>
+                    <Row className="top-three-container">
+    {topThree && topThree.length > 2 ? (
+        <> 
+            {/* 2등 */}
+            <Col xs={12} md={4} className="top-item top-item-2 mb-4">
+                <Card className="top-card">
+                    <Card.Header className="top-card-header">
+                        <span className="rank-icon">⭐</span> {topThree[1]?.rank || 2}위
+                    </Card.Header>
+                    <Card.Img
+                        className="top-card-image"
+                        variant="top"
+                        src={topThree[1]?.imageUrl}
+                        alt="Recipe Image"
+                    />
+                    <Card.Body
+                        className="top-card-body"
+                        onClick={() => handleRecipeClick(topThree[1])}
+                    >
+                        <Card.Title className="top-card-title">
+                            {topThree[1]?.rcpTtl || "Unknown Title"}
+                        </Card.Title>
+                        <Card.Text className="top-card-nickname">
+                            {topThree[1]?.rgtrNm || "Unknown User"}
+                        </Card.Text>
+                        <Card.Text className="top-card-stat">
+                            {selectedCategory === "inquiry" &&
+                                `조회수: ${topThree[1]?.inqCnt || 0}`}
+                            {selectedCategory === "recommendation" &&
+                                `추천수: ${topThree[1]?.rcmmCnt || 0}`}
+                            {selectedCategory === "weekly_views" &&
+                                `주간 조회수: ${topThree[1]?.weeklyViews || 0}`}
+                            {selectedCategory === "weekly_recommendations" &&
+                                `주간 추천수: ${topThree[1]?.weeklyRecommendations || 0}`}
+                        </Card.Text>
+                    </Card.Body>
+                </Card>
+            </Col>
+
+            {/* 1등 */}
+            <Col xs={12} md={4} className="top-item top-item-1 mb-4">
+                <Card className="top-card">
+                    <Card.Header className="top-card-header">
+                        <span className="rank-icon">⭐</span> {topThree[0]?.rank || 1}위
+                    </Card.Header>
+                    <Card.Img
+                        className="top-card-image"
+                        variant="top"
+                        src={topThree[0]?.imageUrl}
+                        alt="Recipe Image"
+                    />
+                    <Card.Body
+                        className="top-card-body"
+                        onClick={() => handleRecipeClick(topThree[0])}
+                    >
+                        <Card.Title className="top-card-title">
+                            {topThree[0]?.rcpTtl || "Unknown Title"}
+                        </Card.Title>
+                        <Card.Text className="top-card-nickname">
+                            {topThree[0]?.rgtrNm || "Unknown User"}
+                        </Card.Text>
+                        <Card.Text className="top-card-stat">
+                            {selectedCategory === "inquiry" &&
+                                `조회수: ${topThree[0]?.inqCnt || 0}`}
+                            {selectedCategory === "recommendation" &&
+                                `추천수: ${topThree[0]?.rcmmCnt || 0}`}
+                            {selectedCategory === "weekly_views" &&
+                                `주간 조회수: ${topThree[0]?.weeklyViews || 0}`}
+                            {selectedCategory === "weekly_recommendations" &&
+                                `주간 추천수: ${topThree[0]?.weeklyRecommendations || 0}`}
+                        </Card.Text>
+                    </Card.Body>
+                </Card>
+            </Col>
+
+            {/* 3등 */}
+            <Col xs={12} md={4} className="top-item top-item-3 mb-4">
+                <Card className="top-card">
+                    <Card.Header className="top-card-header">
+                        <span className="rank-icon">⭐</span> {topThree[2]?.rank || 3}위
+                    </Card.Header>
+                    <Card.Img
+                        className="top-card-image"
+                        variant="top"
+                        src={topThree[2]?.imageUrl}
+                        alt="Recipe Image"
+                    />
+                    <Card.Body
+                        className="top-card-body"
+                        onClick={() => handleRecipeClick(topThree[2])}
+                    >
+                        <Card.Title className="top-card-title">
+                            {topThree[2]?.rcpTtl || "Unknown Title"}
+                        </Card.Title>
+                        <Card.Text className="top-card-nickname">
+                            {topThree[2]?.rgtrNm || "Unknown User"}
+                        </Card.Text>
+                        <Card.Text className="top-card-stat">
+                            {selectedCategory === "inquiry" &&
+                                `조회수: ${topThree[2]?.inqCnt || 0}`}
+                            {selectedCategory === "recommendation" &&
+                                `추천수: ${topThree[2]?.rcmmCnt || 0}`}
+                            {selectedCategory === "weekly_views" &&
+                                `주간 조회수: ${topThree[2]?.weeklyViews || 0}`}
+                            {selectedCategory === "weekly_recommendations" &&
+                                `주간 추천수: ${topThree[2]?.weeklyRecommendations || 0}`}
+                        </Card.Text>
+                    </Card.Body>
+                </Card>
+            </Col>
+        </>
+    ) : (
+        <div>No Data Available</div>
+    )}
+</Row>
 
                     {/* Divider */}
                     <hr className="divider" />
