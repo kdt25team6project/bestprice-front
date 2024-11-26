@@ -1,132 +1,152 @@
 .ranking-container {
-	width: 100%;
-	max-width: 1280px;
-	margin: 0 auto;
-	font-family: Arial, sans-serif;
-	padding-top: 5%;
-	border: 1px solid #ddd;
-	box-shadow: 0 0 9px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+    padding-top: 5%;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 9px rgba(0, 0, 0, 0.5);
+    padding-bottom: 50px; /* 부모 컴포넌트 바닥과 여백 추가 */
 }
 
 .ranking-header {
-	display: flex;
-	justify-content: center;
-	gap: 10px;
-	margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
 }
 
 .header-button {
-	border: none;
-	padding: 10px 20px;
-	font-size: 16px;
-	cursor: pointer;
-	border-radius: 8px;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 8px;
 }
 
 .views {
-	background-color: #f8caca;
-	color: #333;
+    background-color: #f8caca;
+    color: #333;
 }
 
 .recommends {
-	background-color: #d4f8d4;
-	color: #333;
+    background-color: #d4f8d4;
+    color: #333;
 }
 
 .reviews {
-	background-color: #d4d4f8;
-	color: #333;
+    background-color: #d4d4f8;
+    color: #333;
 }
 
 .top-three-container {
-	position: relative;
-	display: flex;
-	justify-content: center;
-	align-items: flex-end;
-	margin-bottom: 20px;
-	height: 350px;
-	width: 90%;
-	margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 40px; /* 아래 div와의 간격 조정 */
+    width: 90%;
+    margin: 0 auto;
 }
 
 .top-item {
-	position: absolute;
-	width: 15%;
-	height: 220px;
-	border-radius: 10px;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: flex-end;
-	padding: 10px;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    position: relative;
 }
 
-.top-item:nth-child(1) {
-	left: 50%;
-	transform: translateX(-50%);
-	bottom: 30%;
+.top-item-1 {
+    transform: translateY(-2%);
+    z-index: 3;
 }
 
-.top-item:nth-child(2) {
-	left: 25%;
-	transform: translateY(-25%);
+.top-item-2 {
+    transform: translateY(8%);
+}
+.top-item-3 {
+    transform: translateY(9%);
 }
 
-.top-item:nth-child(3) {
-	right: 25%;
-	transform: translateY(-5%);
+.top-card {
+    width: 100%;
+    height: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.rank-icon {
-	font-size: 24px;
+.top-card-header {
+    background-color: #ffedcc;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-bottom: 2px solid #ffc107;
 }
 
-.rank-number {
-	font-size: 32px;
-	font-weight: bold;
+.top-card-image {
+    height: 200px;
+    object-fit: cover;
+}
+
+.top-card-body {
+    text-align: center;
+}
+
+.top-card-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.top-card-nickname {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.top-card-stat {
+    font-size: 0.85rem;
+    color: #777;
 }
 
 .divider {
-	border: none;
-	border-top: 2px solid #e0e0e0;
-	margin: 20px 0;
+    border: none;
+    border-top: 2px solid #e0e0e0;
+    margin: 20px 0;
 }
 
 .other-ranks-container {
-	width: 70%;
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
-	margin: 0 auto;
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0 auto;
 }
 
 .rank-item {
-	display: flex;
-	align-items: center;
-	gap: 10px;
-	background-color: #d4eaff;
-	padding: 10px;
-	border-radius: 8px;
-	height: 90px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #d4eaff;
+    padding: 10px;
+    border-radius: 8px;
+    height: 90px;
+    margin-bottom: 20px; /* 마지막 아이템 간격 추가 */
 }
 
 .rank-avatar {
-	background-color: #e6e6ff;
-	width: 40px;
-	height: 40px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	border-radius: 50%;
-	border: 2px solid #a0ffa0;
+    background-color: #e6e6ff;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 2px solid #a0ffa0;
 }
 
 .rank-label {
-	font-size: 18px;
-	font-weight: bold;
+    font-size: 18px;
+    font-weight: bold;
 }
 
 .rank-title {
-	font-size: 1.1rem;
+    font-size: 1.1rem;
+	font-weight: bold;
 }

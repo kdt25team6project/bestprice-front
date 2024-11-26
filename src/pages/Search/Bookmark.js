@@ -16,9 +16,11 @@ export const toggleBookmark = async (recipeId, userId, isBookmarked) => {
     try {
         if (isBookmarked) {
             await axios.delete(`http://localhost:8001/api/recipe/${recipeId}/bookmark`, { params: { userId } });
+            alert("찜 취소 완료!");
             return false; // 찜 해제 상태
         } else {
             await axios.post(`http://localhost:8001/api/recipe/${recipeId}/bookmark`, null, { params: { userId } });
+            alert("찜 완료!");
             return true; // 찜 추가 상태
         }
     } catch (error) {

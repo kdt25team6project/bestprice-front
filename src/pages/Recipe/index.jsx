@@ -243,6 +243,7 @@ function RecipeDetailPage() {
 				isBookmarked
 			);
 			setIsBookmarked(newBookmarkState);
+
 		} catch (error) {
 			console.error("찜 상태 변경 실패:", error);
 		} finally {
@@ -383,19 +384,19 @@ function RecipeDetailPage() {
 				<img src={recipe.mainThumb} alt={recipe.rcp_TTL} />
 				<div className="button-group">
 					<button
-						className="buttons1"
+						className={`buttons2 ${isRecommended ? "active" : ""}`}
 						onClick={handleToggleRecommend}
 						disabled={isLoading}
 					>
-						{isRecommended ? "추천 취소" : "추천하기"}
+						{isRecommended ? "추천 취소" : "추천 하기"}
 					</button>
 
 					<button
-						className="buttons2"
+						className={`buttons1 ${isBookmarked ? "active" : ""}`}
 						onClick={handleToggleBookmark}
 						disabled={isLoading}
 					>
-						{isBookmarked ? "찜 해제" : "찜하기"}
+						{isBookmarked ? "찜 해제" : "찜 하기"}
 					</button>
 				</div>
 			</div>

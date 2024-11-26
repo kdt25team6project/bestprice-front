@@ -159,18 +159,18 @@ const RecipeCard = ({ recipe, bookmarkedRecipes, onBookmarkUpdate = () => {} }) 
             {/* 찜 및 추천 버튼 */}
             <div className="button-group">
                 <button
-                    className={`btn ${isBookmarked ? "btn-warning" : "btn-success"} btn-sm`}
-                    onClick={toggleBookmark}
+						className={`${isBookmarked ? "active" : ""}`}
+                        onClick={toggleBookmark}
                     disabled={isLoading}
                 >
-                    {isBookmarked ? "찜 해제" : "찜하기"}
+                    {isBookmarked ? "찜 해제" : "찜 하기"}
                 </button>
                 <button
-                    className={`btn ${isRecommended ? "btn-danger" : "btn-primary"} btn-sm`}
+					className={`${isRecommended ? "active" : ""}`}
                     onClick={toggleRecommend}
                     disabled={isLoading}
                 >
-                    {isRecommended ? "추천 취소" : "추천하기"}
+                    {isRecommended ? "추천 취소" : "추천 하기"}
                 </button>
             </div>
         </div>

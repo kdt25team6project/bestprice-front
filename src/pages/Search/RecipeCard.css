@@ -99,3 +99,9 @@
 .recipe-list.two-column .recipe-card-image {
 	height: 350px;
 }
+
+.button-group button.active {
+	background-color: #ff5833;
+	color: white;
+	border-color: #ff5833; 
+  }

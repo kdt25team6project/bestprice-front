@@ -140,3 +140,28 @@ ul {
 .sort_buttons button:active {
   background-color: #ccc;
 }
+
+.button-group{
+  margin-left: 3%;
+  max-width: 1200px;
+  flex-wrap: wrap;
+}
+.button-group button {
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  color: #ff5833;
+  border: 1px solid #ff5833;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.button-group button.active {
+  background-color: #ff5833;
+  color: white;
+  border-color: #ff5833; 
+}
