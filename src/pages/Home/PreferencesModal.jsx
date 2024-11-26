@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import { useRecoilValue } from "recoil";
 import { userState } from "../../state/userState";
 import axios from "axios";
+import "./styles.css";
 
 const PreferencesModal = ({ show, onClose }) => {
 	const user = useRecoilValue(userState);
@@ -31,15 +32,6 @@ const PreferencesModal = ({ show, onClose }) => {
 				method: preferences.method,
 			});
 
-            console.log("Preferences to save:", {
-                userId,
-                difficulty: preferences.difficulty,
-                portion: preferences.portion,
-                category: preferences.category,
-                method: preferences.method,
-            });
-            
-
 			alert("선호도가 저장되었습니다.");
 			onClose(); // Close the modal
 		} catch (error) {
@@ -51,7 +43,7 @@ const PreferencesModal = ({ show, onClose }) => {
 	return (
 		<Modal show={show} onHide={onClose} centered>
 			<Modal.Header closeButton>
-				<Modal.Title>나의 선호도 설정</Modal.Title>
+				<Modal.Title className="modal-title">나의 선호도 설정</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
 				<div className="preferences-section">
@@ -100,6 +92,11 @@ const PreferencesModal = ({ show, onClose }) => {
 							<option value="찌개">찌개</option>
 							<option value="디저트">디저트</option>
 							<option value="퓨전">퓨전</option>
+							<option value="김치/젓갈/장류">김치/젓갈/장류</option>
+							<option value="양식">양식</option>
+							<option value="샐러드">샐러드</option>
+							<option value="스프">스프</option>
+							<option value="차/음료/술">차/음료/술</option>
 							<option value="기타">기타</option>
 						</select>
 					</div>
@@ -118,6 +115,13 @@ const PreferencesModal = ({ show, onClose }) => {
 							<option value="찜">찜</option>
 							<option value="조림">조림</option>
 							<option value="무침">무침</option>
+							<option value="비빔">비빔</option>
+							<option value="절임">절임</option>
+							<option value="튀김">튀김</option>
+							<option value="삶기">삶기</option>
+							<option value="굽기">굽기</option>
+							<option value="데치기">데치기</option>
+							<option value="회">회</option>
 							<option value="기타">기타</option>
 						</select>
 					</div>
@@ -127,7 +131,11 @@ const PreferencesModal = ({ show, onClose }) => {
 				<Button variant="secondary" onClick={onClose}>
 					닫기
 				</Button>
-				<Button variant="primary" onClick={savePreferences}>
+				<Button
+					variant="primary"
+					onClick={savePreferences}
+					style={{ backgroundColor: "#ff5833", borderColor: "#ff5833" }}
+				>
 					저장
 				</Button>
 			</Modal.Footer>

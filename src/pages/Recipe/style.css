@@ -1,15 +1,19 @@
-.recipe-image{
-  position: relative;
+.recipe-image {
+  display: flex; /* Flexbox로 중앙 정렬 */
+  justify-content: center; /* 수평 가운데 정렬 */
+  align-items: center; /* 수직 가운데 정렬 (필요 시) */
 }
 
 .recipe-image img {
-  width: 94%;
-  margin: 3%;
+  width: 60%; /* 너비를 50%로 설정 */
+  margin: 0 auto; /* 상하좌우 중앙 배치 */
+  display: block; /* 이미지가 블록 요소로 동작하도록 설정 */
 }
+
 
 .recipe-container {
   max-width: 1200px;
-   position: relative;
+  position: relative;
   margin-right: auto;
   margin-left: auto;
 }

@@ -253,3 +253,37 @@
 	max-width: 84.7%;
 	margin-left: 2%;
 }
+
+/* 모달 제목 스타일 */
+.modal-title {
+	text-align: center;
+	width: 100%;
+	font-weight: bold;
+	color: #333;
+}
+
+/* 모달 내용 스타일 */
+.preferences-section {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+}
+
+.preferences-item {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.preferences-item label {
+	font-size: 1rem;
+	font-weight: bold;
+}
+
+.preferences-item select {
+	padding: 5px;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+	font-size: 0.9rem;
+}
+

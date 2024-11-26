@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import { userState } from "../../state/userState";
 import { changeNickname } from "../../services/changeNicknameApi";
 import { changePassword } from "../../services/changePasswordApi";
@@ -166,8 +166,8 @@ const MyPage = () => {
 					isLoading={isLoading}
 				/>
 			) : (
-				<InquirySection 
-					inquiries={filteredInquiries} 
+				<InquirySection
+					inquiries={filteredInquiries}
 					isLoading={isLoading}
 					userId={userId}
 				/>
@@ -408,6 +408,11 @@ const PreferencesSection = ({
 								<option value="찌개">찌개</option>
 								<option value="디저트">디저트</option>
 								<option value="퓨전">퓨전</option>
+								<option value="김치/젓갈/장류">김치/젓갈/장류</option>
+								<option value="양식">양식</option>
+								<option value="샐러드">샐러드</option>
+								<option value="스프">스프</option>
+								<option value="차/음료/술">차/음료/술</option>
 								<option value="기타">기타</option>
 							</select>
 						) : (
@@ -430,6 +435,14 @@ const PreferencesSection = ({
 								<option value="찜">찜</option>
 								<option value="조림">조림</option>
 								<option value="무침">무침</option>
+								<option value="비빔">비빔</option>
+								<option value="찜">찜</option>
+								<option value="절임">절임</option>
+								<option value="튀김">튀김</option>
+								<option value="삶기">삶기</option>
+								<option value="굽기">굽기</option>
+								<option value="데치기">데치기</option>
+								<option value="회">회</option>
 								<option value="기타">기타</option>
 							</select>
 						) : (
@@ -471,8 +484,8 @@ const InquirySection = ({ inquiries, isLoading }) => {
 	const navigate = useNavigate();
 
 	const NavigateInquiries = () => {
-        navigate("/inquiries"); // /inquiries 경로로 이동
-    };
+		navigate("/inquiries"); // /inquiries 경로로 이동
+	};
 
 	return (
 		<div className="inquiry-list-container">
@@ -483,8 +496,9 @@ const InquirySection = ({ inquiries, isLoading }) => {
 			) : (
 				<div className="no-scraps">
 					<p>문의 내역이 없습니다.</p>
-					<button className="recommend-btn"
-							onClick={NavigateInquiries}>문의하러 가기</button>
+					<button className="recommend-btn" onClick={NavigateInquiries}>
+						문의하러 가기
+					</button>
 				</div>
 			)}
 		</div>
