@@ -115,17 +115,17 @@ const Home = () => {
 				// 정렬 및 상위 3개 데이터 추출
 				const byInqCount = [...transformedData]
 					.sort((a, b) => b.INQ_CNT - a.INQ_CNT)
-					.slice(0, 3);
+					.slice(0, 2);
 				console.log("조회수 기준 데이터:", byInqCount);
 
 				const bySrapCount = [...transformedData]
 					.sort((a, b) => b.RCMM_CNT - a.RCMM_CNT) // 추천수 기준
-					.slice(0, 3);
+					.slice(0, 2);
 				console.log("추천 수 기준 데이터:", bySrapCount);
 
 				const byRcmmCount = [...transformedData]
 					.sort((a, b) => b.RCMM_CNT - a.RCMM_CNT)
-					.slice(0, 3);
+					.slice(0, 2);
 				console.log("추천 수 기준 데이터:", byRcmmCount);
 
 				// 상태 업데이트
@@ -305,7 +305,7 @@ const Home = () => {
 						</Carousel>
 					</div>
 					{/* 추천 레시피 캐러셀 */}
-					<div className="carousel-container">
+					<div className="carousel-container1">
 						<Carousel
 							activeIndex={index2}
 							onSelect={handleSelect2}

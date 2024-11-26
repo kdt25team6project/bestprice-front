@@ -161,6 +161,15 @@
 	margin: 0; /* 기본 여백 제거 */
 }
 
+.carousel-container1 {
+	overflow: hidden; /* 캐러셀 전체에서 오버플로우 숨기기 */
+	max-width: 100%;
+	height: 336px;
+	border-radius: 5px;
+	overflow: hidden;
+}
+
+
 .carousel-container2 {
 	width: 90%;
 	height: 350px;

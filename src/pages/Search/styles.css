@@ -103,7 +103,7 @@
 .button-group {
 	display: flex; /* 버튼들을 가로로 나열 */
 	align-items: center; /* 수직 가운데 정렬 */
-	gap: 8px; /* 버튼 간 간격 조정 */
+	gap: 4px; /* 버튼 간 간격 조정 */
 	margin: 10px 0; /* 그룹 간격 */
 }
 
