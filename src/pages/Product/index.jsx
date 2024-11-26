@@ -14,65 +14,34 @@ function ProductSearchPage() {
   const [bookmarkedRecipes, setBookmarkedRecipes] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [keyword, setKeyword] = useState("");
+  const [allKeywords, setAllKeywords] = useState([]); // 모든 키워드 상태
   const [error, setError] = useState(null); // 오류 상태 관리
+  const [selectedKeyword, setSelectedKeyword] = useState(""); // 현재 선택된 키워드 상태
   const { user } = useRecoilValue(userState);
   const userId = user?.userId;
   const defaultKeywords = ["설탕", "소금", "계란", "양파", "생수"];
 
-  const formatPrice = (price) => {
-    if (!price) return null;
-    if (typeof price === "string" && price.includes(",")) return price;
-    return new Intl.NumberFormat("ko-KR").format(parseInt(price, 10));
-  };
-
-  const getRandomKeyword = (keywords, isLoggedIn) => {
-    if (!isLoggedIn) {
-      // 로그인되지 않은 경우 기본 키워드에서 랜덤 선택
-      const randomIndex = Math.floor(Math.random() * defaultKeywords.length);
-      return defaultKeywords[randomIndex];
-    }
-    if (!keywords || keywords.length === 0) return null;
-  
-    // 키워드를 배열로 분리
-    const keywordArray = keywords.split(",").map((kw) => kw.trim());
-  
-    // 랜덤 인덱스 선택
-    const randomIndex = Math.floor(Math.random() * keywordArray.length);
-  
-    // 선택된 키워드에서 첫 번째 단어만 반환
-    return keywordArray[randomIndex].split(" ")[0];
-  };
-  
-  
-  // 재료이름 추출
   const parseIngredients = (ingredientText) => {
     if (!ingredientText) return [];
-    
+
     const sections = ingredientText.split(/\[(.*?)\]/).filter(Boolean);
     const ingredients = [];
-  
-    sections.forEach((section, index) => {
-      if (index % 2 === 0) {
-        return;
-      } else {
-        const items = section.split('|').map((item) => item.trim());
-        ingredients.push(...items.filter(Boolean));
-      }
-    });
-  
-    return ingredients;
-  };
 
-  const parseQuantity = (item) => {
-    const match = item.match(/(.*?)(\d+.*)?/);
-    if (match) {
-      const name = match[1]?.trim();
-      return {
-        name: name && name.length > 0 ? name : null,
-        amount: match[2]?.trim() || null,
-      };
-    }
-    return { name: null, amount: null };
+    sections.forEach((section, index) => {
+      if (index % 2 === 0) return;
+
+      const items = section.split('|').map((item) => {
+        const trimmedItem = item.trim();
+        if (/\d/.test(trimmedItem)) {
+          return trimmedItem.replace(/\d.*$/, "").trim();
+        }
+        return trimmedItem.split(" ")[0].trim();
+      });
+
+      ingredients.push(...items.filter(Boolean));
+    });
+
+    return ingredients;
   };
 
   const fetchBookmarkedRecipes = async () => {
@@ -88,16 +57,15 @@ function ProductSearchPage() {
           const { data: recipe } = await axios.get(
             `http://localhost:8001/api/recipe/${id}`
           );
-          console.log(recipe);
           return { ...recipe, id };
         })
       );
       const ingredients = recipeDetails.flatMap((recipe) =>
         parseIngredients(recipe.ckg_MTRL_CN)
       );
-      const keywordString = ingredients.join(", ");
-      console.log("검색 키워드:", keywordString);
-      setKeyword(keywordString);
+      const keywordsArray = [...new Set(ingredients)];
+      setAllKeywords(keywordsArray);
+      setKeyword(keywordsArray[0] || defaultKeywords[0]);
       setBookmarkedRecipes(recipeDetails);
     } catch (error) {
       console.error("북마크된 레시피를 가져오는 중 오류 발생:", error);
@@ -110,20 +78,19 @@ function ProductSearchPage() {
     fetchBookmarkedRecipes(); // 북마크된 레시피 데이터 가져오기
   }, []);
 
+  const handleKeywordClick = (selectedKeyword) => {
+    setSelectedKeyword(selectedKeyword); // 선택된 키워드 상태 업데이트
+    setKeyword(selectedKeyword); // 선택된 키워드로 검색
+  };
+
   useEffect(() => {
     const fetchData = async () => {
-      // 로그인 여부 확인
-      const isLoggedIn = !!userId;
-  
-      // 랜덤 키워드 선택
-      const randomKeyword = getRandomKeyword(keyword, isLoggedIn);
-      console.log("랜덤 검색 키워드:", randomKeyword); 
-  
+      if (!keyword) return;
       setLoading(true);
-      setError(null);
+      setError(null); // 오류 초기화
       try {
         const response = await fetch(
-          `http://localhost:8001/shop?query=${encodeURIComponent(randomKeyword)}`
+          `http://localhost:8001/shop?query=${encodeURIComponent(keyword)}`
         );
         const data = await response.json();
         const classifiedData = data.map((item) => ({
@@ -131,7 +98,7 @@ function ProductSearchPage() {
           platform: getPlatformName(item.link),
           price: formatPrice(item.price),
         }));
-  
+
         setProducts(classifiedData);
         setSortedProducts(classifiedData);
       } catch (error) {
@@ -141,46 +108,14 @@ function ProductSearchPage() {
         setLoading(false);
       }
     };
-  
+
     fetchData();
-  }, [keyword, userId]);
-  
-  
+  }, [keyword]);
 
-  useEffect(() => {
-    const sortAndFilterProducts = () => {
-      const sorted = [...products].sort((a, b) => {
-        if (sortOption === "lowPrice") {
-          return (
-            parseInt(a.price.replace(/,/g, ""), 10) -
-            parseInt(b.price.replace(/,/g, ""), 10)
-          );
-        }
-        if (sortOption === "highPrice") {
-          return (
-            parseInt(b.price.replace(/,/g, ""), 10) -
-            parseInt(a.price.replace(/,/g, ""), 10)
-          );
-        }
-        return 0;
-      });
-
-      const filtered = sorted.filter((product) => filters[product.platform]);
-      setSortedProducts(filtered);
-    };
-
-    sortAndFilterProducts();
-  }, [sortOption, products, filters]);
-
-  const handleSortOption = (option) => {
-    setSortOption(option);
-  };
-
-  const handleFilterChange = (platform) => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      [platform]: !prevFilters[platform],
-    }));
+  const formatPrice = (price) => {
+    if (!price) return null;
+    if (typeof price === "string" && price.includes(",")) return price;
+    return new Intl.NumberFormat("ko-KR").format(parseInt(price, 10));
   };
 
   const getPlatformName = (link) => {
@@ -189,9 +124,32 @@ function ProductSearchPage() {
     return "기타";
   };
 
-  const filteredProducts = sortedProducts.filter(
-    (product) => filters[product.platform]
-  );
+  const sortAndFilterProducts = () => {
+    const sorted = [...products].sort((a, b) => {
+      if (sortOption === "lowPrice") {
+        return (
+          parseInt(a.price.replace(/,/g, ""), 10) -
+          parseInt(b.price.replace(/,/g, ""), 10)
+        );
+      }
+      if (sortOption === "highPrice") {
+        return (
+          parseInt(b.price.replace(/,/g, ""), 10) -
+          parseInt(a.price.replace(/,/g, ""), 10)
+        );
+      }
+      return 0;
+    });
+
+    const filtered = sorted.filter((product) => filters[product.platform]);
+    setSortedProducts(filtered);
+  };
+
+  useEffect(() => {
+    sortAndFilterProducts();
+  }, [sortOption, products, filters]);
+
+  const allRenderedKeywords = [...new Set([...defaultKeywords, ...allKeywords])];
 
   if (loading) {
     return <div>로딩 중...</div>;
@@ -209,7 +167,7 @@ function ProductSearchPage() {
             <input
               type="checkbox"
               checked={filters["네이버"]}
-              onChange={() => handleFilterChange("네이버")}
+              onChange={() => setFilters({ ...filters, 네이버: !filters["네이버"] })}
             />
             네이버
           </label>
@@ -217,7 +175,7 @@ function ProductSearchPage() {
             <input
               type="checkbox"
               checked={filters["쿠팡"]}
-              onChange={() => handleFilterChange("쿠팡")}
+              onChange={() => setFilters({ ...filters, 쿠팡: !filters["쿠팡"] })}
             />
             쿠팡
           </label>
@@ -225,19 +183,32 @@ function ProductSearchPage() {
             <input
               type="checkbox"
               checked={filters["기타"]}
-              onChange={() => handleFilterChange("기타")}
+              onChange={() => setFilters({ ...filters, 기타: !filters["기타"] })}
             />
             기타
           </label>
         </div>
         <div className="sort_buttons">
-          <button onClick={() => handleSortOption("default")}>기본순</button>
-          <button onClick={() => handleSortOption("lowPrice")}>낮은 가격순</button>
-          <button onClick={() => handleSortOption("highPrice")}>높은 가격순</button>
+          <button onClick={() => setSortOption("default")}>기본순</button>
+          <button onClick={() => setSortOption("lowPrice")}>낮은 가격순</button>
+          <button onClick={() => setSortOption("highPrice")}>높은 가격순</button>
         </div>
       </div>
 
-      {filteredProducts.map((product) => (
+      <div className="button-group">
+        {(allKeywords.length > 0 ? allKeywords : defaultKeywords).map((kw, index) => (
+          <button
+            key={index}
+            onClick={() => handleKeywordClick(kw)}
+            className={`btn ${selectedKeyword === kw ? "active" : ""}`}
+          >
+            {kw}
+          </button>
+        ))}
+      </div>
+
+
+      {sortedProducts.map((product) => (
         <a
           href={product.link}
           target="_blank"

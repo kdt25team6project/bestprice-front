@@ -2,6 +2,7 @@
   display: flex; /* Flexbox로 중앙 정렬 */
   justify-content: center; /* 수평 가운데 정렬 */
   align-items: center; /* 수직 가운데 정렬 (필요 시) */
+  position: relative;
 }
 
 .recipe-image img {
@@ -216,7 +217,7 @@ ul, li {
   background-color: #80ffc3;
   position: absolute; 
   bottom: -30px; 
-  right: 100px; 
+  right: 110px; 
   display: flex;
   gap: 0.5rem;
   z-index: 10;
@@ -229,4 +230,10 @@ ul, li {
   display: flex;
   gap: 0.5rem;
   z-index: 10;
+}
+
+.button-group button.active {
+  background-color: #ff5833;
+  color: white;
+  border-color: #ff5833; 
 }
