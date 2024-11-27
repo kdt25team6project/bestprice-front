@@ -153,7 +153,7 @@ const RecipeCard = ({ recipe, bookmarkedRecipes, onBookmarkUpdate = () => {} }) 
     
             {/* 추가 정보 */}
             <p className="recipe-info">조회수: {recipe.inq_CNT || recipe.INQ_CNT || 0}</p>
-            <p className="recipe-info">추천수: {recommendCount}</p>
+            <p className="recipe-info">추천수: {recipe.rcmm_CNT || recipe.RCMM_CNT || recommendCount}</p>
             <p className="recipe-info">난이도: {recipe.ckg_DODF_NM || recipe.CKG_DODF_NM || "알 수 없음"}</p>
     
             {/* 찜 및 추천 버튼 */}
