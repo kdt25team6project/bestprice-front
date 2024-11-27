@@ -94,7 +94,7 @@ const findIngredient = (name, data) => {
 	const fusePrimary = new Fuse(data, {
 		keys: ["식품명"],
 		// 정확도
-		threshold: 0.3,
+		threshold: 0.4,
 		includeScore: true,
 	});
 	let result = fusePrimary.search(normalizedName);
@@ -335,10 +335,6 @@ function RecipeDetailPage() {
 			protein: 0,
 			carbs: 0,
 			fat: 0,
-			fiber: 0,
-			calcium: 0,
-			sodium: 0,
-			vitaminC: 0,
 		};
 		let calculatedIngredients = [];
 
@@ -353,11 +349,6 @@ function RecipeDetailPage() {
 				totalNutrition.protein += ((found["단백질(g)"] || 0) / 100) * grams;
 				totalNutrition.carbs += ((found["탄수화물(g)"] || 0) / 100) * grams;
 				totalNutrition.fat += ((found["지방(g)"] || 0) / 100) * grams;
-				totalNutrition.fiber += ((found["식이섬유(g)"] || 0) / 100) * grams;
-				totalNutrition.calcium += ((found["칼슘(mg)"] || 0) / 100) * grams;
-				totalNutrition.sodium += ((found["나트륨(mg)"] || 0) / 100) * grams;
-				totalNutrition.vitaminC += ((found["비타민 C(mg)"] || 0) / 100) * grams;
-
 				calculatedIngredients.push({
 					usedName: name,
 					matchedName: found["식품명"],
@@ -436,7 +427,7 @@ function RecipeDetailPage() {
 														{item.name || "재료 이름 없음"}
 													</div>
 													<span className="ingredient-amount">
-														{item.amount || "양 없음"}
+														{item.amount || "기호에 따라"}
 													</span>
 												</div>
 											</li>
@@ -487,33 +478,6 @@ function RecipeDetailPage() {
 										<div className="ingredient-name">지방</div>
 										<span className="ingredient-amount">
 											{result.fat.toFixed(2)}
-											<span>g</span>
-										</span>
-									</div>
-								</li>
-								<li>
-									<div className="ingredient-list_1">
-										<div className="ingredient-name">식이섬유</div>
-										<span className="ingredient-amount">
-											{result.fiber.toFixed(2)}
-											<span>g</span>
-										</span>
-									</div>
-								</li>
-								<li>
-									<div className="ingredient-list_1">
-										<div className="ingredient-name">칼슘</div>
-										<span className="ingredient-amount">
-											{result.calcium.toFixed(2)}
-											<span>g</span>
-										</span>
-									</div>
-								</li>
-								<li>
-									<div className="ingredient-list_1">
-										<div className="ingredient-name">나트륨</div>
-										<span className="ingredient-amount">
-											{result.sodium.toFixed(2)}
 											<span>g</span>
 										</span>
 									</div>
